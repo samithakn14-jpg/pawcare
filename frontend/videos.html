@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse educational pet-care videos listed in PetCare Connect." />
+  <title>Pet Care Videos | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c3028;
+      --muted: #61736a;
+      --green: #225c46;
+      --cream: #f7f6f0;
+      --line: #e6e9e0;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cream); color: var(--ink); font-family: 'Poppins', sans-serif; }
+    .site-nav { background: #173d30; }
+    .site-nav .navbar-brand { color: #fff; font-weight: 600; letter-spacing: 0.01em; }
+    .site-nav .nav-link { color: rgba(255,255,255,.8); font-size: .9rem; }
+    .site-nav .nav-link:hover, .site-nav .nav-link.active { color: #d9efaa; }
+    .video-hero { padding: 8rem 0 4.5rem; color: #fff; background: linear-gradient(125deg, #173d30, #2a7656); }
+    .hero-kicker { color: #d9efaa; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .video-hero h1 { max-width: 720px; margin: .8rem auto 1rem; font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.12; }
+    .video-hero p { max-width: 640px; margin: 0 auto; color: rgba(255,255,255,.8); }
+    .video-library { padding: 4rem 0 5rem; }
+    .section-intro { max-width: 680px; margin: 0 auto 2rem; text-align: center; }
+    .section-intro p { color: var(--muted); }
+    .care-video { height: 100%; overflow: hidden; border: 1px solid var(--line); border-radius: 1rem; background: #fff; box-shadow: 0 12px 32px rgba(30,55,42,.07); }
+    .care-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #dce5dc; }
+    .care-video-content { padding: 1.25rem; }
+    .topic-tag { display: inline-block; margin-bottom: .7rem; padding: .3rem .7rem; border-radius: 999px; background: #e7f2df; color: #35613e; font-size: .74rem; }
+    .care-video h2 { margin: 0 0 .55rem; font-size: 1.15rem; line-height: 1.45; }
+    .care-video p { margin: 0 0 1rem; color: var(--muted); font-size: .9rem; line-height: 1.7; }
+    .watch-link { color: var(--green); font-size: .88rem; text-decoration: none; }
+    .watch-link:hover { text-decoration: underline; }
+    .video-thumbnail-fallback { width: 7rem; aspect-ratio: 16 / 9; margin-right: .5rem; border-radius: .35rem; object-fit: cover; vertical-align: middle; }
+    .video-admin { margin: 0 auto 2rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 1rem; background: #fff; }
+    .video-admin .hero-kicker { color: var(--green); }
+    .video-admin-card { border: 1px solid var(--line); border-radius: .75rem; background: #fff; }
+    .video-admin-card video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #dce5dc; }
+    .stored-video video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #dce5dc; }
+    .video-notice:empty { display: none; }
+    .medical-note { max-width: 900px; margin: 0 auto; padding: 1rem 1.25rem; border-left: 4px solid #c58a29; border-radius: .5rem; background: #fff6df; color: #644a1c; font-size: .88rem; }
+    .site-footer { padding: 2.5rem 0; background: #173d30; color: rgba(255,255,255,.78); }
+    .site-footer a { color: #d9efaa; text-decoration: none; }
+    @media (max-width: 767.98px) {
+      .video-hero { padding: 7rem 0 3.5rem; }
+      .video-library { padding: 3rem 0; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg site-nav">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <button class="navbar-toggler border-light" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="siteNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+          <li class="nav-item"><a class="nav-link" href="shelters.html">Shelters</a></li>
+          <li class="nav-item"><a class="nav-link" href="petcare.html">Pet Care</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="video-hero text-center">
+    <div class="container">
+      <div class="hero-kicker">Learn, notice, care</div>
+      <h1>Pet care videos</h1>
+      <p>Browse educational videos on the topics available in the PetCare Connect library. Video content is provided for general learning only.</p>
+    </div>
+  </header>
+
+  <main class="video-library">
+    <div class="container">
+      <div class="section-intro">
+        <h2 class="h3">A little knowledge goes a long way</h2>
+        <p>Filter the existing library by topic. The catalog does not imply that every topic has a video yet.</p>
+      </div>
+      <div id="videoFilters" class="d-flex flex-wrap justify-content-center gap-2 mb-4" aria-label="Filter videos by topic"></div>
+      <div id="videoStatus" class="medical-note mb-4" role="status" aria-live="polite">Loading videos…</div>
+      <div id="videoGrid" class="row g-4"></div>
+        <section id="videoAdminSection" class="video-admin" aria-labelledby="videoAdminHeading" hidden>
+          <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+            <div>
+              <span class="hero-kicker">Administrator tools</span>
+              <h2 class="h4 mb-1" id="videoAdminHeading">Upload and manage videos</h2>
+              <p class="text-secondary mb-0">Video uploads are limited to 100 MB. Optional thumbnails are limited to 5 MB.</p>
+            </div>
+            <span class="badge text-bg-success">Admin access verified</span>
+          </div>
+          <div id="videoAdminNotice" class="alert video-notice" role="status" aria-live="polite"></div>
+          <form id="petCareVideoForm" novalidate>
+            <input type="hidden" id="petCareVideoId" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="petCareVideoTitle">Title</label>
+                <input class="form-control" id="petCareVideoTitle" name="title" maxlength="160" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="petCareVideoCategory">Category</label>
+                <select class="form-select" id="petCareVideoCategory" name="category" required>
+                  <option value="">Choose a category</option>
+                  <option>Dog Care</option><option>Cat Care</option><option>Pet Nutrition</option>
+                  <option>Pet Training</option><option>Pet Health</option><option>Vaccination Awareness</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="petCareVideoDescription">Description</label>
+                <textarea class="form-control" id="petCareVideoDescription" name="description" rows="3" maxlength="3000"></textarea>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="petCareVideoFile">Video file</label>
+                <input class="form-control" id="petCareVideoFile" name="video" type="file" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" />
+                <div class="form-text">MP4, WebM, or MOV. Required when adding a video; optional when replacing one.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="petCareVideoThumbnail">Thumbnail image (optional)</label>
+                <input class="form-control" id="petCareVideoThumbnail" name="thumbnail" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+              </div>
+              <div class="col-sm-6">
+                <div class="form-check">
+                  <input class="form-check-input" id="petCareVideoPublic" name="is_public" type="checkbox" checked />
+                  <label class="form-check-label" for="petCareVideoPublic">Visible to public visitors</label>
+                </div>
+              </div>
+              <div class="col-sm-6 text-sm-end">
+                <button class="btn btn-success" id="savePetCareVideo" type="submit">Upload video</button>
+                <button class="btn btn-outline-secondary" id="cancelPetCareVideoEdit" type="button" hidden>Cancel edit</button>
+              </div>
+            </div>
+          </form>
+          <hr class="my-4" />
+          <h3 class="h5">Uploaded video library</h3>
+          <div id="adminVideoGrid" class="row g-3">
+            <p class="text-secondary">Loading uploaded videos…</p>
+          </div>
+        </section>
+        <p class="medical-note mt-4"><i class="fas fa-circle-info me-2" aria-hidden="true"></i>Videos are third-party educational materials and are not a diagnosis or substitute for veterinary care. Consult a veterinarian about your pet's individual health and vaccination needs.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span>© 2026 PetCare Connect. Made with care for dogs.</span>
+      <span>Sira, Tumakuru, Karnataka · <a href="tel:+916362024336">+91 63620 4336</a> · <a href="mailto:samithakn14@gmail.com">samithakn14@gmail.com</a></span>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=review-fixes-1"></script>
+  <script src="js/video-library.js?v=storage-1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

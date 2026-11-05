@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shelters | PetCare Connect</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ===================== GLOBAL ===================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f8f9ff; color: #2d3748; }
+
+    /* ===================== NAVBAR ===================== */
+    .pawcare-navbar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 12px 0;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      z-index: 1050;
+    }
+    .pawcare-navbar .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff !important;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+    .pawcare-navbar .navbar-brand:hover { color: #f6c90e !important; }
+    .pawcare-navbar .nav-link {
+      color: rgba(255,255,255,0.85) !important;
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 6px 12px !important;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    .pawcare-navbar .nav-link:hover,
+    .pawcare-navbar .nav-link.active { color: #f6c90e !important; background: rgba(246,201,14,0.12); }
+    .pawcare-navbar .navbar-toggler { border-color: rgba(255,255,255,0.3); }
+    .pawcare-navbar .navbar-toggler-icon { filter: invert(1); }
+    .btn-login {
+      color: #fff !important;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-right: 8px;
+    }
+    .btn-login:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+    .btn-register {
+      background: linear-gradient(135deg, #f6c90e, #f0a500);
+      color: #1a1a2e !important;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(246,201,14,0.4); }
+    #userMenu { display: flex; align-items: center; gap: 10px; }
+    .user-avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #f6c90e, #f0a500);
+      border: none; color: #1a1a2e; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .notification-btn {
+      background: none; border: none; color: rgba(255,255,255,0.8);
+      font-size: 1.1rem; cursor: pointer; position: relative; padding: 4px 8px;
+    }
+    .notification-btn .badge {
+      position: absolute; top: 0; right: 2px; font-size: 0.6rem;
+      background: #e53e3e; border-radius: 50%; min-width: 16px; height: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ===================== HERO ===================== */
+    .shelters-hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 120px 0 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .shelters-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .shelters-hero .hero-tag {
+      display: inline-block;
+      background: rgba(246,201,14,0.15);
+      border: 1px solid rgba(246,201,14,0.4);
+      color: #f6c90e;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .shelters-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .shelters-hero h1 span { color: #f6c90e; }
+    .shelters-hero p {
+      color: rgba(255,255,255,0.75);
+      font-size: 1.1rem;
+      max-width: 550px;
+      margin: 0 auto 32px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .stat-num {
+      font-size: 2rem; font-weight: 800; color: #f6c90e; display: block; line-height: 1;
+    }
+    .hero-stat .stat-lbl { color: rgba(255,255,255,0.65); font-size: 0.85rem; }
+
+    /* ===================== FILTER BAR ===================== */
+    .filter-section {
+      background: #fff;
+      border-bottom: 1px solid #e8eaf0;
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .filter-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      flex-wrap: wrap;
+    }
+    .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-tab {
+      padding: 7px 18px;
+      border-radius: 20px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8f9ff;
+      color: #4a5568;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .filter-tab:hover { border-color: #667eea; color: #667eea; background: #eef0ff; }
+    .filter-tab.active { background: #667eea; color: #fff; border-color: #667eea; }
+    .filter-divider { width: 1px; height: 32px; background: #e2e8f0; margin: 0 4px; flex-shrink: 0; }
+    .location-select {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8f9ff;
+      color: #4a5568;
+      font-size: 0.85rem;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .location-select:focus { border-color: #667eea; }
+    .filter-search {
+      margin-left: auto;
+      position: relative;
+      min-width: 220px;
+    }
+    .filter-search input {
+      width: 100%;
+      padding: 8px 14px 8px 38px;
+      border-radius: 20px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8f9ff;
+      font-size: 0.85rem;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .filter-search input:focus { border-color: #667eea; background: #fff; }
+    .filter-search i {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: #a0aec0; font-size: 0.85rem;
+    }
+    .results-count {
+      font-size: 0.85rem;
+      color: #718096;
+      white-space: nowrap;
+      padding: 8px 0;
+    }
+
+    /* ===================== SHELTER CARDS ===================== */
+    .shelters-section { padding: 50px 0 80px; }
+    .shelter-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      border: 1px solid #eef0f7;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .shelter-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(102,126,234,0.18);
+    }
+    .shelter-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .shelter-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .shelter-card:hover .shelter-image img { transform: scale(1.06); }
+    .shelter-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%);
+      display: flex; align-items: flex-start; justify-content: flex-end;
+      padding: 12px;
+    }
+    .verified-badge {
+      background: linear-gradient(135deg, #38a169, #2f855a);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: flex; align-items: center; gap: 4px;
+      box-shadow: 0 2px 8px rgba(56,161,105,0.4);
+    }
+    .shelter-rating {
+      position: absolute; bottom: 10px; left: 12px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 8px; padding: 3px 10px;
+      font-size: 0.8rem; font-weight: 700; color: #2d3748;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .shelter-rating i { color: #f6c90e; }
+    .shelter-body {
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      flex: 1;
+    }
+    .shelter-body h5 {
+      font-size: 1.05rem; font-weight: 700; color: #1a202c;
+      margin: 0; line-height: 1.3;
+    }
+    .shelter-meta { display: flex; flex-direction: column; gap: 6px; }
+    .shelter-meta p {
+      font-size: 0.82rem; color: #718096; margin: 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .shelter-meta p i { color: #667eea; width: 14px; }
+    .pet-count-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #eef0ff; color: #667eea;
+      font-size: 0.78rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 12px;
+      align-self: flex-start;
+    }
+    .contact-info {
+      display: flex; flex-direction: column; gap: 4px;
+      font-size: 0.78rem; color: #718096;
+      background: #f8f9ff; border-radius: 10px; padding: 10px 12px;
+    }
+    .contact-info span { display: flex; align-items: center; gap: 6px; }
+    .shelter-services {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .service-tag {
+      background: #f0fff4; color: #276749;
+      font-size: 0.72rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 10px;
+      border: 1px solid #c6f6d5;
+    }
+    .shelter-body .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none; border-radius: 10px;
+      font-weight: 600; font-size: 0.85rem;
+      padding: 9px 20px;
+      transition: all 0.3s ease;
+      margin-top: auto;
+      align-self: stretch;
+    }
+    .shelter-body .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+    }
+
+    /* ===================== EMPTY STATE ===================== */
+    .empty-state {
+      text-align: center; padding: 80px 20px;
+      grid-column: 1 / -1;
+    }
+    .empty-state .empty-icon {
+      font-size: 5rem; margin-bottom: 20px; display: block; opacity: 0.5;
+    }
+    .empty-state h4 { font-size: 1.4rem; font-weight: 700; color: #4a5568; margin-bottom: 10px; }
+    .empty-state p { color: #a0aec0; max-width: 360px; margin: 0 auto 24px; }
+
+    /* ===================== SKELETON ===================== */
+    .skeleton-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      border: 1px solid #eef0f7;
+    }
+    .skeleton-img { height: 200px; background: #e2e8f0; }
+    .skeleton-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .skeleton-line {
+      height: 14px; background: #e2e8f0; border-radius: 6px;
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton-line.w-60 { width: 60%; }
+    .skeleton-line.w-80 { width: 80%; }
+    .skeleton-line.w-40 { width: 40%; }
+    .skeleton-btn { height: 38px; background: #e2e8f0; border-radius: 10px; animation: shimmer 1.4s infinite; }
+    @keyframes shimmer {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===================== FOOTER ===================== */
+    .pawcare-footer {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: rgba(255,255,255,0.8);
+      padding: 70px 0 0;
+    }
+    .footer-brand { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .footer-brand span { color: #f6c90e; }
+    .footer-desc { font-size: 0.88rem; line-height: 1.7; max-width: 300px; color: rgba(255,255,255,0.6); }
+    .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+    .footer-social a {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.7); font-size: 0.9rem;
+      text-decoration: none; transition: all 0.3s ease;
+    }
+    .footer-social a:hover { background: #f6c90e; color: #1a1a2e; transform: translateY(-3px); }
+    .footer-heading {
+      font-size: 1rem; font-weight: 700; color: #fff;
+      margin-bottom: 20px; letter-spacing: 0.5px;
+    }
+    .footer-links { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.6); text-decoration: none;
+      font-size: 0.88rem; transition: color 0.25s;
+    }
+    .footer-links a:hover { color: #f6c90e; padding-left: 4px; }
+    .footer-contact-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.88rem; color: rgba(255,255,255,0.6); margin-bottom: 12px;
+    }
+    .footer-contact-item i { color: #f6c90e; margin-top: 2px; font-size: 0.85rem; }
+    .footer-divider { border-color: rgba(255,255,255,0.1); margin: 40px 0 0; }
+    .footer-bottom {
+      padding: 20px 0;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    .footer-bottom p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.25s; }
+    .footer-bottom-links a:hover { color: #f6c90e; }
+
+    /* ===================== CHATBOT FAB ===================== */
+    .chatbot-fab {
+      position: fixed; bottom: 30px; right: 30px; z-index: 999;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.4rem; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(102,126,234,0.5);
+      border: none; transition: all 0.3s ease;
+    }
+    .chatbot-fab:hover { transform: scale(1.1); }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 768px) {
+      .filter-inner { gap: 8px; }
+      .filter-search { min-width: 100%; order: 99; }
+      .filter-divider { display: none; }
+      .shelters-hero { padding: 100px 0 50px; }
+      .hero-stats { gap: 20px; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar navbar-expand-lg pawcare-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link active" href="shelters.html">Shelters</a></li>
+        <li class="nav-item"><a class="nav-link" href="petcare.html">Pet Care</a></li>
+        <li class="nav-item"><a class="nav-link" href="food.html">Food</a></li>
+        <li class="nav-item"><a class="nav-link" href="medicine.html">Medicine</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2" id="navRight">
+        <a href="login.html" class="btn-login" id="loginBtn">Login</a>
+        <a href="register.html" class="btn-register" id="registerBtn">Register</a>
+        <div id="userMenu" style="display:none;" class="d-flex align-items-center gap-2">
+          <button class="notification-btn" onclick="window.location='dashboard.html#notifications'" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge" style="display:none;">0</span>
+          </button>
+          <div class="dropdown">
+            <button class="user-avatar-btn dropdown-toggle" id="userAvatarBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Account">
+              <span id="userInitials">U</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+              <li><a class="dropdown-item" href="dashboard.html#applications"><i class="fas fa-file-alt me-2"></i>My Applications</a></li>
+              <li><a class="dropdown-item" href="dashboard.html#profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="shelters-hero">
+  <div class="container position-relative">
+    <div class="hero-tag">🏠 Trusted Facilities</div>
+    <h1>Animal <span>Shelters</span></h1>
+    <p>Explore animal shelters and rescue centres listed on PetCare Connect. Verification status is shown on each listing.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num" id="totalSheltersCount">—</span>
+        <span class="stat-lbl">Shelters Listed</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="totalPetsCount">—</span>
+        <span class="stat-lbl">Pets Available</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="totalCitiesCount">—</span>
+        <span class="stat-lbl">Cities Covered</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FILTER BAR ===================== -->
+<section class="filter-section">
+  <div class="container">
+    <div class="filter-inner">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="all">All Shelters</button>
+        <button class="filter-tab" data-filter="verified">Verified Only</button>
+      </div>
+      <div class="filter-divider"></div>
+      <select class="location-select" id="locationFilter" aria-label="Filter by location">
+        <option value="">📍 All Locations</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Pune">Pune</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+      </select>
+      <span class="results-count" id="resultsCount">Loading…</span>
+      <div class="filter-search">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search shelters…" aria-label="Search shelters" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SHELTERS GRID ===================== -->
+<section class="shelters-section">
+  <div class="container">
+    <div class="row g-4" id="sheltersGrid">
+      <!-- Skeleton placeholders -->
+      <div class="col-lg-4 col-md-6 skeleton-col">
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 skeleton-col">
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 skeleton-col">
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CHATBOT FAB ===================== -->
+<button class="chatbot-fab" id="chatbotFab" title="Chat with PawBot" aria-label="Open chatbot">
+  <i class="fas fa-robot"></i>
+</button>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="pawcare-footer">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">🐾 PetCare <span>Connect</span></div>
+        <p class="footer-desc">India's most trusted pet adoption and care platform. Connecting loving families with pets who need a home since 2024.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="footer-heading">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Shelters</a></li>
+          <li><a href="petcare.html">Pet Care</a></li>
+          <li><a href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="footer-heading">Services</div>
+        <ul class="footer-links">
+          <li><a href="food.html">Pet Food</a></li>
+          <li><a href="medicine.html">Medicine</a></li>
+          <li><a href="videos.html">Grooming videos</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-heading">Contact Us</div>
+        <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Sira, Tumakuru, Karnataka, India</span></div>
+        <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+916362024336">+91 63620 4336</a></div>
+        <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:samithakn14@gmail.com">samithakn14@gmail.com</a></div>
+        <div class="footer-contact-item"><i class="fas fa-clock"></i><span>Mon–Sat: 9:00 AM – 6:00 PM IST</span></div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p>© 2026 PetCare Connect. All rights reserved. Made with ❤️ for pets across India.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=review-fixes-1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+/* Shelter catalog */
+let allShelters = [];
+let activeFilter = 'all';
+let activeLocation = '';
+let searchQuery = '';
+
+// ---- DOM refs ----
+const sheltersGrid   = document.getElementById('sheltersGrid');
+const resultsCount   = document.getElementById('resultsCount');
+const filterTabs     = document.querySelectorAll('.filter-tab');
+const locationFilter = document.getElementById('locationFilter');
+const searchInput    = document.getElementById('searchInput');
+const totalSheltersStat = document.getElementById('totalSheltersCount');
+const totalPetsStat     = document.getElementById('totalPetsCount');
+const totalCitiesStat   = document.getElementById('totalCitiesCount');
+
+// ---- Render helpers ----
+function starStars(rating) {
+  const full  = Math.floor(rating);
+  const half  = rating % 1 >= 0.5;
+  let html = '';
+  for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+  if (half) html += '<i class="fas fa-star-half-alt"></i>';
+  return html;
+}
+
+function renderShelterCard(s) {
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+  const services = (s.services || []).map(sv => `<span class="service-tag">${escapeHtml(sv)}</span>`).join('');
+  const location = [s.city || s.location, s.state].filter(Boolean).map(escapeHtml).join(', ') || 'Location unavailable';
+  const image = escapeHtml(s.image || 'https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?w=600&q=80');
+  const name = escapeHtml(s.name || 'Shelter');
+  const petCount = Number.isFinite(Number(s.pet_count)) ? Number(s.pet_count) : null;
+  const rating = Number(s.rating ?? s.average_rating);
+  const hasRating = Number.isFinite(rating) && Number(s.review_count) > 0;
+  const verified = s.is_verified
+    ? `<div class="shelter-overlay"><span class="verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>`
+    : `<div class="shelter-overlay"></div>`;
+  return `
+    <div class="col-lg-4 col-md-6">
+      <div class="shelter-card">
+        <div class="shelter-image">
+          <img src="${image}"
+               alt="${name}"
+               loading="lazy"
+               onerror="this.src='https://placehold.co/600x200/667eea/ffffff?text=Shelter'" />
+          ${verified}
+          <div class="shelter-rating">
+            ${hasRating ? starStars(rating) : '<span>Not yet rated</span>'}
+            ${hasRating ? `<span style="margin-left:4px;">${rating.toFixed(1)}</span>` : ''}
+            <span style="color:#a0aec0;font-weight:400;">(${s.review_count || 0})</span>
+          </div>
+        </div>
+        <div class="shelter-body">
+          <h5>${name}</h5>
+          <div class="shelter-meta">
+            <p><i class="fas fa-map-marker-alt"></i> ${location}</p>
+            <p><i class="fas fa-location-dot"></i> ${escapeHtml(s.address || 'Address not available')}</p>
+          </div>
+          <div class="pet-count-badge">
+            <i class="fas fa-paw"></i> ${petCount === null ? 'Count unavailable' : `${petCount} Pets Available`}
+          </div>
+          <div class="contact-info">
+            <span>📞 ${escapeHtml(s.phone || 'N/A')}</span>
+            <span>📧 ${escapeHtml(s.email || 'N/A')}</span>
+          </div>
+          <div class="shelter-services">${services}</div>
+          <a href="shelter-detail.html?id=${encodeURIComponent(s.id)}" class="btn btn-primary">
+            View Details <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderEmpty() {
+  return `
+    <div class="empty-state" style="grid-column:1/-1">
+      <span class="empty-icon">🏠</span>
+      <h4>No Shelters Found</h4>
+      <p>Try adjusting your filters or search query. More shelters are being added soon!</p>
+      <button class="btn btn-primary" onclick="resetFilters()">
+        <i class="fas fa-redo me-2"></i>Reset Filters
+      </button>
+    </div>`;
+}
+
+function filterAndRender() {
+  let filtered = [...allShelters];
+
+  if (activeFilter === 'verified') filtered = filtered.filter(s => s.is_verified);
+  if (activeLocation) filtered = filtered.filter(s => s.city === activeLocation);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(s =>
+      (s.name || '').toLowerCase().includes(q) ||
+      (s.city || '').toLowerCase().includes(q) ||
+      (s.state || '').toLowerCase().includes(q) ||
+      (s.services || []).some(sv => sv.toLowerCase().includes(q))
+    );
+  }
+
+  resultsCount.textContent = `${filtered.length} shelter${filtered.length !== 1 ? 's' : ''} found`;
+
+  if (filtered.length === 0) {
+    sheltersGrid.innerHTML = renderEmpty();
+    return;
+  }
+  sheltersGrid.innerHTML = filtered.map(renderShelterCard).join('');
+}
+
+function resetFilters() {
+  activeFilter = 'all';
+  activeLocation = '';
+  searchQuery = '';
+  locationFilter.value = '';
+  searchInput.value = '';
+  filterTabs.forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
+  filterAndRender();
+}
+
+// ---- Event listeners ----
+filterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    filterTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeFilter = tab.dataset.filter;
+    filterAndRender();
+  });
+});
+
+locationFilter.addEventListener('change', () => {
+  activeLocation = locationFilter.value;
+  filterAndRender();
+});
+
+let searchDebounce;
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    searchQuery = searchInput.value.trim();
+    filterAndRender();
+  }, 300);
+});
+
+// ---- Load from Backend API or Supabase or fallback ----
+async function loadShelters() {
+  const apiBase = window.PAWCARE_CONFIG.API_BASE_URL;
+  const sb = window.PAWCARE_CONFIG?.supabase;
+
+  // Show loading indicator
+  if (sheltersGrid) {
+    sheltersGrid.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading shelters...</span>
+        </div>
+        <p class="mt-3 text-muted fw-semibold">Loading verified shelters...</p>
+      </div>`;
+  }
+
+  let loaded = false;
+
+  // 1. Try Backend API first
+  try {
+    const res = await fetch(`${apiBase}/shelters`);
+    if (res.ok) {
+      const result = await res.json();
+      if (result.success && Array.isArray(result.data)) {
+        allShelters = result.data.map(s => ({
+          ...s,
+          is_verified: s.verified ?? s.is_verified ?? false,
+          city: s.city || s.location || 'India',
+        }));
+        loaded = true;
+      }
+    }
+  } catch (apiErr) {
+    console.warn('Backend shelters API failed, trying Supabase client:', apiErr.message);
+  }
+
+  // 2. Try Supabase Client
+  if (!loaded && sb) {
+    try {
+      const { data, error } = await sb
+        .from('shelters')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && Array.isArray(data)) {
+        allShelters = data.map(s => ({
+          ...s,
+          is_verified: s.verified ?? s.is_verified ?? false,
+          city: s.city || s.location || 'India',
+        }));
+        loaded = true;
+      }
+    } catch (sbErr) {
+      console.warn('Supabase shelters query failed:', sbErr.message);
+    }
+  }
+
+  if (!loaded) {
+    totalSheltersStat.textContent = '—';
+    totalPetsStat.textContent = '—';
+    totalCitiesStat.textContent = '—';
+    resultsCount.textContent = '';
+    sheltersGrid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1" role="alert">
+        <span class="empty-icon">⚠️</span>
+        <h4>Unable to Load Shelters</h4>
+        <p>Shelter information is temporarily unavailable. Please try again later.</p>
+        <button class="btn btn-primary" type="button" onclick="loadShelters()">
+          <i class="fas fa-redo me-2"></i>Try Again
+        </button>
+      </div>`;
+    return;
+  }
+
+  // Update hero stats
+  const cityCount = new Set(allShelters.map(s => (s.city || s.location || '').trim()).filter(Boolean)).size;
+  const hasPetCounts = allShelters.every(s =>
+    s.pet_count !== undefined && s.pet_count !== null && Number.isFinite(Number(s.pet_count))
+  );
+  const totalPets = allShelters.reduce((sum, s) => sum + (Number(s.pet_count) || 0), 0);
+  if (totalSheltersStat) totalSheltersStat.textContent = allShelters.length;
+  if (totalPetsStat) totalPetsStat.textContent = hasPetCounts ? totalPets : '—';
+  if (totalCitiesStat) totalCitiesStat.textContent = cityCount;
+
+  filterAndRender();
+}
+
+// ---- Auth UI ----
+function initAuthUI() {
+  try {
+    const user = JSON.parse(localStorage.getItem('pawcare_user') || 'null');
+    if (user) {
+      document.getElementById('loginBtn').style.display  = 'none';
+      document.getElementById('registerBtn').style.display = 'none';
+      document.getElementById('userMenu').style.display  = 'flex';
+      const initials = (user.full_name || user.email || 'U').slice(0, 1).toUpperCase();
+      document.getElementById('userInitials').textContent = initials;
+    }
+  } catch (_) {}
+
+  document.getElementById('logoutBtn')?.addEventListener('click', e => {
+    e.preventDefault();
+    localStorage.removeItem('pawcare_user');
+    localStorage.removeItem('pawcare_session');
+    window.location.href = 'index.html';
+  });
+}
+
+// ---- Chatbot ----
+document.getElementById('chatbotFab')?.addEventListener('click', () => {
+  if (typeof window.openChatbot === 'function') window.openChatbot();
+  else alert('PawBot is loading… please try again in a moment.');
+});
+
+// ---- Init ----
+document.addEventListener('DOMContentLoaded', () => {
+  initAuthUI();
+  loadShelters();
+});
+</script>
+</body>
+</html>

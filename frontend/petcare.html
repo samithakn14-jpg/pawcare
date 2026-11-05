@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet Health & Care | PetCare Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --danger-red: #dc2626;
+      --success: #16a34a;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --card-shadow: 0 4px 24px rgba(79,70,229,0.10);
+      --border-radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding-top: 72px;
+    }
+
+    /* ── Navbar ── */
+    .pawcare-navbar {
+      background: linear-gradient(135deg, #1e293b 0%, #312e81 100%);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+      padding: 0.6rem 0;
+    }
+    .pawcare-navbar .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff !important;
+      letter-spacing: -0.5px;
+    }
+    .pawcare-navbar .nav-link {
+      color: rgba(255,255,255,0.85) !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.65rem !important;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pawcare-navbar .nav-link:hover,
+    .pawcare-navbar .nav-link.active {
+      background: rgba(255,255,255,0.15);
+      color: #fff !important;
+    }
+    .navbar-toggler { border-color: rgba(255,255,255,0.4); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ── Hero ── */
+    .hero-section {
+      background: linear-gradient(135deg, #1e293b 0%, #312e81 60%, #4f46e5 100%);
+      padding: 80px 0 60px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-section .badge-pill {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .hero-section h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; margin-bottom: 0.75rem; }
+    .hero-section p { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+    /* ── Disclaimer Banners ── */
+    .disclaimer-banner {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 2rem 0;
+    }
+    .disclaimer-banner .icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+    .disclaimer-banner p { margin: 0; color: #78350f; font-weight: 500; font-size: 0.95rem; }
+
+    .emergency-banner {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border: 2px solid #dc2626;
+      border-radius: 10px;
+      padding: 0.75rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .emergency-banner .icon { font-size: 1.2rem; flex-shrink: 0; }
+    .emergency-banner p { margin: 0; color: #7f1d1d; font-size: 0.85rem; font-weight: 600; }
+
+    /* ── Section Styles ── */
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 0.4rem;
+    }
+    .section-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
+    .section-divider {
+      width: 60px; height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 4px; margin: 0 0 1rem;
+    }
+
+    /* ── Care Cards (Section 1) ── */
+    .care-card {
+      background: #fff;
+      border-radius: var(--border-radius);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(79,70,229,0.08);
+      height: 100%;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .care-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(79,70,229,0.18); }
+    .care-icon {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .care-card h5 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      color: var(--text-dark);
+    }
+    .care-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin: 0; }
+
+    /* ── Accordion ── */
+    .custom-accordion .accordion-button {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-dark);
+      background: #fff;
+      border-radius: 12px !important;
+    }
+    .custom-accordion .accordion-button:not(.collapsed) {
+      background: linear-gradient(135deg, #ede9fe, #dbeafe);
+      color: var(--primary-dark);
+      box-shadow: none;
+    }
+    .custom-accordion .accordion-item {
+      border: 1px solid rgba(79,70,229,0.15);
+      border-radius: 12px !important;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+    .custom-accordion .accordion-body { background: #fafafa; }
+    .custom-accordion table { font-size: 0.9rem; }
+    .custom-accordion .table thead th { background: #ede9fe; color: var(--primary-dark); }
+
+    /* ── Emergency Cards ── */
+    .emergency-card {
+      background: #fff;
+      border: 2px solid #fca5a5;
+      border-left: 6px solid var(--danger-red);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      height: 100%;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .emergency-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(220,38,38,0.15); }
+    .emergency-card .em-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .emergency-card h5 { font-weight: 700; color: var(--danger-red); margin-bottom: 0.5rem; }
+    .emergency-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; margin: 0 0 0.5rem; }
+    .emergency-card ul { font-size: 0.88rem; color: var(--text-muted); padding-left: 1.2rem; margin: 0; }
+    .emergency-card ul li { margin-bottom: 0.3rem; }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-section h3 { font-weight: 800; font-size: 1.7rem; }
+    .cta-section p { opacity: 0.88; margin-bottom: 1.5rem; }
+    .cta-section .btn { border-radius: 50px; padding: 0.65rem 2rem; font-weight: 600; }
+
+    /* ── Species Tabs ── */
+    .species-tabs .nav-link {
+      border-radius: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 0.55rem 1.4rem;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .species-tabs .nav-link.active,
+    .species-tabs .nav-link:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .species-tab-content { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: var(--card-shadow); margin-top: 1rem; }
+    .species-tip { display: flex; gap: 12px; padding: 0.85rem 1rem; border-radius: 10px; background: #f8fafc; margin-bottom: 0.65rem; border-left: 4px solid var(--primary); }
+    .species-tip .tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .species-tip .tip-text h6 { font-weight: 700; margin: 0 0 0.2rem; font-size: 0.92rem; }
+    .species-tip .tip-text p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #cbd5e1;
+      padding: 3.5rem 0 1.5rem;
+      margin-top: 5rem;
+    }
+    .site-footer h5 { color: #fff; font-weight: 700; margin-bottom: 1rem; }
+    .site-footer a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .site-footer a:hover { color: #a5b4fc; }
+    .site-footer ul { list-style: none; padding: 0; }
+    .site-footer ul li { margin-bottom: 0.4rem; }
+    .footer-brand { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+    .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem; }
+    .footer-bottom { text-align: center; font-size: 0.82rem; color: #64748b; }
+
+    /* ── Utilities ── */
+    .section-padding { padding: 5rem 0; }
+    .section-padding-sm { padding: 3rem 0; }
+    .bg-light-section { background: #fff; }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+<nav class="navbar navbar-expand-lg pawcare-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link" href="shelters.html">Shelters</a></li>
+        <li class="nav-item"><a class="nav-link active" href="petcare.html">Pet Care</a></li>
+        <li class="nav-item"><a class="nav-link" href="food.html">Food</a></li>
+        <li class="nav-item"><a class="nav-link" href="medicine.html">Medicine</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <a href="login.html" class="btn btn-outline-primary btn-sm" id="loginBtn">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="registerBtn">Register</a>
+        <div id="userMenu" class="d-none">
+          <a href="dashboard.html" class="btn btn-outline-secondary btn-sm">Dashboard</a>
+          <button onclick="logoutUser()" class="btn btn-outline-danger btn-sm">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero-section">
+  <div class="container position-relative">
+    <div class="badge-pill">🩺 Health & Wellness Guide</div>
+    <h1>Pet Health &amp; Care</h1>
+    <p>Everything you need to know to keep your furry, feathered, or fluffy companion healthy and happy.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
+<main class="container" style="max-width: 1200px;">
+
+  <!-- ── DISCLAIMER BANNER ── -->
+  <div class="disclaimer-banner">
+    <span class="icon">⚠️</span>
+    <p><strong>Educational Purposes Only:</strong> This information is for general guidance only. For serious or emergency conditions, contact a qualified veterinarian immediately. Never delay seeking professional veterinary advice based on information found here.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1 – Basic Pet Care
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Basic Pet Care</h2>
+    <p class="section-subtitle">Essential daily and weekly routines to keep your pet in top condition.</p>
+
+    <div class="row g-4">
+      <!-- Grooming -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🛁</span>
+          <h5>Grooming</h5>
+          <p>Regular grooming keeps your pet's coat healthy and reduces shedding. Brush short-haired dogs weekly, long-haired dogs daily. Use a slicker brush or grooming mitt suited to the coat type. Check for tangles, mats, fleas, or skin irritation. Trim nails every 3–4 weeks — overgrown nails cause pain and posture problems. Use pet-specific nail clippers and have styptic powder on hand in case of bleeding.</p>
+        </div>
+      </div>
+
+      <!-- Bathing -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🚿</span>
+          <h5>Bathing</h5>
+          <p>Most dogs benefit from a bath every 4–6 weeks. Always use pH-balanced, dog-safe shampoo — human shampoos disrupt your dog's skin barrier. Use lukewarm water and thoroughly rinse to prevent skin irritation. Dry with a towel and keep your dog warm afterward. Never get water directly into the ears — use cotton balls as a barrier during baths.</p>
+        </div>
+      </div>
+
+      <!-- Exercise -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🏃</span>
+          <h5>Exercise</h5>
+          <p>Dogs need 30–120 minutes of exercise daily depending on breed and age. High-energy breeds (Labradors, Border Collies) require vigorous daily activity; smaller breeds need shorter walks. Adjust activity to your dog's age and health, and use puzzle feeders and training games for mental stimulation. Exercise helps prevent obesity, anxiety, and destructive behaviour.</p>
+        </div>
+      </div>
+
+      <!-- Hygiene -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🧹</span>
+          <h5>Hygiene</h5>
+          <p>Clean your dog's ears as advised by your vet using a vet-approved ear cleaner and cotton balls — never insert anything into the ear canal. Check for redness, odour, or dark discharge (signs of infection). Wipe paw pads after outdoor walks to remove debris, chemicals, or allergens. Clean around the eyes daily with a damp cloth to remove discharge.</p>
+        </div>
+      </div>
+
+      <!-- Dental Care -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🦷</span>
+          <h5>Dental Care</h5>
+          <p>Brush your dog's teeth 2–3 times per week using dog-specific toothpaste (never human toothpaste — xylitol is toxic). Offer dental treats, chews, and water additives approved by the Veterinary Oral Health Council (VOHC). Signs of dental disease include bad breath, difficulty eating, pawing at the mouth, drooling, and red or swollen gums. Ask your vet whether professional dental cleaning is recommended.</p>
+        </div>
+      </div>
+
+      <!-- Sleep & Rest -->
+      <div class="col-sm-6 col-lg-4">
+        <div class="care-card">
+          <span class="care-icon">🛌</span>
+          <h5>Sleep &amp; Rest</h5>
+          <p>Adult dogs sleep 12–14 hours per day; puppies and seniors may sleep up to 18–20 hours. Provide a comfortable, draft-free sleeping area with appropriate bedding. Respect your dog's rest — waking them abruptly can cause stress or anxiety. Sudden changes in sleep patterns may signal illness; consult your vet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 2 – Health & Wellness Accordion
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding bg-light-section rounded-4 px-4 py-5 mb-5" style="background: #fff; box-shadow: var(--card-shadow);">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Health &amp; Wellness</h2>
+    <p class="section-subtitle">In-depth guides on prevention, schedules, and knowing when to seek professional care.</p>
+
+    <div class="accordion custom-accordion" id="healthAccordion">
+
+      <!-- Vaccination Schedule -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVaccine">
+            💉 Vaccination Schedule
+          </button>
+        </h2>
+        <div id="collapseVaccine" class="accordion-collapse collapse show" data-bs-parent="#healthAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Vaccinations protect your dog from serious and potentially fatal diseases. Your vet will recommend what is appropriate for your dog's lifestyle and local risks.</p>
+            <h6 class="fw-bold mb-2">🐶 Dog Vaccines</h6>
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th>Vaccine</th>
+                    <th>First Dose</th>
+                    <th>Frequency</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Distemper (DHPP)</td><td>6–8 weeks</td><td>Every 1–3 years after initial series</td><td>Core vaccine; series of 3–4 puppy shots</td></tr>
+                  <tr><td>Parvovirus (DHPP)</td><td>6–8 weeks</td><td>Every 1–3 years</td><td>Core; highly contagious & often fatal if untreated</td></tr>
+                  <tr><td>Rabies</td><td>12–16 weeks</td><td>Annually or every 3 years (per local law)</td><td>Core; legally required in many regions</td></tr>
+                  <tr><td>Bordetella</td><td>8 weeks</td><td>Annually (or every 6 months for high-risk)</td><td>Non-core; recommended for social/boarding dogs</td></tr>
+                  <tr><td>Leptospirosis</td><td>12 weeks</td><td>Annually</td><td>Non-core; recommended in wet/rural areas</td></tr>
+                  <tr><td>Canine Influenza</td><td>6–8 weeks</td><td>Annually</td><td>Non-core; for dogs in contact with many dogs</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-info mt-3 mb-0"><i class="fas fa-info-circle me-2"></i>Always keep vaccination records and track due dates. You can log these on your <a href="dashboard.html">PetCare Connect Dashboard</a>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deworming Guide -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeworming">
+            🪱 Deworming Guide
+          </button>
+        </h2>
+        <div id="collapseDeworming" class="accordion-collapse collapse" data-bs-parent="#healthAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Internal parasites (worms) are common in dogs and can affect both dog and human health. Regular deworming is a key part of preventive care.</p>
+            <h6 class="fw-bold">How Often Should You Deworm?</h6>
+            <ul class="mb-3">
+              <li><strong>Puppies:</strong> Follow your veterinarian's schedule, often every 2 weeks from 2 weeks of age until 12 weeks, then monthly until 6 months.</li>
+              <li><strong>Adult dogs:</strong> Deworming frequency depends on lifestyle, local parasite risks, and test results. Ask your veterinarian for a schedule.</li>
+              <li><strong>Pregnant/Nursing Females:</strong> As directed by your vet (usually before and after birth).</li>
+            </ul>
+            <h6 class="fw-bold">Common Types of Worms</h6>
+            <div class="table-responsive mb-3">
+              <table class="table table-bordered table-sm">
+                <thead><tr><th>Worm Type</th><th>Common Symptoms</th><th>Transmission</th></tr></thead>
+                <tbody>
+                  <tr><td>Roundworms</td><td>Pot belly, dull coat, vomiting, diarrhoea</td><td>Mother to offspring, contaminated soil</td></tr>
+                  <tr><td>Tapeworms</td><td>Rice-like segments near tail, scooting, weight loss</td><td>Infected fleas, raw meat</td></tr>
+                  <tr><td>Hookworms</td><td>Anaemia, dark/tarry stools, weakness</td><td>Skin contact with contaminated soil</td></tr>
+                  <tr><td>Whipworms</td><td>Bloody diarrhoea, weight loss, dehydration</td><td>Ingestion of contaminated faeces/soil</td></tr>
+                  <tr><td>Heartworms</td><td>Coughing, lethargy, exercise intolerance</td><td>Mosquito bites</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-warning mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Some worms can be transmitted to humans (zoonotic). Always wash hands after handling pet faeces. Consult your vet for the appropriate deworming product for your pet's specific situation.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Common Pet Symptoms -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSymptoms">
+            🔍 Common Pet Symptoms
+          </button>
+        </h2>
+        <div id="collapseSymptoms" class="accordion-collapse collapse" data-bs-parent="#healthAccordion">
+          <div class="accordion-body">
+            <div class="alert alert-danger mb-3"><i class="fas fa-exclamation-circle me-2"></i><strong>Important:</strong> This table is informational only. All symptoms should be evaluated by a licensed veterinarian for proper diagnosis and treatment.</div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover table-sm">
+                <thead><tr><th>Symptom</th><th>Possible Causes</th><th>When to See a Vet</th></tr></thead>
+                <tbody>
+                  <tr><td>Vomiting</td><td>Dietary indiscretion, gastritis, parvovirus, foreign body, toxin</td><td>If more than twice, blood present, or accompanied by lethargy</td></tr>
+                  <tr><td>Diarrhoea</td><td>Diet change, parasites, infection, IBD, stress</td><td>Bloody, more than 24 hours, or with other symptoms</td></tr>
+                  <tr><td>Lethargy</td><td>Infection, pain, anaemia, heart disease, toxin</td><td>Always — sudden lethargy is a red flag</td></tr>
+                  <tr><td>Excessive thirst</td><td>Diabetes, kidney disease, Cushing's disease, hyperthyroidism</td><td>If noticeable change in water intake</td></tr>
+                  <tr><td>Hair loss / scratching</td><td>Allergies, fleas, mange, ringworm, hormonal disorder</td><td>If persistent or skin is broken/inflamed</td></tr>
+                  <tr><td>Limping</td><td>Injury, arthritis, paw wound, bone disease</td><td>If not bearing weight, or persists more than 24 hours</td></tr>
+                  <tr><td>Coughing</td><td>Kennel cough, heart disease, asthma, foreign body</td><td>If persistent (more than a day), or accompanied by breathing difficulty</td></tr>
+                  <tr><td>Loss of appetite</td><td>Stress, dental pain, infection, organ disease</td><td>If more than 24 hours in adults, sooner in puppies</td></tr>
+                  <tr><td>Eye discharge</td><td>Conjunctivitis, allergies, infection, blocked tear duct</td><td>If coloured (yellow/green), eye appears cloudy, or pet is squinting</td></tr>
+                  <tr><td>Swollen abdomen</td><td>Bloat (GDV), pregnancy, organ enlargement, fluid accumulation</td><td>Immediately — especially in dogs; GDV is life-threatening</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regular Checkup Schedule -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCheckup">
+            📅 Regular Checkup Schedule
+          </button>
+        </h2>
+        <div id="collapseCheckup" class="accordion-collapse collapse" data-bs-parent="#healthAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Routine veterinary check-ups help catch health issues early, when they are easiest and least costly to treat.</p>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead><tr><th>Life Stage</th><th>Age Range</th><th>Visit Frequency</th><th>What's Checked</th></tr></thead>
+                <tbody>
+                  <tr><td>Puppy</td><td>0–1 year</td><td>Every 3–4 weeks (0–16 wks), then every 6 months</td><td>Vaccines, deworming, diet, growth, socialisation</td></tr>
+                  <tr><td>Young Adult</td><td>1–3 years</td><td>Annually</td><td>Full physical, vaccine boosters, dental check, parasite screen</td></tr>
+                  <tr><td>Mature Adult</td><td>3–7 years</td><td>Annually</td><td>Bloodwork, weight, dental health, organ function</td></tr>
+                  <tr><td>Senior</td><td>7–10 years</td><td>Every 6 months</td><td>Full bloodwork, urinalysis, joint assessment, cognitive health</td></tr>
+                  <tr><td>Geriatric</td><td>10+ years</td><td>Every 3–6 months</td><td>Comprehensive diagnostics, pain management, quality of life</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-success mt-3 mb-0"><i class="fas fa-check-circle me-2"></i>Don't wait for your pet to look sick — many serious diseases have no visible symptoms in early stages. Preventive care is always better and more affordable than emergency treatment.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3 – Emergency First Aid
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider" style="background: linear-gradient(90deg, #dc2626, #f97316);"></div>
+    <h2 class="section-title" style="color: var(--danger-red);">🚨 Emergency First Aid</h2>
+    <p class="section-subtitle">What to do in a crisis — while you get your pet to a veterinarian as quickly as possible.</p>
+
+    <div class="row g-4">
+
+      <!-- Injury / Bleeding -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">🩹</span>
+          <h5>Injury / Bleeding</h5>
+          <p>Stay calm — your pet will sense your stress. Restrain gently to prevent biting from pain.</p>
+          <ul>
+            <li>Apply firm, direct pressure with a clean cloth or bandage.</li>
+            <li>Do not remove the cloth if it becomes soaked — add more on top.</li>
+            <li>Keep the wound elevated if possible.</li>
+            <li>Do not apply a tourniquet unless directed by a vet.</li>
+            <li>Transport to emergency vet immediately.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Poisoning -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">☢️</span>
+          <h5>Poisoning / Toxin Ingestion</h5>
+          <p>If you suspect your pet has eaten something toxic, act immediately.</p>
+          <ul>
+            <li><strong>Do NOT induce vomiting</strong> unless specifically instructed by a vet or poison hotline.</li>
+            <li>Identify the substance if possible (keep the packaging).</li>
+            <li>Note the time of ingestion and amount consumed.</li>
+            <li>Call the Pet Poison Helpline or your emergency vet at once.</li>
+            <li>Do not give food, water, or home remedies.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breathing Difficulty -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">😫</span>
+          <h5>Breathing Difficulty</h5>
+          <p>Laboured breathing, blue or grey gums, choking, or collapse is a life-threatening emergency.</p>
+          <ul>
+            <li>Keep your pet calm and minimize exertion.</li>
+            <li>Check the mouth carefully for visible obstructions — remove only if easily accessible.</li>
+            <li>Do not muzzle a pet struggling to breathe.</li>
+            <li>Keep the airway clear and head slightly extended.</li>
+            <li>Get to an emergency vet immediately — do not wait.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Severe Vomiting -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">🤢</span>
+          <h5>Severe Vomiting / Diarrhoea</h5>
+          <p>Occasional vomiting can be normal, but persistent or severe episodes require attention.</p>
+          <ul>
+            <li>Withhold food for 1–2 hours to let the stomach settle.</li>
+            <li>Offer small amounts of water to prevent dehydration.</li>
+            <li>Monitor for blood in vomit or stool.</li>
+            <li>Watch for signs of dehydration: sunken eyes, dry gums, lethargy.</li>
+            <li>See a vet if vomiting occurs more than 2–3 times, or persists beyond 24 hours.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heat Stroke -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">🥵</span>
+          <h5>Heat Stroke</h5>
+          <p>Signs include excessive panting, drooling, bright red gums, weakness, and collapse. Act fast.</p>
+          <ul>
+            <li>Move your pet immediately to a cool, shaded area.</li>
+            <li>Apply cool (not cold/icy) water to paws, armpits, and groin.</li>
+            <li>Use a fan to help evaporative cooling.</li>
+            <li>Offer small sips of cool water if conscious.</li>
+            <li>Do not cover with a wet towel — this traps heat.</li>
+            <li>Call your vet immediately and transport with windows open.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seizure -->
+      <div class="col-md-6 col-lg-4">
+        <div class="emergency-card">
+          <span class="em-icon">⚡</span>
+          <h5>Seizures</h5>
+          <p>Seizures can look alarming. Your first job is to keep your pet and yourself safe.</p>
+          <ul>
+            <li>Do NOT put your hands near the mouth — pets cannot swallow their tongue, but they can bite.</li>
+            <li>Clear the surrounding area of hard objects.</li>
+            <li>Time the seizure — if it lasts more than 5 minutes, go to the emergency vet now.</li>
+            <li>Keep the area dark and quiet to reduce stimulation.</li>
+            <li>After it stops, keep your pet warm and calm.</li>
+            <li>All first-time seizures require immediate veterinary evaluation.</li>
+          </ul>
+          <div class="emergency-banner">
+            <span class="icon">🚨</span>
+            <p>EMERGENCY: Contact a veterinarian immediately. This information is first-aid guidance only.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 4 – Vaccination Records CTA
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding-sm">
+    <div class="cta-section">
+      <div class="row align-items-center">
+        <div class="col-lg-8 text-lg-start mb-3 mb-lg-0">
+          <h3>📋 Keep Your Pet's Vaccination Records Organised</h3>
+          <p class="mb-0">Never miss a vaccine or deworming appointment again. PetCare Connect lets you log, track, and receive reminders for all your pet's health records in one secure place. Access them anytime, share with your vet, and stay on top of preventive care.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="dashboard.html" class="btn btn-light btn-lg me-2 mb-2"><i class="fas fa-notes-medical me-2"></i>View Records</a>
+          <a href="register.html" class="btn btn-outline-light btn-lg mb-2"><i class="fas fa-user-plus me-2"></i>Sign Up Free</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 5 – Pet Care Tips by Species
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Care Tips by Species</h2>
+    <p class="section-subtitle">Every animal has unique needs — find species-specific guidance below.</p>
+
+    <div>
+
+      <!-- Dog Pane -->
+      <div class="tab-pane fade show active" id="dog-pane" role="tabpanel">
+        <div class="species-tab-content">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="species-tip"><span class="tip-icon">🦮</span><div class="tip-text"><h6>Socialisation</h6><p>Expose puppies to diverse people, animals, sounds, and environments between 3–14 weeks of age. Well-socialised dogs are calmer and less fearful throughout life.</p></div></div>
+              <div class="species-tip"><span class="tip-icon">🥣</span><div class="tip-text"><h6>Feeding</h6><p>Feed age-appropriate, high-quality dog food. Puppies need 3–4 meals per day; adults 2 meals. Avoid table scraps — many human foods are toxic to dogs.</p></div></div>
+              <div class="species-tip"><span class="tip-icon">🎾</span><div class="tip-text"><h6>Mental Stimulation</h6><p>Use puzzle feeders, training sessions, and nose-work games to keep dogs mentally sharp. A mentally tired dog is a well-behaved dog.</p></div></div>
+            </div>
+            <div class="col-md-6">
+              <div class="species-tip"><span class="tip-icon">🏥</span><div class="tip-text"><h6>Spay / Neuter</h6><p>Spaying or neutering helps prevent unwanted litters, reduces cancer risks, and can reduce aggression. Discuss the ideal timing with your vet (usually 6–12 months).</p></div></div>
+              <div class="species-tip"><span class="tip-icon">🛡️</span><div class="tip-text"><h6>Parasite Prevention</h6><p>Use monthly flea, tick, and heartworm preventives year-round. Check for ticks after outdoor activities, especially in wooded areas.</p></div></div>
+              <div class="species-tip"><span class="tip-icon">🏡</span><div class="tip-text"><h6>Safe Environment</h6><p>Dog-proof your home: secure trash, lock away toxic substances, remove small objects that could be swallowed, and use pet-safe cleaning products.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-brand">🐾 PetCare Connect</div>
+        <p style="color:#94a3b8; font-size:0.9rem; line-height:1.7;">Your trusted companion for pet adoption, care, and wellness. Connecting loving families with animals in need since 2024.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Shelters</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="petcare.html">Pet Care</a></li>
+          <li><a href="food.html">Food Guide</a></li>
+          <li><a href="medicine.html">Medicine Info</a></li>
+          <li><a href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Account</h5>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Emergency</h5>
+        <ul>
+          <li><a href="petcare.html#emergency">First Aid Guide</a></li>
+        </ul>
+        <div class="mt-3">
+          <small style="color:#64748b;">🚨 Pet Poison Helpline</small><br>
+          <strong style="color:#f87171;">+1-855-764-7661</strong>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p class="mb-0">© 2024 PetCare Connect. All rights reserved. | This site provides educational information only. Always consult a qualified veterinarian for medical advice.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=review-fixes-1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>

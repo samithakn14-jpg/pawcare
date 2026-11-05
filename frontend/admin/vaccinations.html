@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Manage verified vaccination history for listed pets." />
+  <title>Vaccination Records | PetCare Connect Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site-theme.css" />
+  <style>
+    body { min-height:100vh; background:#f6f8f5; color:#20342b; font-family:'DM Sans',sans-serif; }
+    .topbar { background:#183d30; }.topbar .navbar-brand { color:#fff; font-weight:700; }
+    .panel { padding:1.2rem; border:1px solid #e5eae5; border-radius:16px; background:#fff; box-shadow:0 8px 26px rgba(30,60,42,.035); }
+    #adminApp[hidden] { display:none!important; }.notice:empty { display:none; }
+    .table > :not(caption) > * > * { vertical-align:middle; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg topbar"><div class="container-fluid px-3 px-lg-4">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect <span class="fw-normal opacity-75">/ Admin</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#healthAdminNav" aria-controls="healthAdminNav" aria-expanded="false" aria-label="Toggle admin navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="healthAdminNav"><div class="navbar-nav ms-auto align-items-lg-center gap-lg-2 py-2 py-lg-0">
+      <a class="nav-link text-white" href="index.html">Dashboard</a><a class="nav-link text-white" href="pets.html">Manage pets</a>
+      <a class="nav-link text-white" href="vaccinations.html" aria-current="page">Vaccination records</a><a class="nav-link text-white" href="support.html">Support inbox</a>
+      <button class="btn btn-sm btn-light ms-lg-2" data-admin-signout type="button">Sign out</button>
+    </div></div>
+  </div></nav>
+  <div class="container-fluid px-3 px-lg-4 pt-3"><div id="adminAccessState" class="alert alert-info" role="status" aria-live="polite">Verifying administrator access…</div></div>
+  <main class="container-fluid px-3 px-lg-4 pb-5" id="adminApp" hidden>
+    <header class="py-4"><span class="text-uppercase small fw-bold" style="letter-spacing:.12em;color:#245c45">Pet health</span><h1 class="h2 mb-1">Vaccination records</h1><p class="text-secondary mb-0">Only administrators can add or edit records. Owners and visitors can view these records on public pet profiles.</p></header>
+    <div id="vaccinationNotice" class="alert notice" role="status" aria-live="polite"></div>
+    <section class="panel mb-4" aria-labelledby="vaccinationFormHeading">
+      <div class="d-flex justify-content-between align-items-center gap-2 mb-3"><h2 class="h5 mb-0" id="vaccinationFormHeading">Add a vaccination record</h2><button class="btn btn-sm btn-outline-secondary" id="cancelVaccinationEdit" type="button" hidden>Cancel edit</button></div>
+      <form id="vaccinationForm" novalidate><input type="hidden" id="vaccinationId" />
+        <div class="row g-3">
+          <div class="col-md-4"><label class="form-label" for="vaccinationPet">Pet <span class="text-danger">*</span></label><select class="form-select" id="vaccinationPet" required><option value="">Loading pets…</option></select></div>
+          <div class="col-md-4"><label class="form-label" for="vaccineName">Vaccine name <span class="text-danger">*</span></label><input class="form-control" id="vaccineName" maxlength="160" required /></div>
+          <div class="col-md-4"><label class="form-label" for="vaccinationDate">Vaccination date <span class="text-danger">*</span></label><input class="form-control" id="vaccinationDate" type="date" required /></div>
+          <div class="col-md-4"><label class="form-label" for="nextDueDate">Next due date</label><input class="form-control" id="nextDueDate" type="date" /></div>
+          <div class="col-md-4"><label class="form-label" for="administeredBy">Administered by</label><input class="form-control" id="administeredBy" maxlength="160" /></div>
+          <div class="col-12"><label class="form-label" for="vaccinationNotes">Notes</label><textarea class="form-control" id="vaccinationNotes" rows="2" maxlength="1000"></textarea></div>
+          <div class="col-12"><button class="btn btn-success" id="saveVaccination" type="submit">Save record</button></div>
+        </div>
+      </form>
+    </section>
+    <section class="panel" aria-labelledby="vaccinationsHeading">
+      <div class="d-flex justify-content-between align-items-center gap-3 mb-3"><h2 class="h5 mb-0" id="vaccinationsHeading">Recorded vaccinations</h2><button class="btn btn-sm btn-outline-success" id="refreshVaccinations" type="button">Refresh</button></div>
+      <div class="table-responsive"><table class="table table-hover mb-0"><thead class="table-light"><tr><th>Pet</th><th>Vaccine</th><th>Vaccinated</th><th>Next due</th><th>Administered by</th><th>Notes</th><th></th></tr></thead><tbody id="vaccinationRows"><tr><td colspan="7" class="text-center py-4 text-secondary">Loading records…</td></tr></tbody></table></div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/config.js?v=health-v1"></script><script src="../js/auth.js"></script><script src="admin-common.js"></script><script src="vaccinations.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

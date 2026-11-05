@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Prepare a dog boarding enquiry and get ready to plan your pet’s stay." />
+  <title>Boarding Enquiry | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/site-theme.css" /><link rel="stylesheet" href="css/portal-pages.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg"><div class="container"><a class="navbar-brand" href="index.html">🐾 PetCare Connect</a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pageNav" aria-controls="pageNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="pageNav"><ul class="navbar-nav ms-auto"><li class="nav-item"><a class="nav-link" href="petcare.html">Care guide</a></li><li class="nav-item"><a class="nav-link" href="veterinarian.html">Veterinary care</a></li><li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li></ul></div></div></nav>
+  <header class="portal-hero"><div class="container"><span class="portal-kicker">A little planning goes a long way</span><h1>Plan a comfortable stay.</h1><p>Explore boarding providers listed with PetCare Connect or send the team an enquiry. PetCare Connect does not operate a boarding facility or confirm reservations.</p></div></header>
+  <main class="portal-main"><div class="container">
+    <section class="portal-card mb-4" aria-labelledby="providersHeading"><span class="portal-kicker">Community listings</span><h2 class="h2 mt-2" id="providersHeading">Boarding providers</h2><p class="alert alert-info">These are database listings, not endorsements or confirmed reservations. Contact providers to verify availability, current rates, facilities, and care arrangements.</p><div id="boarding-providers" role="status" aria-live="polite"><p class="portal-muted mb-0">Loading provider listings…</p></div></section>
+    <div class="row g-4">
+    <section class="col-lg-7"><div class="portal-card"><span class="portal-kicker">Boarding enquiry</span><h2 class="h2 mt-2">Share your plans</h2><p class="portal-muted">Submitting opens your email app with a prepared enquiry. No reservation is made until you arrange it directly with a boarding provider.</p>
+      <form class="portal-service-form" id="boardingRequestForm">
+        <div class="alert alert-secondary">A signed-in request is sent privately to the PetCare Connect support inbox for follow-up. It is an enquiry only, not a reservation. We do not send your details directly to a provider.</div>
+        <div class="mb-3"><label class="form-label" for="board-provider">Provider listing <span class="text-danger">*</span></label><select class="form-select" id="board-provider" required><option value="">Loading providers…</option></select></div>
+        <div class="mb-3"><label class="form-label" for="board-name">Your name</label><input class="form-control" id="board-name" name="name" autocomplete="name" minlength="2" maxlength="100" required /></div>
+        <div class="mb-3"><label class="form-label" for="board-type">Pet type <span class="text-danger">*</span></label><select class="form-select" id="board-type" required><option value="">Choose dog or cat</option><option value="dog">Dog</option><option value="cat">Cat</option></select></div>
+        <div class="mb-3"><label class="form-label" for="board-pet">Pet’s name</label><input class="form-control" id="board-pet" name="pet" minlength="1" maxlength="100" required /></div>
+        <div class="row g-3 mb-3"><div class="col-sm-6"><label class="form-label" for="board-start">Drop-off date</label><input class="form-control" id="board-start" name="drop_off" type="date" required /></div><div class="col-sm-6"><label class="form-label" for="board-end">Pick-up date</label><input class="form-control" id="board-end" name="pick_up" type="date" required /></div></div>
+        <div class="mb-3"><label class="form-label" for="board-notes">Care needs or questions</label><textarea class="form-control" id="board-notes" name="notes" maxlength="1000" placeholder="Share dietary needs, medication, or other questions."></textarea></div>
+        <div class="form-check mb-3"><input class="form-check-input" id="board-consent" type="checkbox" required /><label class="form-check-label" for="board-consent">I agree to send these details to the private PetCare Connect support inbox so the team can follow up. <span class="text-danger">*</span></label></div>
+        <button class="btn btn-primary" id="board-submit" type="submit">Send boarding enquiry</button><div class="small mt-3" id="boarding-result" role="status" aria-live="polite"></div>
+      </form>
+    </div></section>
+    <aside class="col-lg-5"><div class="portal-card"><span class="portal-kicker">Before you book</span><h2 class="h3 mt-2">A few things to check</h2><ul class="portal-muted ps-3"><li>Visit the facility and ask about supervision, exercise, and overnight care.</li><li>Confirm vaccination, medication, and emergency contact requirements.</li><li>Share your dog’s routine and any dietary or accessibility needs.</li><li>Ask how updates and urgent veterinary decisions are handled.</li></ul><a class="btn btn-outline-primary" href="https://www.google.com/maps/search/dog+boarding+near+me" target="_blank" rel="noopener noreferrer">Search nearby boarding <i class="fas fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a></div></aside>
+  </div></div></main>
+  <footer class="portal-footer"><div class="container d-flex flex-wrap justify-content-between gap-2"><a href="petcare.html">Pet care guide</a><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><a href="index.html">Home</a></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js?v=services-v1"></script><script src="js/auth.js"></script>
+  <script>
+    const providerRegion = document.getElementById('boarding-providers');
+    const providerSelect = document.getElementById('board-provider');
+    const boardingForm = document.getElementById('boardingRequestForm');
+    const boardingResult = document.getElementById('boarding-result');
+    const boardingButton = document.getElementById('board-submit');
+    let boardingProviders = [];
+    const escapeProvider = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    const formatList = values => Array.isArray(values) && values.length ? values.map(escapeProvider).join(', ') : 'Not specified';
+
+    async function loadBoardingProviders() {
+      try {
+        const apiBaseUrl = window.PAWCARE_CONFIG?.API_BASE_URL;
+        if (!apiBaseUrl) throw new Error('API URL is not configured. Check frontend/js/config.js.');
+        const response = await fetch(`${apiBaseUrl}/boarding?limit=100`);
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || `Provider listings unavailable (HTTP ${response.status}).`);
+        boardingProviders = result.data || [];
+        if (!boardingProviders.length) {
+          providerRegion.innerHTML = '<p class="portal-muted mb-0">No boarding listings are available yet.</p>';
+          providerSelect.innerHTML = '<option value="">No providers available</option>';
+          boardingButton.disabled = true;
+          return;
+        }
+        providerRegion.innerHTML = `<div class="row g-3">${boardingProviders.map(provider => `<div class="col-md-6"><article class="border rounded-4 p-3 h-100"><h3 class="h5">${escapeProvider(provider.name)}</h3><p class="portal-muted">${escapeProvider(provider.description || 'Contact this listing to ask about availability and care.')}</p><p class="small mb-2"><i class="fas fa-location-dot me-2" aria-hidden="true"></i>${escapeProvider(provider.address || provider.location || 'Location not provided')}</p><p class="small mb-2"><strong>Accepted pets:</strong> ${formatList(provider.pet_types_accepted)}</p><p class="small mb-2"><strong>Facilities:</strong> ${formatList(provider.facilities)}</p>${provider.price_range ? `<p class="small mb-2"><strong>Listed price:</strong> ${escapeProvider(provider.price_range)}</p>` : ''}${provider.rating != null ? `<p class="small mb-2">Listed rating: ${escapeProvider(provider.rating)} (not independently verified)</p>` : ''}<div class="d-flex flex-wrap gap-2">${provider.phone ? `<a class="btn btn-sm btn-outline-primary" href="tel:${encodeURIComponent(provider.phone)}">Call listing</a>` : ''}${provider.email ? `<a class="btn btn-sm btn-outline-primary" href="mailto:${encodeURIComponent(provider.email)}">Email listing</a>` : ''}</div></article></div>`).join('')}</div>`;
+        providerSelect.innerHTML = '<option value="">Choose a provider</option>' + boardingProviders.map(provider => `<option value="${escapeProvider(provider.id)}">${escapeProvider(provider.name)}</option>`).join('');
+      } catch (error) {
+        console.error('Unable to load boarding providers:', error);
+        providerRegion.innerHTML = `<div class="alert alert-danger mb-0">Provider listings could not be loaded: ${escapeProvider(error.message)}</div>`;
+        providerSelect.innerHTML = '<option value="">Listings unavailable</option>';
+        boardingButton.disabled = true;
+      }
+    }
+
+    const today = new Date();
+    const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    document.getElementById('board-start').min = localDate;
+    document.getElementById('board-end').min = localDate;
+    document.getElementById('board-start').addEventListener('change', event => {
+      document.getElementById('board-end').min = event.target.value || localDate;
+    });
+
+    boardingForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      boardingResult.textContent = '';
+      boardingResult.className = 'small mt-3';
+      if (!boardingForm.reportValidity()) return;
+
+      const start = document.getElementById('board-start').value;
+      const end = document.getElementById('board-end').value;
+      if (start < localDate || end <= start) {
+        boardingResult.textContent = 'Choose a drop-off date today or later and a pick-up date after drop-off.';
+        boardingResult.classList.add('text-danger');
+        return;
+      }
+      const provider = boardingProviders.find(item => String(item.id) === providerSelect.value);
+      if (!provider) {
+        boardingResult.textContent = 'Choose a provider from the current listings.';
+        boardingResult.classList.add('text-danger');
+        return;
+      }
+      const petType = document.getElementById('board-type').value;
+      const acceptedTypes = Array.isArray(provider.pet_types_accepted)
+        ? provider.pet_types_accepted.map(type => String(type).toLowerCase().replace(/s$/, ''))
+        : [];
+      if (acceptedTypes.length && !acceptedTypes.includes(petType)) {
+        boardingResult.textContent = `${provider.name} does not list ${petType}s as accepted pets. Choose another listing or contact the provider directly to confirm.`;
+        boardingResult.classList.add('text-danger');
+        return;
+      }
+
+      boardingButton.disabled = true;
+      boardingButton.textContent = 'Sending…';
+      try {
+        const client = window.PAWCARE_CONFIG?.supabase;
+        if (!client) throw new Error('Authentication is unavailable. Please try again later.');
+        const { data: sessionData, error: sessionError } = await client.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!sessionData.session) {
+          sessionStorage.setItem('pawcare_redirect_after_login', `${window.location.pathname}${window.location.search}`);
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const message = [
+          'Boarding enquiry (not a reservation)',
+          `Provider listing: ${provider.name} (ID: ${provider.id})`,
+          `Applicant name: ${document.getElementById('board-name').value.trim()}`,
+          `Pet type: ${petType}`,
+          `Pet name: ${document.getElementById('board-pet').value.trim()}`,
+          `Drop-off date: ${start}`,
+          `Pick-up date: ${end}`,
+          `Care needs/questions: ${document.getElementById('board-notes').value.trim() || 'None provided'}`,
+          'Applicant confirmed consent to send this request to PetCare Connect support.'
+        ].join('\n');
+        const response = await fetch(`${window.PAWCARE_CONFIG.API_BASE_URL}/support/conversations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${sessionData.session.access_token}`
+          },
+          body: JSON.stringify({ message })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || `Request failed (HTTP ${response.status}).`);
+        boardingResult.textContent = `Your private enquiry was sent successfully. Reference: ${result.data.conversation.id}. This is not a reservation; the provider must confirm arrangements separately.`;
+        boardingResult.classList.add('text-success');
+        boardingForm.reset();
+        document.getElementById('board-start').min = localDate;
+        document.getElementById('board-end').min = localDate;
+      } catch (error) {
+        console.error('Unable to send boarding enquiry:', error);
+        boardingResult.textContent = `Could not send your enquiry: ${error.message}`;
+        boardingResult.classList.add('text-danger');
+      } finally {
+        boardingButton.disabled = false;
+        boardingButton.textContent = 'Send boarding enquiry';
+      }
+    });
+    document.addEventListener('DOMContentLoaded', loadBoardingProviders);
+  </script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Manage your PetCare Connect profile, saved pets, and adoption applications." />
+  <title>My Dashboard | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/site-theme.css" />
+  <link rel="stylesheet" href="css/portal-pages.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pageNav" aria-controls="pageNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="pageNav"><ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li><li class="nav-item"><a class="nav-link" href="#applications">My Applications</a></li><li class="nav-item"><a class="nav-link" href="recommend.html">Pet quiz</a></li>
+        <li class="nav-item"><a class="nav-link" href="petcare.html">Care</a></li><li class="nav-item"><a class="nav-link active" aria-current="page" href="dashboard.html">Dashboard</a></li>
+        <li class="nav-item nav-guest"><a class="nav-link" href="login.html">Log in</a></li>
+        <li class="nav-item nav-auth" style="display:none"><a class="nav-link" href="#" data-logout>Log out</a></li>
+      </ul></div>
+    </div>
+  </nav>
+  <header class="portal-hero"><div class="container">
+    <span class="portal-kicker">Your PetCare Connect space</span>
+    <h1>Welcome back, <span id="dashboard-name">friend</span>.</h1>
+    <p>Keep your adoption journey in one place. Your account details, saved pets, and applications are ready when you are.</p>
+  </div></header>
+  <main class="portal-main"><div class="container" id="dashboard-content">
+    <div id="dashboard-status" class="alert alert-info portal-notice" role="status" aria-live="polite">Checking your account…</div>
+    <div class="row g-4">
+      <section class="col-lg-6" id="applications" aria-labelledby="applicationsHeading"><div class="portal-card">
+        <div class="d-flex align-items-center gap-3 mb-3"><span class="contact-icon" aria-hidden="true"><i class="fas fa-file-lines"></i></span><div><span class="portal-kicker">Your journey</span><h2 id="applicationsHeading" class="h3 mb-0">Adoption applications</h2></div></div>
+        <div id="dashboard-applications" aria-live="polite"><p class="portal-muted mb-0">Loading applications…</p></div>
+        <a class="btn btn-primary mt-3" href="adoption-form.html">Start an application</a>
+      </div></section>
+      <section class="col-lg-6" id="saved" aria-labelledby="savedHeading"><div class="portal-card">
+        <div class="d-flex align-items-center gap-3 mb-3"><span class="contact-icon" aria-hidden="true"><i class="fas fa-heart"></i></span><div><span class="portal-kicker">The ones you love</span><h2 id="savedHeading" class="h3 mb-0">Saved pets</h2></div></div>
+        <div id="dashboard-saved-pets" aria-live="polite"><p class="portal-muted mb-0">Loading saved pets…</p></div>
+        <a class="btn btn-outline-primary mt-3" href="adopt.html">Find a pet</a>
+      </div></section>
+    </div>
+    <section class="portal-card mt-4" id="profile" aria-labelledby="profileHeading">
+      <span class="portal-kicker">Helpful shortcuts</span><h2 id="profileHeading" class="h3 mt-2">Care for every part of their life</h2>
+      <div class="d-flex flex-wrap gap-2"><a class="btn btn-outline-primary" href="notifications.html">View notifications</a><a class="btn btn-outline-primary" href="petcare.html">Pet care guide</a><a class="btn btn-outline-primary" href="health.html">Book a vet visit &amp; view appointments</a><a class="btn btn-outline-primary" href="veterinarian.html">Find veterinary care</a><a class="btn btn-outline-primary" href="boarding.html">Boarding request</a><a class="btn btn-outline-secondary" href="contact.html">Contact our team</a></div>
+    </section>
+  </div></main>
+  <footer class="portal-footer"><div class="container d-flex flex-wrap justify-content-between gap-2"><span>🐾 PetCare Connect</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><a href="index.html">Back to home</a></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=adoption-auth-1"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/portal-pages.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

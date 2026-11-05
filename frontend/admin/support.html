@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Inbox | PetCare Connect Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #20342b; --muted: #708077; --green: #245c45; --line: #e5eae5; --paper: #f6f8f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+    .topbar { background: #183d30; color: #fff; }
+    .topbar .navbar-brand { color: #fff; font-weight: 700; }
+    .layout { min-height: calc(100vh - 58px); }
+    .inbox-panel, .thread-panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+    .conversation-list { max-height: 70vh; overflow-y: auto; }
+    .conversation-item { width: 100%; padding: 1rem; border: 0; border-bottom: 1px solid var(--line); background: #fff; text-align: left; color: inherit; }
+    .conversation-item:hover, .conversation-item.active { background: #eef5ef; }
+    .conversation-subject { display: block; font-weight: 600; overflow-wrap: anywhere; }
+    .conversation-meta { color: var(--muted); font-size: .82rem; }
+    .status-pill { display: inline-block; padding: .18rem .6rem; border-radius: 99px; color: #245c45; background: #e4f3e8; font-size: .75rem; }
+    .status-pill.resolved { color: #53605a; background: #edf0ed; }
+    .thread-messages { height: min(54vh, 520px); overflow-y: auto; padding: 1rem; background: #f8faf8; border: 1px solid var(--line); border-radius: 12px; }
+    .message { max-width: 82%; margin-bottom: .85rem; padding: .7rem .9rem; border-radius: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .message.user { margin-left: auto; background: #e4f3e8; }
+    .message.admin { margin-right: auto; background: #e9eef5; }
+    .message-meta { display: block; margin-bottom: .3rem; color: var(--muted); font-size: .76rem; }
+    .muted { color: var(--muted); }
+    .notice { display: none; }
+    @media (max-width: 767.98px) {
+      .conversation-list { max-height: 32vh; }
+      .thread-messages { height: 44vh; }
+      .message { max-width: 94%; }
+    }
+  </style>
+  <link rel="stylesheet" href="../css/site-theme.css" />
+</head>
+<body>
+  <nav class="navbar topbar">
+    <div class="container-fluid px-3 px-lg-4">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect <span class="fw-normal opacity-75">/ Admin support</span></a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-outline-light" href="index.html"><i class="fas fa-chart-line me-1"></i>Dashboard</a>
+        <a class="btn btn-sm btn-outline-light" href="pets.html"><i class="fas fa-dog me-1"></i>Manage Dogs</a>
+        <a class="btn btn-sm btn-outline-light" href="vaccinations.html"><i class="fas fa-syringe me-1"></i>Vaccinations</a>
+        <a class="btn btn-sm btn-outline-light" href="../index.html">View site</a>
+        <button class="btn btn-sm btn-light" data-admin-signout type="button">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-3 px-lg-4 pt-3">
+    <div id="adminAccessState" class="alert alert-info" role="status" aria-live="polite">Verifying administrator access…</div>
+  </div>
+  <main class="container-fluid px-3 px-lg-4 py-4" id="adminApp" hidden>
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+      <div>
+        <p class="text-uppercase small fw-semibold mb-1" style="letter-spacing:.12em;color:var(--green)">Customer care</p>
+        <h1 class="h2 mb-1">Support inbox</h1>
+        <p class="muted mb-0">Reply to user questions from the site chatbot and mark conversations resolved.</p>
+      </div>
+      <div class="d-flex gap-2 align-items-center">
+        <label class="visually-hidden" for="statusFilter">Conversation status</label>
+        <select class="form-select" id="statusFilter" aria-label="Filter conversations">
+          <option value="open">Open questions</option>
+          <option value="resolved">Resolved</option>
+          <option value="all">All conversations</option>
+        </select>
+        <button class="btn btn-outline-secondary" id="refreshBtn" type="button" aria-label="Refresh conversations"><i class="fas fa-rotate"></i></button>
+      </div>
+    </div>
+
+    <div class="alert alert-warning notice" id="notice" role="alert"></div>
+    <div class="row g-3 layout">
+      <section class="col-md-5 col-xl-4" aria-label="Support conversations">
+        <div class="inbox-panel h-100">
+          <div class="p-3 border-bottom d-flex justify-content-between">
+            <strong>Conversations</strong>
+            <span class="muted" id="conversationCount">0</span>
+          </div>
+          <div class="conversation-list" id="conversationList">
+            <p class="muted p-3 mb-0">Sign in with an admin account to load questions.</p>
+          </div>
+        </div>
+      </section>
+      <section class="col-md-7 col-xl-8" aria-label="Selected conversation">
+        <div class="thread-panel p-3 p-lg-4 h-100">
+          <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+            <div>
+              <h2 class="h5 mb-1" id="threadSubject">Select a conversation</h2>
+              <div class="muted small" id="threadUser"></div>
+            </div>
+            <button class="btn btn-outline-success btn-sm" id="resolveBtn" type="button" hidden>Mark resolved</button>
+          </div>
+          <div class="thread-messages mb-3" id="threadMessages" aria-live="polite">
+            <p class="muted mb-0">Choose an open question from the inbox to read and reply.</p>
+          </div>
+          <form id="replyForm">
+            <label for="replyInput" class="form-label">Your reply</label>
+            <div class="input-group">
+              <textarea class="form-control" id="replyInput" rows="2" maxlength="2000" placeholder="Write a helpful reply…" required disabled></textarea>
+              <button class="btn btn-success px-4" id="sendReplyBtn" type="submit" disabled><i class="fas fa-paper-plane me-1"></i>Send</button>
+            </div>
+            <div class="form-text">Replies appear in the user's chatbot when they return to the support conversation.</div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js?v=admin-v1"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin-common.js"></script>
+  <script src="support.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PetCare Connect administrator dashboard." />
+  <title>Admin Dashboard | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site-theme.css" />
+  <style>
+    :root { --admin-ink: #20342b; --admin-muted: #708077; --admin-green: #245c45; --admin-line: #e5eae5; --admin-paper: #f6f8f5; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; background: var(--admin-paper); color: var(--admin-ink); font-family: 'DM Sans', sans-serif; }
+    .topbar { background: #183d30; }
+    .topbar .navbar-brand { color: #fff; font-weight: 700; }
+    .admin-hero { padding: 2rem 0 1.3rem; }
+    .admin-kicker { color: var(--admin-green); font-size: .76rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .stat-card, .panel { height: 100%; padding: 1.15rem; border: 1px solid var(--admin-line); border-radius: 16px; background: #fff; box-shadow: 0 8px 26px rgba(30,60,42,.035); }
+    .stat-label { color: var(--admin-muted); font-size: .88rem; font-weight: 600; }
+    .stat-value { display: block; margin-top: .35rem; font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 700; line-height: 1.15; }
+    .stat-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; background: #e9f3e7; color: var(--admin-green); }
+    .panel-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+    .app-reason { max-width: 290px; color: var(--admin-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .table > :not(caption) > * > * { vertical-align: middle; }
+    .notice:empty { display: none; }
+    #adminApp[hidden] { display: none !important; }
+    @media (max-width: 575.98px) { .admin-hero { padding-top: 1.4rem; } .stat-card { padding: .9rem; } .panel { padding: .9rem; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg topbar">
+    <div class="container-fluid px-3 px-lg-4">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect <span class="fw-normal opacity-75">/ Admin</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle admin navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="adminNav">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2 py-2 py-lg-0">
+          <a class="nav-link text-white" href="index.html" aria-current="page">Dashboard</a>
+          <a class="nav-link text-white" href="pets.html">Manage pets</a>
+          <a class="nav-link text-white" href="vaccinations.html">Vaccinations</a>
+          <a class="nav-link text-white" href="support.html">Support inbox</a>
+          <a class="nav-link text-white" href="../index.html">View site</a>
+          <button class="btn btn-sm btn-light ms-lg-2" data-admin-signout type="button">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-3 px-lg-4 pt-3">
+    <div id="adminAccessState" class="alert alert-info" role="status" aria-live="polite">Verifying administrator access…</div>
+  </div>
+
+  <main class="container-fluid px-3 px-lg-4 pb-5" id="adminApp" hidden>
+    <header class="admin-hero d-flex flex-wrap justify-content-between align-items-end gap-3">
+      <div>
+        <span class="admin-kicker">PetCare Connect operations</span>
+        <h1 class="display-6 fw-bold mb-1">Admin dashboard</h1>
+        <p class="text-secondary mb-0">Review adoption activity and manage the pet directory.</p>
+      </div>
+      <button class="btn btn-outline-success" id="refreshDashboard" type="button"><i class="fas fa-rotate me-2" aria-hidden="true"></i>Refresh</button>
+    </header>
+
+    <div id="dashboardNotice" class="alert notice" role="status" aria-live="polite"></div>
+    <section class="row g-3 mb-4" aria-label="Platform summary">
+      <div class="col-6 col-xl"><article class="stat-card"><div class="d-flex justify-content-between align-items-start"><span class="stat-label">Total pets listed</span><span class="stat-icon"><i class="fas fa-dog" aria-hidden="true"></i></span></div><strong class="stat-value" id="totalPets">—</strong></article></div>
+      <div class="col-6 col-xl"><article class="stat-card"><div class="d-flex justify-content-between align-items-start"><span class="stat-label">Available pets</span><span class="stat-icon"><i class="fas fa-heart" aria-hidden="true"></i></span></div><strong class="stat-value" id="availablePets">—</strong></article></div>
+      <div class="col-6 col-xl"><article class="stat-card"><div class="d-flex justify-content-between align-items-start"><span class="stat-label">Applications</span><span class="stat-icon"><i class="fas fa-file-lines" aria-hidden="true"></i></span></div><strong class="stat-value" id="totalApplications">—</strong></article></div>
+      <div class="col-6 col-xl"><article class="stat-card"><div class="d-flex justify-content-between align-items-start"><span class="stat-label">Pending review</span><span class="stat-icon"><i class="fas fa-clock" aria-hidden="true"></i></span></div><strong class="stat-value" id="pendingApplications">—</strong></article></div>
+      <div class="col-12 col-xl"><article class="stat-card"><div class="d-flex justify-content-between align-items-start"><span class="stat-label">Registered users</span><span class="stat-icon"><i class="fas fa-users" aria-hidden="true"></i></span></div><strong class="stat-value" id="registeredUsers">—</strong></article></div>
+    </section>
+
+    <section class="panel" aria-labelledby="applicationsHeading">
+      <div class="panel-heading mb-3">
+        <div><span class="admin-kicker">Applicant review</span><h2 class="h4 mb-0" id="applicationsHeading">Adoption applications</h2></div>
+        <label class="visually-hidden" for="applicationFilter">Filter applications</label>
+        <select class="form-select form-select-sm" id="applicationFilter" style="max-width:190px">
+          <option value="">All statuses</option><option value="pending">Pending</option><option value="under_review">Under review</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light"><tr><th>Applicant</th><th>Pet</th><th>Application</th><th>Status</th><th class="text-end">Review</th></tr></thead>
+          <tbody id="applicationsBody"><tr><td colspan="5" class="text-center py-4 text-secondary">Loading applications…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js?v=admin-v1"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin-common.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adoption Application | PetCare Connect</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ===================== GLOBAL ===================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f8f9ff; color: #2d3748; }
+
+    /* ===================== NAVBAR ===================== */
+    .pawcare-navbar { background: linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); padding: 12px 0; box-shadow: 0 2px 20px rgba(0,0,0,0.3); z-index: 1050; }
+    .pawcare-navbar .navbar-brand { font-size: 1.5rem; font-weight: 800; color: #fff !important; text-decoration: none; }
+    .pawcare-navbar .navbar-brand:hover { color: #f6c90e !important; }
+    .pawcare-navbar .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 500; font-size: 0.875rem; padding: 6px 12px !important; border-radius: 6px; transition: all 0.3s ease; }
+    .pawcare-navbar .nav-link:hover, .pawcare-navbar .nav-link.active { color: #f6c90e !important; background: rgba(246,201,14,0.12); }
+    .pawcare-navbar .navbar-toggler { border-color: rgba(255,255,255,0.3); }
+    .pawcare-navbar .navbar-toggler-icon { filter: invert(1); }
+    .btn-login { color: #fff !important; border: 1.5px solid rgba(255,255,255,0.5); padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: all 0.3s ease; margin-right: 8px; }
+    .btn-login:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+    .btn-register { background: linear-gradient(135deg,#f6c90e,#f0a500); color: #1a1a2e !important; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
+    .btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(246,201,14,0.4); }
+    #userMenu { display: flex; align-items: center; gap: 10px; }
+    .user-avatar-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#f6c90e,#f0a500); border: none; color: #1a1a2e; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .notification-btn { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 1.1rem; cursor: pointer; position: relative; padding: 4px 8px; }
+    .notification-btn .badge { position: absolute; top: 0; right: 2px; font-size: 0.6rem; background: #e53e3e; border-radius: 50%; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+
+    /* ===================== HERO ===================== */
+    .form-hero {
+      background: linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+      padding: 120px 0 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .form-hero .hero-tag { display: inline-block; background: rgba(246,201,14,0.15); border: 1px solid rgba(246,201,14,0.4); color: #f6c90e; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    .form-hero h1 { font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .form-hero h1 span { color: #f6c90e; }
+    .form-hero p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+    /* ===================== LOGIN GATE ===================== */
+    .login-gate {
+      max-width: 540px; margin: 60px auto 80px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+      padding: 50px 40px; text-align: center;
+    }
+    .login-gate .gate-icon { font-size: 4rem; display: block; margin-bottom: 20px; }
+    .login-gate h3 { font-size: 1.4rem; font-weight: 700; color: #1a202c; margin-bottom: 10px; }
+    .login-gate p { color: #718096; font-size: 0.9rem; margin-bottom: 28px; }
+    .btn-login-gate {
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      border: none; color: #fff; font-weight: 700; font-size: 1rem;
+      padding: 12px 32px; border-radius: 12px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s;
+    }
+    .btn-login-gate:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(102,126,234,0.45); color: #fff; }
+    .btn-browse { color: #667eea; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: inline-block; margin-top: 16px; }
+    .btn-browse:hover { text-decoration: underline; }
+
+    /* ===================== PROGRESS BAR ===================== */
+    .progress-section {
+      background: #fff;
+      border-bottom: 1px solid #e8eaf0;
+      padding: 20px 0;
+      position: sticky; top: 72px; z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .progress-steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; position: relative;
+    }
+    .progress-steps::before {
+      content: '';
+      position: absolute; top: 20px; left: calc(10% + 20px); right: calc(10% + 20px);
+      height: 2px; background: #e2e8f0; z-index: 0;
+    }
+    .step-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; flex: 1; position: relative; z-index: 1;
+    }
+    .step-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid #e2e8f0;
+      background: #fff; color: #a0aec0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700;
+      transition: all 0.3s ease;
+    }
+    .step-item.active .step-circle { border-color: #667eea; background: #667eea; color: #fff; }
+    .step-item.completed .step-circle { border-color: #38a169; background: #38a169; color: #fff; }
+    .step-label { font-size: 0.72rem; font-weight: 600; color: #a0aec0; text-align: center; max-width: 70px; transition: color 0.3s; }
+    .step-item.active .step-label { color: #667eea; }
+    .step-item.completed .step-label { color: #38a169; }
+
+    .progress-track {
+      margin-top: 14px;
+      height: 5px; background: #e2e8f0; border-radius: 3px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg,#667eea,#764ba2);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* ===================== FORM AREA ===================== */
+    .form-area { padding: 50px 0 80px; }
+    .form-wrapper { max-width: 780px; margin: 0 auto; }
+    .form-section-card {
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      border: 1px solid #eef0f7;
+      padding: 36px; margin-bottom: 20px;
+      display: none;
+    }
+    .form-section-card.active { display: block; }
+    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 2px solid #f0f2ff; }
+    .section-number { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
+    .section-header h4 { font-size: 1.15rem; font-weight: 700; color: #1a202c; margin: 0; }
+    .section-header p { font-size: 0.82rem; color: #a0aec0; margin: 0; }
+    .form-label { font-size: 0.85rem; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
+    .form-control, .form-select {
+      border-radius: 10px; border: 1.5px solid #e2e8f0;
+      font-size: 0.88rem; font-family: 'Poppins', sans-serif;
+      padding: 10px 14px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.15); outline: none; }
+    .form-control.is-invalid, .form-select.is-invalid { border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229,62,62,0.15); }
+    .form-control.is-valid, .form-select.is-valid { border-color: #38a169; box-shadow: 0 0 0 3px rgba(56,161,105,0.12); }
+    .invalid-feedback { font-size: 0.78rem; }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-option { flex: 1; min-width: 120px; }
+    .radio-option input[type="radio"] { display: none; }
+    .radio-option label {
+      display: flex; align-items: center; justify-content: center;
+      padding: 10px 16px; border-radius: 10px;
+      border: 2px solid #e2e8f0; background: #f8f9ff;
+      font-size: 0.85rem; font-weight: 500; color: #4a5568;
+      cursor: pointer; transition: all 0.25s ease; text-align: center;
+    }
+    .radio-option input[type="radio"]:checked + label { border-color: #667eea; background: #eef0ff; color: #667eea; font-weight: 600; }
+    .radio-option label:hover { border-color: #667eea; }
+    .char-counter { font-size: 0.75rem; color: #a0aec0; text-align: right; margin-top: 4px; }
+    .char-counter.warning { color: #e53e3e; }
+
+    /* ===================== AGREEMENTS ===================== */
+    .agreement-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px; border-radius: 12px;
+      border: 2px solid #e2e8f0; background: #f8f9ff;
+      cursor: pointer; transition: all 0.25s; margin-bottom: 12px;
+    }
+    .agreement-item:hover { border-color: #667eea; }
+    .agreement-item.checked { border-color: #38a169; background: #f0fff4; }
+    .agreement-item input[type="checkbox"] { width: 20px; height: 20px; border-radius: 6px; accent-color: #38a169; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+    .agreement-item label { font-size: 0.87rem; color: #4a5568; cursor: pointer; line-height: 1.55; margin: 0; }
+
+    /* ===================== NAVIGATION BUTTONS ===================== */
+    .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+    .btn-prev { background: none; border: 2px solid #e2e8f0; color: #4a5568; font-weight: 600; font-size: 0.88rem; padding: 10px 24px; border-radius: 12px; cursor: pointer; transition: all 0.25s; }
+    .btn-prev:hover { border-color: #667eea; color: #667eea; }
+    .btn-next { background: linear-gradient(135deg,#667eea,#764ba2); border: none; color: #fff; font-weight: 700; font-size: 0.88rem; padding: 11px 28px; border-radius: 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+    .btn-submit { background: linear-gradient(135deg,#38a169,#2f855a); border: none; color: #fff; font-weight: 700; font-size: 0.95rem; padding: 13px 32px; border-radius: 14px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,161,105,0.45); }
+    .btn-submit:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+
+    /* ===================== CONDITIONAL FIELDS ===================== */
+    .conditional-field { display: none; }
+    .conditional-field.visible { display: block; }
+
+    /* ===================== PET PREVIEW ===================== */
+    .pet-preview {
+      background: #f0f2ff; border: 1.5px solid #c7d2fe;
+      border-radius: 14px; padding: 16px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .pet-preview-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
+    .pet-preview-info { flex: 1; }
+    .pet-preview-info .name { font-weight: 700; color: #1a202c; font-size: 0.95rem; }
+    .pet-preview-info .meta { font-size: 0.78rem; color: #718096; }
+
+    /* ===================== SUCCESS MODAL ===================== */
+    .modal-content.success-modal { border-radius: 20px; border: none; text-align: center; }
+    .success-icon-wrap { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg,#38a169,#2f855a); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 30px rgba(56,161,105,0.4); }
+    .success-icon-wrap i { font-size: 2.5rem; color: #fff; }
+    .success-modal .modal-body { padding: 40px 36px; }
+    .success-modal h4 { font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 8px; }
+    .app-id-badge { background: #f0fff4; border: 1.5px solid #c6f6d5; border-radius: 12px; padding: 12px 20px; display: inline-block; margin: 16px 0; }
+    .app-id-badge .label { font-size: 0.75rem; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .app-id-badge .id { font-size: 1.3rem; font-weight: 800; color: #276749; letter-spacing: 2px; }
+    .success-message { font-size: 0.9rem; color: #4a5568; line-height: 1.65; margin-bottom: 24px; }
+    .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-dashboard { background: linear-gradient(135deg,#667eea,#764ba2); border: none; color: #fff; font-weight: 700; padding: 11px 24px; border-radius: 12px; text-decoration: none; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
+    .btn-dashboard:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); color: #fff; }
+    .btn-browse-more { background: #f8f9ff; border: 2px solid #e2e8f0; color: #4a5568; font-weight: 700; padding: 11px 24px; border-radius: 12px; text-decoration: none; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
+    .btn-browse-more:hover { border-color: #667eea; color: #667eea; }
+
+    /* ===================== FOOTER ===================== */
+    .pawcare-footer { background: linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%); color: rgba(255,255,255,0.8); padding: 70px 0 0; }
+    .footer-brand { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .footer-brand span { color: #f6c90e; }
+    .footer-desc { font-size: 0.88rem; line-height: 1.7; max-width: 300px; color: rgba(255,255,255,0.6); }
+    .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+    .footer-social a { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; }
+    .footer-social a:hover { background: #f6c90e; color: #1a1a2e; transform: translateY(-3px); }
+    .footer-heading { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 20px; letter-spacing: 0.5px; }
+    .footer-links { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.88rem; transition: color 0.25s; }
+    .footer-links a:hover { color: #f6c90e; padding-left: 4px; }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+    .footer-contact-item i { color: #f6c90e; margin-top: 2px; font-size: 0.85rem; }
+    .footer-divider { border-color: rgba(255,255,255,0.1); margin: 40px 0 0; }
+    .footer-bottom { padding: 20px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.25s; }
+    .footer-bottom-links a:hover { color: #f6c90e; }
+
+    /* ===================== CHATBOT FAB ===================== */
+    .chatbot-fab { position: fixed; bottom: 30px; right: 30px; z-index: 999; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; cursor: pointer; box-shadow: 0 6px 20px rgba(102,126,234,0.5); border: none; transition: all 0.3s ease; }
+    .chatbot-fab:hover { transform: scale(1.1); }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 768px) {
+      .form-hero { padding: 100px 0 50px; }
+      .form-section-card { padding: 24px 18px; }
+      .progress-steps::before { display: none; }
+      .step-label { font-size: 0.65rem; }
+      .step-circle { width: 34px; height: 34px; font-size: 0.78rem; }
+      .login-gate { padding: 36px 24px; margin: 40px 16px 60px; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar navbar-expand-lg pawcare-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link" href="shelters.html">Shelters</a></li>
+        <li class="nav-item"><a class="nav-link" href="petcare.html">Pet Care</a></li>
+        <li class="nav-item"><a class="nav-link" href="food.html">Food</a></li>
+        <li class="nav-item"><a class="nav-link" href="medicine.html">Medicine</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2" id="navRight">
+        <a href="login.html" class="btn-login" id="loginBtn">Login</a>
+        <a href="register.html" class="btn-register" id="registerBtn">Register</a>
+        <div id="userMenu" style="display:none;" class="d-flex align-items-center gap-2">
+          <button class="notification-btn" onclick="window.location='dashboard.html#notifications'" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notifBadge" style="display:none;">0</span>
+          </button>
+          <div class="dropdown">
+            <button class="user-avatar-btn dropdown-toggle" id="userAvatarBtn" data-bs-toggle="dropdown" aria-expanded="false">
+              <span id="userInitials">U</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+              <li><a class="dropdown-item" href="dashboard.html#applications"><i class="fas fa-file-alt me-2"></i>My Applications</a></li>
+              <li><a class="dropdown-item" href="dashboard.html#profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="form-hero">
+  <div class="container position-relative">
+    <div class="hero-tag">🐾 Give a Pet a Home</div>
+    <h1>Adoption <span>Application</span></h1>
+    <p>Fill out the form below to start your adoption journey. We review every application carefully to ensure the best match.</p>
+  </div>
+</section>
+
+<!-- ===================== LOGIN GATE (shown if not logged in) ===================== -->
+<div class="container" id="loginGateSection" style="display:none;">
+  <div class="login-gate">
+    <span class="gate-icon">🔒</span>
+    <h3>Login Required</h3>
+    <p>Please log in to your PetCare Connect account to apply for adoption. Don't have an account? Create one for free — it only takes a minute!</p>
+    <a href="login.html?redirect=adoption-form.html" class="btn-login-gate">
+      <i class="fas fa-sign-in-alt"></i> Login to Continue
+    </a>
+    <br />
+    <a href="register.html" class="btn-browse">Don't have an account? Register here</a>
+    <br />
+    <a href="adopt.html" class="btn-browse mt-2" style="color:#a0aec0;">← Browse Pets Without Logging In</a>
+  </div>
+</div>
+
+<!-- ===================== FORM CONTENT (shown if logged in) ===================== -->
+<div id="formContentSection" style="display:none;">
+
+  <!-- Progress Bar -->
+  <div class="progress-section">
+    <div class="container">
+      <div class="progress-steps" id="progressSteps">
+        <div class="step-item active" data-step="1">
+          <div class="step-circle" id="stepCircle1">1</div>
+          <span class="step-label">Personal Info</span>
+        </div>
+        <div class="step-item" data-step="2">
+          <div class="step-circle" id="stepCircle2">2</div>
+          <span class="step-label">Living Situation</span>
+        </div>
+        <div class="step-item" data-step="3">
+          <div class="step-circle" id="stepCircle3">3</div>
+          <span class="step-label">Pet Experience</span>
+        </div>
+        <div class="step-item" data-step="4">
+          <div class="step-circle" id="stepCircle4">4</div>
+          <span class="step-label">Adoption Reason</span>
+        </div>
+        <div class="step-item" data-step="5">
+          <div class="step-circle" id="stepCircle5">5</div>
+          <span class="step-label">Agreement</span>
+        </div>
+      </div>
+      <div class="progress-track mt-3">
+        <div class="progress-fill" id="progressFill" style="width:20%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Area -->
+  <div class="form-area">
+    <div class="container">
+      <div class="form-wrapper">
+
+        <!-- ===== PET PREVIEW (if pet ID in URL) ===== -->
+        <div id="petPreviewCard" style="display:none;" class="pet-preview mb-4">
+          <img id="petPreviewImg" src="" alt="Pet" class="pet-preview-img" />
+          <div class="pet-preview-info">
+            <div class="name" id="petPreviewName"></div>
+            <div class="meta" id="petPreviewMeta"></div>
+            <div style="font-size:0.75rem;color:#667eea;font-weight:600;margin-top:4px;">🐾 You are applying to adopt this pet</div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 1: Personal Info ===== -->
+        <div class="form-section-card active" id="section1">
+          <div class="section-header">
+            <div class="section-number"><i class="fas fa-user"></i></div>
+            <div>
+              <h4>Personal Information</h4>
+              <p>Tell us a bit about yourself</p>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="fullName">Full Name *</label>
+              <input type="text" class="form-control" id="fullName" placeholder="Ravi Kumar" autocomplete="name" required />
+              <div class="invalid-feedback">Full name is required.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="email">Email Address *</label>
+              <input type="email" class="form-control" id="email" placeholder="ravi@email.com" autocomplete="email" required />
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="phone">Phone Number *</label>
+              <div class="input-group">
+                <span class="input-group-text" style="border-radius:10px 0 0 10px;border:1.5px solid #e2e8f0;border-right:none;background:#f8f9ff;font-size:0.88rem;">+91</span>
+                <input type="tel" class="form-control" id="phone" placeholder="98765 43210" maxlength="10" pattern="[0-9]{10}" autocomplete="tel" required style="border-radius:0 10px 10px 0;" />
+              </div>
+              <div class="invalid-feedback" id="phoneError">Please enter a valid 10-digit phone number.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="city">City *</label>
+              <select class="form-select" id="city" required>
+                <option value="">Select your city</option>
+                <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+                <option>Chennai</option><option>Pune</option><option>Hyderabad</option>
+                <option>Kolkata</option><option>Ahmedabad</option><option>Jaipur</option>
+                <option>Other</option>
+              </select>
+              <div class="invalid-feedback">Please select your city.</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="address">Full Address *</label>
+              <textarea class="form-control" id="address" rows="3" placeholder="Flat / House No., Street, Area, City, PIN code" required></textarea>
+              <div class="invalid-feedback">Please provide your full address.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="occupation">Occupation</label>
+              <input type="text" class="form-control" id="occupation" placeholder="e.g. Software Engineer, Teacher, Self-employed" />
+            </div>
+          </div>
+          <div class="form-nav">
+            <div></div>
+            <button class="btn-next" onclick="nextSection(1)">
+              Next: Living Situation <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 2: Living Situation ===== -->
+        <div class="form-section-card" id="section2">
+          <div class="section-header">
+            <div class="section-number"><i class="fas fa-home"></i></div>
+            <div>
+              <h4>Living Situation</h4>
+              <p>Help us understand your home environment</p>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Home Type *</label>
+              <div class="radio-group" id="homeTypeGroup">
+                <div class="radio-option">
+                  <input type="radio" name="homeType" id="ht1" value="Apartment" />
+                  <label for="ht1"><i class="fas fa-building me-2"></i>Apartment</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="homeType" id="ht2" value="House with yard" />
+                  <label for="ht2"><i class="fas fa-house-user me-2"></i>House with Yard</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="homeType" id="ht3" value="House without yard" />
+                  <label for="ht3"><i class="fas fa-home me-2"></i>House w/o Yard</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="homeType" id="ht4" value="Farm" />
+                  <label for="ht4"><i class="fas fa-tractor me-2"></i>Farm</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="homeType" id="ht5" value="Other" />
+                  <label for="ht5"><i class="fas fa-question me-2"></i>Other</label>
+                </div>
+              </div>
+              <div class="invalid-feedback d-block" id="homeTypeError" style="display:none!important;"></div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Do you own or rent? *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="ownRent" id="own" value="Own" />
+                  <label for="own"><i class="fas fa-key me-2"></i>Own</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="ownRent" id="rent" value="Rent" />
+                  <label for="rent"><i class="fas fa-file-contract me-2"></i>Rent</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="familyMembers">Number of Family Members</label>
+              <input type="number" class="form-control" id="familyMembers" min="1" max="20" placeholder="e.g. 3" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Do you have children? *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="hasChildren" id="childYes" value="Yes" onchange="toggleConditional('childrenAgesField', true)" />
+                  <label for="childYes"><i class="fas fa-child me-2"></i>Yes</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="hasChildren" id="childNo" value="No" onchange="toggleConditional('childrenAgesField', false)" />
+                  <label for="childNo"><i class="fas fa-times me-2"></i>No</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 conditional-field" id="childrenAgesField">
+              <label class="form-label" for="childrenAges">Children's Ages</label>
+              <input type="text" class="form-control" id="childrenAges" placeholder="e.g. 5, 8, 12" />
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="prevSection(2)"><i class="fas fa-arrow-left me-2"></i>Back</button>
+            <button class="btn-next" onclick="nextSection(2)">Next: Pet Experience <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 3: Pet Experience ===== -->
+        <div class="form-section-card" id="section3">
+          <div class="section-header">
+            <div class="section-number"><i class="fas fa-paw"></i></div>
+            <div>
+              <h4>Pet Experience</h4>
+              <p>Tell us about your experience with animals</p>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Have you had pets before? *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="hadPetsBefore" id="prevYes" value="Yes" onchange="toggleConditional('prevPetsField', true)" />
+                  <label for="prevYes"><i class="fas fa-check me-2"></i>Yes</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="hadPetsBefore" id="prevNo" value="No" onchange="toggleConditional('prevPetsField', false)" />
+                  <label for="prevNo"><i class="fas fa-times me-2"></i>No</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 conditional-field" id="prevPetsField">
+              <label class="form-label" for="prevPetsDesc">Describe your previous pets</label>
+              <textarea class="form-control" id="prevPetsDesc" rows="3" placeholder="e.g. Had a Labrador for 7 years, a Beagle for 3 years…"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Do you currently have other pets? *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="currentPets" id="currYes" value="Yes" onchange="toggleConditional('currPetsField', true)" />
+                  <label for="currYes"><i class="fas fa-check me-2"></i>Yes</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="currentPets" id="currNo" value="No" onchange="toggleConditional('currPetsField', false)" />
+                  <label for="currNo"><i class="fas fa-times me-2"></i>No</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 conditional-field" id="currPetsField">
+              <label class="form-label" for="currPetsDesc">Describe your current pets</label>
+              <textarea class="form-control" id="currPetsDesc" rows="3" placeholder="e.g. 2 dogs (Milo, 3y and Luna, 1y), neutered…"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Experience Level *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="expLevel" id="expFirst" value="First-time owner" />
+                  <label for="expFirst">🌱 First-time Owner</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="expLevel" id="expSome" value="Some experience" />
+                  <label for="expSome">⭐ Some Experience</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="expLevel" id="expVery" value="Very experienced" />
+                  <label for="expVery">🏆 Very Experienced</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="prevSection(3)"><i class="fas fa-arrow-left me-2"></i>Back</button>
+            <button class="btn-next" onclick="nextSection(3)">Next: Adoption Reason <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 4: Adoption Reason ===== -->
+        <div class="form-section-card" id="section4">
+          <div class="section-header">
+            <div class="section-number"><i class="fas fa-heart"></i></div>
+            <div>
+              <h4>Adoption Reason</h4>
+              <p>Help us understand why you want to adopt</p>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label" for="petSelect">Which pet are you applying for? *</label>
+              <select class="form-select" id="petSelect" required>
+                <option value="">Select a pet…</option>
+                <!-- Populated by JS -->
+              </select>
+              <div class="invalid-feedback">Please select which pet you are applying for.</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="adoptionReason">Why do you want to adopt this pet? *</label>
+              <textarea class="form-control" id="adoptionReason" rows="5"
+                placeholder="Tell us your story — why you want a pet, what you can offer, your lifestyle… (minimum 50 characters)"
+                required minlength="50" maxlength="1000"></textarea>
+              <div class="d-flex justify-content-between mt-1">
+                <div class="invalid-feedback d-inline" id="reasonError">Please write at least 50 characters.</div>
+                <div class="char-counter" id="reasonCounter">0/1000</div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="dailyRoutine">What is your daily routine?</label>
+              <textarea class="form-control" id="dailyRoutine" rows="4"
+                placeholder="e.g. I work from home, go for morning walks at 7am, back by 6pm…" maxlength="600"></textarea>
+              <div class="char-counter" id="routineCounter">0/600</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Are you prepared for veterinary expenses? *</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="vetExpenses" id="vetYes" value="Yes" />
+                  <label for="vetYes"><i class="fas fa-check-circle me-2 text-success"></i>Yes, I am prepared</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="vetExpenses" id="vetNo" value="No" />
+                  <label for="vetNo"><i class="fas fa-times-circle me-2 text-danger"></i>Not at this time</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="prevSection(4)"><i class="fas fa-arrow-left me-2"></i>Back</button>
+            <button class="btn-next" onclick="nextSection(4)">Next: Agreement <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 5: Agreement ===== -->
+        <div class="form-section-card" id="section5">
+          <div class="section-header">
+            <div class="section-number"><i class="fas fa-file-signature"></i></div>
+            <div>
+              <h4>Agreement & Declaration</h4>
+              <p>Please read and agree to all statements before submitting</p>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="agreement-item" id="agr1Wrap">
+              <input type="checkbox" id="agr1" onchange="updateAgreement(this, 'agr1Wrap')" />
+              <label for="agr1">I confirm that all the information I have provided in this application is accurate and truthful to the best of my knowledge. I understand that providing false information may result in rejection of my application.</label>
+            </label>
+            <label class="agreement-item" id="agr2Wrap">
+              <input type="checkbox" id="agr2" onchange="updateAgreement(this, 'agr2Wrap')" />
+              <label for="agr2">I agree to provide a safe, loving, and suitable home environment for the adopted pet, ensuring their physical and emotional well-being at all times.</label>
+            </label>
+            <label class="agreement-item" id="agr3Wrap">
+              <input type="checkbox" id="agr3" onchange="updateAgreement(this, 'agr3Wrap')" />
+              <label for="agr3">I agree to allow follow-up visits by shelter staff or volunteers to verify the pet's well-being, as required within the first 6 months of adoption.</label>
+            </label>
+            <label class="agreement-item" id="agr4Wrap">
+              <input type="checkbox" id="agr4" onchange="updateAgreement(this, 'agr4Wrap')" />
+              <label for="agr4">I understand that adoption approval is entirely at the discretion of the shelter. I accept their decision gracefully, including if my application is not selected.</label>
+            </label>
+          </div>
+
+          <div id="agreeError" class="alert alert-danger d-none">
+            <i class="fas fa-exclamation-triangle me-2"></i>Please agree to all the declarations above before submitting.
+          </div>
+          <div id="submitError" class="alert alert-danger d-none">
+            <i class="fas fa-times-circle me-2"></i><span id="submitErrorMsg">Something went wrong. Please try again.</span>
+          </div>
+
+          <!-- Summary -->
+          <div class="alert alert-info" style="border-radius:12px;font-size:0.85rem;border:1.5px solid #bee3f8;background:#ebf8ff;color:#2b6cb0;">
+            <i class="fas fa-info-circle me-2"></i>
+            After submission, you will receive a confirmation email. Our team will review your application within <strong>3–5 business days</strong>.
+          </div>
+
+          <div class="form-nav">
+            <button class="btn-prev" onclick="prevSection(5)"><i class="fas fa-arrow-left me-2"></i>Back</button>
+            <button class="btn-submit" id="submitBtn" onclick="submitApplication()">
+              <i class="fas fa-paper-plane"></i>
+              <span id="submitBtnText">Submit Adoption Application</span>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /form-wrapper -->
+    </div>
+  </div>
+</div><!-- /formContentSection -->
+
+<!-- ===================== SUCCESS MODAL ===================== -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content success-modal">
+      <div class="modal-body">
+        <div class="success-icon-wrap">
+          <i class="fas fa-check"></i>
+        </div>
+        <h4>Application Submitted! 🎉</h4>
+        <p class="text-muted" style="font-size:0.88rem;">Your adoption application has been received.</p>
+        <div class="app-id-badge">
+          <div class="label">Application ID</div>
+          <div class="id" id="appIdDisplay">APP-0000-0000</div>
+        </div>
+        <p class="success-message">
+          Your application has been submitted successfully. Our shelter team will carefully review it and contact you via email and phone within <strong>3–5 business days</strong>. Thank you for choosing to adopt! 🐾
+        </p>
+        <div class="success-actions">
+          <a href="dashboard.html#applications" class="btn-dashboard">
+            <i class="fas fa-tachometer-alt"></i> View Application Status
+          </a>
+          <a href="adopt.html" class="btn-browse-more">
+            <i class="fas fa-paw"></i> Browse More Pets
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CHATBOT FAB ===================== -->
+<button class="chatbot-fab" id="chatbotFab" title="Chat with PawBot" aria-label="Open chatbot">
+  <i class="fas fa-robot"></i>
+</button>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="pawcare-footer">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">🐾 PetCare <span>Connect</span></div>
+        <p class="footer-desc">India's most trusted pet adoption and care platform. Connecting loving families with pets who need a home since 2024.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="footer-heading">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Shelters</a></li>
+          <li><a href="petcare.html">Pet Care</a></li>
+          <li><a href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="footer-heading">Services</div>
+        <ul class="footer-links">
+          <li><a href="food.html">Pet Food</a></li>
+          <li><a href="medicine.html">Medicine</a></li>
+          <li><a href="videos.html">Grooming videos</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-heading">Contact Us</div>
+        <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Sira, Tumakuru, Karnataka, India</span></div>
+        <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+916362024336">+91 63620 4336</a></div>
+        <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:samithakn14@gmail.com">samithakn14@gmail.com</a></div>
+        <div class="footer-contact-item"><i class="fas fa-clock"></i><span>Mon–Sat: 9:00 AM – 6:00 PM IST</span></div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p>© 2026 PetCare Connect. All rights reserved. Made with ❤️ for pets across India.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=adoption-auth-1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+
+<script>
+/* ===================================================================
+   ADOPTION FORM — Inline Script
+   =================================================================== */
+
+let currentStep = 1;
+const TOTAL_STEPS = 5;
+let currentUser = null;
+
+// ---- Auth UI & gate ----
+async function initAuthUI() {
+  const auth = window.PawCareAuth;
+  const loginGate = document.getElementById('loginGateSection');
+  const formContent = document.getElementById('formContentSection');
+  const loginUrl = `login.html?redirect=${encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search)}`;
+  document.getElementById('loginBtn').href = loginUrl;
+  loginGate.querySelector('.btn-login-gate').href = loginUrl;
+
+  if (!auth || !window.PAWCARE_CONFIG?.supabase) {
+    loginGate.style.display = 'block';
+    formContent.style.display = 'none';
+    loginGate.querySelector('p').textContent = 'Sign-in is temporarily unavailable. Please try again later.';
+    document.getElementById('loginBtn').style.display = '';
+    document.getElementById('registerBtn').style.display = '';
+    document.getElementById('userMenu').style.display = 'none';
+    return;
+  }
+
+  try {
+    const user = await auth.getCurrentUser();
+    const profile = user ? await auth.getUserProfile(user.id) : null;
+    currentUser = user ? {
+      id: user.id,
+      email: user.email,
+      full_name: profile?.name || user.user_metadata?.full_name || '',
+      phone: profile?.phone || user.user_metadata?.phone || ''
+    } : null;
+  } catch (error) {
+    console.error('Unable to verify adoption form access:', error);
+    currentUser = null;
+  }
+
+  if (!currentUser) {
+    loginGate.style.display = 'block';
+    formContent.style.display = 'none';
+    document.getElementById('loginBtn').style.display = '';
+    document.getElementById('registerBtn').style.display = '';
+    document.getElementById('userMenu').style.display = 'none';
+  } else {
+    loginGate.style.display = 'none';
+    formContent.style.display = 'block';
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('registerBtn').style.display = 'none';
+    document.getElementById('userMenu').style.display = 'flex';
+
+    const initials = (currentUser.full_name || currentUser.email || 'U')[0].toUpperCase();
+    document.getElementById('userInitials').textContent = initials;
+
+    // Pre-fill personal info
+    if (currentUser.full_name) document.getElementById('fullName').value = currentUser.full_name;
+    if (currentUser.email) document.getElementById('email').value = currentUser.email;
+    if (currentUser.phone) document.getElementById('phone').value = currentUser.phone;
+  }
+
+  document.getElementById('logoutBtn')?.addEventListener('click', e => {
+    e.preventDefault();
+    void auth.logoutUser().then(result => {
+      if (!result.success) alert(result.error);
+    });
+  });
+}
+
+// ---- Load URL params ----
+async function loadUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const petId = params.get('pet');
+  const shelterId = params.get('shelter');
+
+  // Build pet options dropdown
+  await buildPetDropdown(petId, shelterId);
+
+  // If pet in URL, show preview card
+  if (petId) {
+    try {
+      const apiBase = window.PAWCARE_CONFIG.API_BASE_URL;
+      const response = await fetch(`${apiBase}/pets/${encodeURIComponent(petId)}`);
+      if (!response.ok) throw new Error(`Pet API returned HTTP ${response.status}`);
+      const result = await response.json();
+      if (!result.success || !result.data) {
+        throw new Error(result.message || 'The selected pet could not be found.');
+      }
+
+      const pet = result.data;
+      const image = pet.primary_image || pet.pet_images?.find(item => item.is_primary)?.image_url;
+      const age = pet.age_years
+        ? `${pet.age_years} year${pet.age_years === 1 ? '' : 's'}`
+        : `${pet.age_months || 0} months`;
+      document.getElementById('petPreviewImg').src = image || 'https://placehold.co/60x60/667eea/ffffff?text=🐾';
+      document.getElementById('petPreviewName').textContent = pet.name;
+      document.getElementById('petPreviewMeta').textContent = `${pet.species || ''} · ${pet.breed || ''} · ${age}`;
+      document.getElementById('petPreviewCard').style.display = 'flex';
+    } catch (error) {
+      console.error('Unable to load selected pet from the backend API:', error);
+      window.showToast?.('The selected pet details could not be loaded.', 'warning');
+    }
+  }
+}
+
+async function buildPetDropdown(selectedPetId, shelterId) {
+  const sel = document.getElementById('petSelect');
+  const apiBase = window.PAWCARE_CONFIG.API_BASE_URL;
+  const params = new URLSearchParams({ adoption_status: 'available', limit: '100' });
+  if (shelterId) params.set('shelter_id', shelterId);
+  sel.innerHTML = '<option value="">Loading available pets…</option>';
+  sel.disabled = true;
+  let pets = [];
+
+  try {
+    const response = await fetch(`${apiBase}/pets?${params.toString()}`);
+    if (!response.ok) throw new Error(`Pet API returned HTTP ${response.status}`);
+    const result = await response.json();
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error(result.message || 'The pet API returned an invalid response.');
+    }
+    pets = result.data;
+    sel.innerHTML = '<option value="">Select a pet…</option>';
+    if (pets.length === 0) {
+      sel.innerHTML = '<option value="">No available pets found</option>';
+    }
+    pets.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.name} (${p.species}${p.breed ? ' · ' + p.breed : ''})`;
+      if (selectedPetId && p.id === selectedPetId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.disabled = pets.length === 0;
+  } catch (error) {
+    console.error('Unable to load available pets from the backend API:', error);
+    sel.innerHTML = '<option value="">Unable to load pets. Please refresh and try again.</option>';
+    window.showToast?.('Available pets could not be loaded from the server.', 'error');
+    return;
+  }
+
+  // If petId from URL but not in list, add it anyway
+  if (selectedPetId && !pets.find(p => p.id === selectedPetId)) {
+    const opt = document.createElement('option');
+    opt.value = selectedPetId;
+    opt.textContent = 'Selected Pet';
+    opt.selected = true;
+    sel.appendChild(opt);
+    sel.disabled = false;
+  }
+}
+
+// ---- Toggle conditional fields ----
+function toggleConditional(fieldId, show) {
+  const el = document.getElementById(fieldId);
+  if (el) { el.classList.toggle('visible', show); }
+}
+
+// ---- Agreement checkbox highlight ----
+function updateAgreement(checkbox, wrapId) {
+  document.getElementById(wrapId).classList.toggle('checked', checkbox.checked);
+}
+
+// ---- Progress update ----
+function updateProgress(step) {
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.querySelectorAll('.step-item').forEach(item => {
+    const s = +item.dataset.step;
+    item.classList.toggle('active', s === step);
+    item.classList.toggle('completed', s < step);
+    if (s < step) document.getElementById(`stepCircle${s}`).innerHTML = '<i class="fas fa-check"></i>';
+    else if (s === step) document.getElementById(`stepCircle${s}`).textContent = s;
+    else document.getElementById(`stepCircle${s}`).textContent = s;
+  });
+}
+
+// ---- Show section ----
+function showSection(n) {
+  document.querySelectorAll('.form-section-card').forEach(c => c.classList.remove('active'));
+  document.getElementById(`section${n}`).classList.add('active');
+  currentStep = n;
+  updateProgress(n);
+  window.scrollTo({ top: document.querySelector('.progress-section').offsetTop - 80, behavior: 'smooth' });
+}
+
+// ---- Validation helpers ----
+function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function validatePhone(phone) { return /^[0-9]{10}$/.test(phone.replace(/\s/g, '')); }
+function setFieldValid(el) { el.classList.remove('is-invalid'); el.classList.add('is-valid'); }
+function setFieldInvalid(el) { el.classList.remove('is-valid'); el.classList.add('is-invalid'); }
+function clearField(el) { el.classList.remove('is-invalid', 'is-valid'); }
+
+// ---- Section validators ----
+function validateSection1() {
+  let valid = true;
+  const name = document.getElementById('fullName');
+  const email = document.getElementById('email');
+  const phone = document.getElementById('phone');
+  const city = document.getElementById('city');
+  const addr = document.getElementById('address');
+
+  if (!name.value.trim() || name.value.trim().length < 2) { setFieldInvalid(name); valid = false; } else setFieldValid(name);
+  if (!validateEmail(email.value.trim())) { setFieldInvalid(email); valid = false; } else setFieldValid(email);
+  if (!validatePhone(phone.value)) {
+    setFieldInvalid(phone);
+    document.getElementById('phoneError').style.display = 'block';
+    valid = false;
+  } else { setFieldValid(phone); document.getElementById('phoneError').style.display = 'none'; }
+  if (!city.value) { setFieldInvalid(city); valid = false; } else setFieldValid(city);
+  if (!addr.value.trim() || addr.value.trim().length < 10) { setFieldInvalid(addr); valid = false; } else setFieldValid(addr);
+
+  return valid;
+}
+
+function validateSection2() {
+  const homeType = document.querySelector('input[name="homeType"]:checked');
+  const errEl = document.getElementById('homeTypeError');
+  if (!homeType) {
+    errEl.textContent = 'Please select your home type.';
+    errEl.style.display = 'block';
+    return false;
+  }
+  errEl.style.display = 'none';
+  return true;
+}
+
+function validateSection3() {
+  const hadPets = document.querySelector('input[name="hadPetsBefore"]:checked');
+  const currPets = document.querySelector('input[name="currentPets"]:checked');
+  const expLevel = document.querySelector('input[name="expLevel"]:checked');
+  if (!hadPets || !currPets || !expLevel) {
+    alert('Please answer all required questions in this section.');
+    return false;
+  }
+  return true;
+}
+
+function validateSection4() {
+  let valid = true;
+  const petSel = document.getElementById('petSelect');
+  const reason = document.getElementById('adoptionReason');
+  const vetExpenses = document.querySelector('input[name="vetExpenses"]:checked');
+
+  if (!petSel.value) { setFieldInvalid(petSel); valid = false; } else setFieldValid(petSel);
+  if (reason.value.trim().length < 50) {
+    setFieldInvalid(reason);
+    document.getElementById('reasonError').style.display = 'inline';
+    valid = false;
+  } else { setFieldValid(reason); document.getElementById('reasonError').style.display = 'none'; }
+  if (!vetExpenses) { alert('Please indicate if you are prepared for veterinary expenses.'); valid = false; }
+
+  return valid;
+}
+
+function validateSection5() {
+  const agr1 = document.getElementById('agr1').checked;
+  const agr2 = document.getElementById('agr2').checked;
+  const agr3 = document.getElementById('agr3').checked;
+  const agr4 = document.getElementById('agr4').checked;
+  const errEl = document.getElementById('agreeError');
+
+  if (!agr1 || !agr2 || !agr3 || !agr4) {
+    errEl.classList.remove('d-none');
+    return false;
+  }
+  errEl.classList.add('d-none');
+  return true;
+}
+
+// ---- Navigation ----
+function nextSection(from) {
+  const validators = { 1: validateSection1, 2: validateSection2, 3: validateSection3, 4: validateSection4 };
+  if (validators[from] && !validators[from]()) return;
+  if (from < TOTAL_STEPS) showSection(from + 1);
+}
+
+function prevSection(from) {
+  if (from > 1) showSection(from - 1);
+}
+
+// ---- Submit ----
+async function submitApplication() {
+  if (!validateSection5()) return;
+
+  const submitBtn = document.getElementById('submitBtn');
+  const submitBtnText = document.getElementById('submitBtnText');
+  const submitError = document.getElementById('submitError');
+  const submitErrorMsg = document.getElementById('submitErrorMsg');
+  submitError.classList.add('d-none');
+
+  // Disable button & show loading
+  submitBtn.disabled = true;
+  submitBtnText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting…';
+
+  try {
+    const client = window.PAWCARE_CONFIG?.supabase;
+    if (!client) throw new Error('Adoption applications are unavailable because Supabase is not configured.');
+    const { data: sessionData, error: sessionError } = await client.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!sessionData.session?.access_token) {
+      throw new Error('Your session has expired. Please log in again before submitting.');
+    }
+
+    const homeType = document.querySelector('input[name="homeType"]:checked')?.value || '';
+    const currentPets = document.querySelector('input[name="currentPets"]:checked')?.value === 'Yes';
+    const hasChildren = document.querySelector('input[name="hasChildren"]:checked')?.value === 'Yes';
+    const experience = [
+      document.querySelector('input[name="expLevel"]:checked')?.value,
+      document.getElementById('prevPetsDesc').value.trim()
+    ].filter(Boolean).join(': ');
+    const livingSituation = [
+      `City: ${document.getElementById('city').value}`,
+      `Tenure: ${document.querySelector('input[name="ownRent"]:checked')?.value || 'Not specified'}`,
+      `Family members: ${document.getElementById('familyMembers').value || 'Not specified'}`,
+      `Children ages: ${document.getElementById('childrenAges').value.trim() || 'None specified'}`,
+      `Current pets: ${document.getElementById('currPetsDesc').value.trim() || 'None specified'}`,
+      `Daily routine: ${document.getElementById('dailyRoutine').value.trim() || 'Not specified'}`,
+      `Prepared for veterinary expenses: ${document.querySelector('input[name="vetExpenses"]:checked')?.value || 'Not specified'}`
+    ].join('; ').slice(0, 500);
+    const apiBase = window.PAWCARE_CONFIG.API_BASE_URL;
+    const response = await fetch(`${apiBase}/adoptions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionData.session.access_token}`
+      },
+      body: JSON.stringify({
+        pet_id: document.getElementById('petSelect').value,
+        full_name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        home_type: {
+          Apartment: 'apartment',
+          'House with yard': 'house_with_yard',
+          'House without yard': 'house_without_yard',
+          Farm: 'farm',
+          Other: 'other'
+        }[homeType],
+        has_children: hasChildren,
+        has_other_pets: currentPets,
+        experience_with_pets: experience.slice(0, 1000),
+        living_situation: livingSituation,
+        reason: document.getElementById('adoptionReason').value.trim(),
+        message: document.getElementById('adoptionReason').value.trim()
+      })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      const validationMessage = result.errors?.map(error => error.msg).filter(Boolean).join(' ');
+      throw new Error(result.message || validationMessage || 'Your application could not be submitted. Please try again.');
+    }
+
+    // Show success modal
+    document.getElementById('appIdDisplay').textContent = result.data?.id || 'Submitted';
+    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+    modal.show();
+    submitBtn.disabled = false;
+    submitBtnText.textContent = 'Submit Adoption Application';
+
+  } catch (err) {
+    console.error('Submission error:', err);
+    submitErrorMsg.textContent = err.message || 'Something went wrong. Please try again.';
+    submitError.classList.remove('d-none');
+    submitBtn.disabled = false;
+    submitBtnText.textContent = 'Submit Adoption Application';
+  }
+}
+
+// ---- Char counters ----
+document.getElementById('adoptionReason')?.addEventListener('input', function() {
+  const count = this.value.length;
+  const counter = document.getElementById('reasonCounter');
+  counter.textContent = `${count}/1000`;
+  counter.classList.toggle('warning', count > 950);
+});
+
+document.getElementById('dailyRoutine')?.addEventListener('input', function() {
+  const count = this.value.length;
+  const counter = document.getElementById('routineCounter');
+  counter.textContent = `${count}/600`;
+  counter.classList.toggle('warning', count > 570);
+});
+
+// ---- Real-time email validation ----
+document.getElementById('email')?.addEventListener('blur', function() {
+  if (this.value) {
+    if (validateEmail(this.value.trim())) setFieldValid(this);
+    else setFieldInvalid(this);
+  }
+});
+
+// ---- Real-time phone validation ----
+document.getElementById('phone')?.addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g, '').slice(0, 10);
+});
+
+// ---- Chatbot ----
+document.getElementById('chatbotFab')?.addEventListener('click', () => {
+  if (typeof window.openChatbot === 'function') window.openChatbot();
+  else alert('PawBot is loading… please try again.');
+});
+
+// ---- Init ----
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthUI();
+  if (currentUser) {
+    await loadUrlParams();
+  }
+});
+</script>
+</body>
+</html>

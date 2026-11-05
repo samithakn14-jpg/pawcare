@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet Food & Nutrition Guide | PetCare Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --danger-red: #dc2626;
+      --success: #16a34a;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --card-shadow: 0 4px 24px rgba(79,70,229,0.10);
+      --border-radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding-top: 72px;
+    }
+
+    /* ── Navbar ── */
+    .pawcare-navbar {
+      background: linear-gradient(135deg, #1e293b 0%, #312e81 100%);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+      padding: 0.6rem 0;
+    }
+    .pawcare-navbar .navbar-brand { font-size: 1.5rem; font-weight: 800; color: #fff !important; letter-spacing: -0.5px; }
+    .pawcare-navbar .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 500; font-size: 0.9rem; padding: 0.4rem 0.65rem !important; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+    .pawcare-navbar .nav-link:hover, .pawcare-navbar .nav-link.active { background: rgba(255,255,255,0.15); color: #fff !important; }
+    .navbar-toggler { border-color: rgba(255,255,255,0.4); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ── Hero ── */
+    .hero-section {
+      background: linear-gradient(135deg, #134e4a 0%, #065f46 40%, #064e3b 100%);
+      padding: 80px 0 60px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-section .badge-pill { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; display: inline-block; margin-bottom: 1rem; }
+    .hero-section h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; margin-bottom: 0.75rem; }
+    .hero-section p { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+    /* ── Section Styles ── */
+    .section-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .section-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
+    .section-divider { width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; margin: 0 0 1rem; }
+    .section-padding { padding: 5rem 0; }
+    .section-padding-sm { padding: 3rem 0; }
+
+    /* ── Filter Pills ── */
+    .filter-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2.5rem; }
+    .filter-pill {
+      padding: 0.45rem 1.2rem;
+      border-radius: 50px;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-pill:hover, .filter-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ── Food Cards ── */
+    .food-card {
+      background: #fff;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(79,70,229,0.08);
+      height: 100%;
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .food-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(79,70,229,0.16); }
+    .food-icon { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; text-align: center; }
+    .food-card h5 { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; color: var(--text-dark); text-align: center; }
+    .badge-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 0.75rem; }
+    .pet-type-badge { background: #ede9fe; color: #5b21b6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .category-badge { background: #d1fae5; color: #065f46; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .food-card .benefits { color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; flex-grow: 1; margin-bottom: 0.75rem; }
+    .feeding-info, .safety-info { font-size: 0.82rem; color: var(--text-muted); padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.4rem; }
+    .feeding-info { background: #f0fdf4; border-left: 3px solid #16a34a; }
+    .safety-info { background: #fff7ed; border-left: 3px solid #f59e0b; }
+    .feeding-info strong { color: #15803d; }
+    .safety-info strong { color: #b45309; }
+
+    /* Loading & Empty States */
+    .loading-spinner { text-align: center; padding: 4rem 0; color: var(--text-muted); }
+    .loading-spinner .spinner-border { color: var(--primary); width: 3rem; height: 3rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── Danger Cards ── */
+    .danger-section { background: linear-gradient(135deg, #fff5f5, #fff1f2); padding: 4rem 0; }
+    .danger-card {
+      background: #fff;
+      border: 2px solid #fca5a5;
+      border-left: 6px solid var(--danger-red);
+      border-radius: var(--border-radius);
+      padding: 1.4rem;
+      height: 100%;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .danger-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(220,38,38,0.15); }
+    .danger-icon { font-size: 2.2rem; text-align: center; margin-bottom: 0.5rem; display: block; }
+    .danger-card h5 { font-weight: 700; color: var(--danger-red); margin-bottom: 0.4rem; font-size: 0.95rem; text-align: center; }
+    .danger-card .affected-pets { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.6rem; justify-content: center; }
+    .danger-card .affected-pets span { background: #fee2e2; color: var(--danger-red); font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .danger-card .symptoms { font-size: 0.83rem; color: #7f1d1d; background: #fff5f5; border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 0.5rem; }
+    .danger-card .symptoms strong { color: var(--danger-red); }
+    .danger-card .emergency-note { font-size: 0.78rem; color: #b91c1c; font-weight: 600; text-align: center; }
+
+    /* ── Recipe Cards ── */
+    .recipe-card {
+      background: #fff;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      height: 100%;
+    }
+    .recipe-header { background: linear-gradient(135deg, #065f46, #047857); padding: 1.5rem; text-align: center; }
+    .recipe-header .recipe-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    .recipe-header h5 { color: #fff; font-weight: 700; margin: 0; }
+    .recipe-header .pet-tag { background: rgba(255,255,255,0.2); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 50px; margin-top: 0.4rem; display: inline-block; }
+    .recipe-body { padding: 1.5rem; }
+    .recipe-body h6 { font-weight: 700; color: var(--text-dark); font-size: 0.88rem; margin-bottom: 0.4rem; }
+    .recipe-body ul { font-size: 0.85rem; color: var(--text-muted); padding-left: 1.2rem; margin-bottom: 1rem; }
+    .recipe-body ul li { margin-bottom: 0.25rem; }
+    .recipe-disclaimer { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.78rem; color: #78350f; }
+
+    /* ── Feeding Schedule ── */
+    .schedule-table thead th { background: linear-gradient(135deg, #1e293b, #312e81); color: #fff; }
+    .schedule-table tbody tr:hover { background: #f1f5f9; }
+
+    /* ── Footer ── */
+    .site-footer { background: linear-gradient(135deg, #1e293b, #0f172a); color: #cbd5e1; padding: 3.5rem 0 1.5rem; margin-top: 5rem; }
+    .site-footer h5 { color: #fff; font-weight: 700; margin-bottom: 1rem; }
+    .site-footer a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .site-footer a:hover { color: #a5b4fc; }
+    .site-footer ul { list-style: none; padding: 0; }
+    .site-footer ul li { margin-bottom: 0.4rem; }
+    .footer-brand { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+    .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem; }
+    .footer-bottom { text-align: center; font-size: 0.82rem; color: #64748b; }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+<nav class="navbar navbar-expand-lg pawcare-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link" href="shelters.html">Shelters</a></li>
+        <li class="nav-item"><a class="nav-link" href="petcare.html">Pet Care</a></li>
+        <li class="nav-item"><a class="nav-link active" href="food.html">Food</a></li>
+        <li class="nav-item"><a class="nav-link" href="medicine.html">Medicine</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <a href="login.html" class="btn btn-outline-primary btn-sm" id="loginBtn">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="registerBtn">Register</a>
+        <div id="userMenu" class="d-none">
+          <a href="dashboard.html" class="btn btn-outline-secondary btn-sm">Dashboard</a>
+          <button onclick="logoutUser()" class="btn btn-outline-danger btn-sm">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero-section">
+  <div class="container position-relative">
+    <div class="badge-pill">🥗 Nutrition & Diet Guide</div>
+    <h1>Pet Food &amp; Nutrition Guide</h1>
+    <p>Browse the existing food guide and practical feeding tips for dogs and cats. Your veterinarian can help tailor a complete diet to your pet.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
+<main class="container" style="max-width: 1200px;">
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1 – Food Categories & Cards
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Food Guide</h2>
+    <p class="section-subtitle">Food listings come from the PetCare Connect database. Availability of species-specific entries depends on the records maintained by the project.</p>
+
+    <!-- Filter Pills -->
+    <div class="filter-pills" id="filterPills">
+      <button class="filter-pill active" data-filter="all">🌟 All</button>
+      <button class="filter-pill" data-filter="dog">🐶 Dog Food</button>
+      <button class="filter-pill" data-filter="cat">🐱 Cat Food</button>
+      <button class="filter-pill" data-filter="treat">🦴 Treats</button>
+      <button class="filter-pill" data-filter="homemade">🍳 Homemade</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="foodLoading" class="loading-spinner">
+      <div class="spinner-border mb-3"></div>
+      <p>Loading food information...</p>
+    </div>
+    <div id="foodDataNotice" class="alert alert-warning" role="status" aria-live="polite" hidden></div>
+    <div class="row g-3 mb-4" aria-label="General feeding tips">
+      <div class="col-md-6"><div class="alert alert-info h-100 mb-0"><strong>Dogs:</strong> Choose food labeled for dogs and your dog’s life stage, provide fresh water, and make diet changes gradually. Ask a veterinarian about portions or special dietary needs.</div></div>
+      <div class="col-md-6"><div class="alert alert-info h-100 mb-0"><strong>Cats:</strong> Choose food labeled for cats rather than using a dog-food guide, provide fresh water, and ask a veterinarian for guidance on a complete diet and portions suited to your cat.</div></div>
+    </div>
+
+    <!-- Food Grid -->
+    <div class="row g-4" id="foodGrid" style="display:none;"></div>
+
+    <!-- Empty state -->
+    <div id="foodEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <h5>No food items found for this filter</h5>
+      <p>Try selecting a different category.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 – Foods to AVOID
+══════════════════════════════════════════════════════ -->
+<section class="danger-section" id="dangerFoods">
+  <div class="container" style="max-width: 1200px;">
+    <div class="section-divider" style="background: linear-gradient(90deg, #dc2626, #f97316);"></div>
+    <h2 class="section-title" style="color: var(--danger-red);">⚠️ Foods Dogs Should NEVER Eat</h2>
+    <p class="section-subtitle">The following foods can cause serious illness or death in dogs. Keep them out of reach at all times.</p>
+
+    <div class="row g-4">
+
+      <!-- Chocolate -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🍫</span>
+          <h5>Chocolate</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Vomiting, diarrhoea, rapid breathing, muscle tremors, seizures, heart failure. Dark chocolate and baking chocolate are most dangerous.</div>
+          <div class="emergency-note">🚨 Even small amounts can be fatal. Call your vet immediately.</div>
+        </div>
+      </div>
+
+      <!-- Onions & Garlic -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🧅</span>
+          <h5>Onions &amp; Garlic</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Destroys red blood cells causing haemolytic anaemia. Signs include weakness, pale gums, reduced appetite, breathlessness. All forms dangerous: raw, cooked, powdered.</div>
+          <div class="emergency-note">🚨 Toxicity is cumulative — repeated small doses are also dangerous.</div>
+        </div>
+      </div>
+
+      <!-- Grapes & Raisins -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🍇</span>
+          <h5>Grapes &amp; Raisins</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Acute kidney failure. Signs: vomiting, diarrhoea, lethargy, reduced urination. Even a single grape can be fatal in some dogs. Mechanism not fully understood.</div>
+          <div class="emergency-note">🚨 No safe amount is known. Seek emergency vet care immediately.</div>
+        </div>
+      </div>
+
+      <!-- Macadamia Nuts -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🥜</span>
+          <h5>Macadamia Nuts</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Weakness, hyperthermia, vomiting, tremors, inability to walk. Effects usually appear within 12 hours. Most cases resolve in 48 hours but vet care is essential.</div>
+          <div class="emergency-note">🚨 Even 6 nuts can cause clinical signs in a small dog.</div>
+        </div>
+      </div>
+
+      <!-- Xylitol -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🍬</span>
+          <h5>Xylitol (Artificial Sweetener)</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Rapid insulin release causing severe hypoglycaemia. Signs: vomiting, weakness, collapse, seizures, liver failure. Found in sugar-free gum, candy, peanut butter, baked goods, toothpaste.</div>
+          <div class="emergency-note">🚨 Dangerously toxic — even tiny amounts require emergency care.</div>
+        </div>
+      </div>
+
+      <!-- Caffeine -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">☕</span>
+          <h5>Caffeine</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Restlessness, rapid breathing, heart palpitations, muscle tremors, seizures. Found in coffee, tea, energy drinks, chocolate, and some medications. No safe dose exists for dogs.</div>
+          <div class="emergency-note">🚨 Toxic to the heart and nervous system. Treat as emergency.</div>
+        </div>
+      </div>
+
+      <!-- Alcohol -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🍷</span>
+          <h5>Alcohol</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> Vomiting, disorientation, dangerous drops in blood sugar/pressure/temperature, breathing difficulties, seizures, coma. Even beer, wine, or bread dough (which ferments) is dangerous.</div>
+          <div class="emergency-note">🚨 There is no safe amount of alcohol for dogs. Emergency vet required.</div>
+        </div>
+      </div>
+
+      <!-- Avocado -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="danger-card">
+          <span class="danger-icon">🥑</span>
+          <h5>Avocado</h5>
+          <div class="affected-pets"><span>Dogs</span></div>
+          <div class="symptoms"><strong>Symptoms:</strong> The high fat content may cause stomach upset or pancreatitis in dogs. The pit is also a choking hazard.</div>
+          <div class="emergency-note">🚨 Keep avocado and its pit away from dogs.</div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+    <div class="alert alert-danger mt-4 d-flex align-items-start gap-3">
+      <i class="fas fa-exclamation-triangle fa-lg mt-1"></i>
+      <div>
+        <strong>Important Note:</strong> This list is not exhaustive. When in doubt about a new food, consult your veterinarian before feeding it to your dog. If you believe your dog has ingested a toxic substance, contact the <strong>Pet Poison Helpline (+1-855-764-7661)</strong> or your nearest emergency vet immediately.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<main class="container" style="max-width: 1200px;">
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3 – Homemade Recipes
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider" style="background: linear-gradient(90deg, #16a34a, #06b6d4);"></div>
+    <h2 class="section-title">🍳 Healthy Homemade Recipes</h2>
+    <p class="section-subtitle">Simple, vet-safe recipe ideas for an occasional homemade treat. Always consult your vet for a fully balanced diet plan.</p>
+
+    <div class="alert alert-warning mb-4 d-flex align-items-start gap-3">
+      <i class="fas fa-exclamation-triangle fa-lg mt-1"></i>
+      <div><strong>Disclaimer:</strong> These recipes are intended as occasional supplemental meals or treats, not as complete diet replacements. Homemade diets require careful formulation to ensure nutritional balance. Always consult a veterinary nutritionist or your vet before transitioning to a homemade diet. Individual pets may have allergies or sensitivities.</div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Recipe 1: Chicken & Rice for Dogs -->
+      <div class="col-md-4">
+        <div class="recipe-card">
+          <div class="recipe-header">
+            <span class="recipe-emoji">🍗</span>
+            <h5>Chicken &amp; Rice Recovery Meal</h5>
+            <span class="pet-tag">🐶 Dogs</span>
+          </div>
+          <div class="recipe-body">
+            <h6>Ingredients</h6>
+            <ul>
+              <li>1 cup plain boneless chicken breast (no seasoning)</li>
+              <li>2 cups plain white rice (cooked)</li>
+              <li>1 cup low-sodium chicken broth (no onion/garlic)</li>
+              <li>½ cup carrots (cooked, mashed)</li>
+            </ul>
+            <h6>Instructions</h6>
+            <ul>
+              <li>Boil chicken until fully cooked. Shred finely.</li>
+              <li>Cook rice in broth for extra flavour (without additives).</li>
+              <li>Mix together with mashed carrots and cool completely.</li>
+              <li>Serve at room temperature, refrigerate remainder.</li>
+            </ul>
+            <h6>Benefits</h6>
+            <ul>
+              <li>Bland and easy to digest — ideal during stomach upsets</li>
+              <li>Lean protein supports muscle recovery</li>
+              <li>Plain carbohydrates soothe the gut</li>
+            </ul>
+            <div class="recipe-disclaimer">⚠️ Not a complete diet. Use as a temporary meal during recovery or as an occasional supplement. Consult your vet before use.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 4 – Feeding Schedule Guide
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding-sm mb-5">
+    <div class="section-divider"></div>
+    <h2 class="section-title">📅 Feeding Schedule Guide</h2>
+    <p class="section-subtitle">How often to feed based on your dog's age. Portion sizes vary by breed and weight — consult your vet or the food packaging for specific amounts.</p>
+
+    <div class="row g-4">
+
+      <!-- Dog Schedule -->
+      <div class="col-lg-12">
+        <div class="card border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+          <div class="card-header py-3 fw-bold" style="background: linear-gradient(135deg, #312e81, #4f46e5); color: #fff; font-size: 1.05rem;">🐶 Dog Feeding Schedule</div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 schedule-table">
+                <thead>
+                  <tr>
+                    <th>Age / Stage</th>
+                    <th>Meals Per Day</th>
+                    <th>Food Type</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Puppy (0–3 weeks)</td><td>Mother's milk / every 2 hrs</td><td>Mother's milk or puppy formula</td><td>Do not separate from mother</td></tr>
+                  <tr><td>Puppy (3–6 weeks)</td><td>4–5 times daily</td><td>Begin softened puppy kibble + mother's milk</td><td>Weaning period — gradual introduction</td></tr>
+                  <tr><td>Puppy (6–12 weeks)</td><td>4 times daily</td><td>High-quality puppy kibble</td><td>Small, frequent meals for developing gut</td></tr>
+                  <tr><td>Puppy (3–6 months)</td><td>3 times daily</td><td>Puppy formula kibble</td><td>Monitor for consistent growth</td></tr>
+                  <tr><td>Puppy (6–12 months)</td><td>2–3 times daily</td><td>Puppy or transitional adult food</td><td>Large breeds need puppy food longer</td></tr>
+                  <tr><td>Adult (1–7 years)</td><td>2 times daily</td><td>Complete adult dog food</td><td>Morning and evening feeding recommended</td></tr>
+                  <tr><td>Senior (7+ years)</td><td>2 times daily</td><td>Senior / joint-support dog food</td><td>Reduced calories; more fibre for digestion</td></tr>
+                  <tr><td>Pregnant/Nursing</td><td>3–4 times daily</td><td>Puppy formula or high-calorie adult food</td><td>Increased caloric needs; vet guidance required</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+    <div class="alert alert-info mt-4 d-flex align-items-start gap-3">
+      <i class="fas fa-info-circle fa-lg mt-1"></i>
+      <div>
+        <strong>Pro Tips:</strong>
+        <ul class="mb-0 mt-1">
+          <li>Always provide fresh, clean water alongside every meal.</li>
+          <li>Use measuring cups to avoid overfeeding — obesity is one of the most common preventable pet health problems.</li>
+          <li>Transition between foods gradually over 7–10 days to avoid digestive upset: 25% new / 75% old → 50/50 → 75% new / 25% old → 100% new.</li>
+          <li>Feed at consistent times each day to establish healthy digestive rhythms.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-brand">🐾 PetCare Connect</div>
+        <p style="color:#94a3b8; font-size:0.9rem; line-height:1.7;">Your trusted companion for pet adoption, care, and wellness. Connecting loving families with animals in need since 2024.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Shelters</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="petcare.html">Pet Care</a></li>
+          <li><a href="food.html">Food Guide</a></li>
+          <li><a href="medicine.html">Medicine Info</a></li>
+          <li><a href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Account</h5>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Emergency</h5>
+        <ul>
+          <li><a href="petcare.html">First Aid Guide</a></li>
+        </ul>
+        <div class="mt-3">
+          <small style="color:#64748b;">🚨 Pet Poison Helpline</small><br>
+          <strong style="color:#f87171;">+1-855-764-7661</strong>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p class="mb-0">© 2024 PetCare Connect. All rights reserved. | This site provides educational information only. Always consult a qualified veterinarian for dietary advice.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=services-v1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+/* ─── Static Fallback Food Data ─── */
+const STATIC_FOOD_DATA = [
+  {
+    name: "Puppy Kibble",
+    petType: "dog",
+    category: "Dry Food",
+    icon: "🐕",
+    benefits: "High protein content for rapid muscle growth, DHA for brain and eye development, calcium and phosphorus for strong bones. Specially formulated caloric density for growing puppies.",
+    feeding: "3–4 times daily. Follow package guidelines based on expected adult weight. Always measure portions.",
+    safety: "Ensure fresh water is always available. Choose a brand with AAFCO nutritional adequacy statement for 'growth'."
+  },
+  {
+    name: "Adult Dry Dog Food",
+    petType: "dog",
+    category: "Dry Food",
+    icon: "🦮",
+    benefits: "Balanced protein, fat, and carbohydrates for adult maintenance. Supports healthy weight, coat, and energy levels. Helps with dental cleaning through mechanical abrasion.",
+    feeding: "2 times daily — morning and evening. Portion according to weight and activity level.",
+    safety: "Store in airtight container. Check for recalls regularly. Transition new foods gradually over 7–10 days."
+  },
+  {
+    name: "Wet Dog Food",
+    petType: "dog",
+    category: "Wet Food",
+    icon: "🥘",
+    benefits: "High moisture content aids hydration. Highly palatable — ideal for picky eaters or seniors. Easier to chew for dogs with dental issues. High protein from real meat sources.",
+    feeding: "Can be fed alone (2x/day) or mixed with dry food. Refrigerate unused portions and use within 2 days of opening.",
+    safety: "Check sugar and salt content. Some wet foods have high sodium — not ideal for pets with heart conditions."
+  },
+  {
+    name: "Senior Dog Formula",
+    petType: "dog",
+    category: "Dry Food",
+    icon: "🐾",
+    benefits: "Reduced calories to prevent weight gain. Added glucosamine and chondroitin for joint support. Higher fibre for digestive health. Antioxidants for immune system support.",
+    feeding: "2 times daily. Senior dogs may have reduced appetite — monitor weight monthly.",
+    safety: "Consult vet before switching. Some seniors need prescription diets for kidney, heart, or liver support."
+  },
+  {
+    name: "Dog Training Treats",
+    petType: "dog",
+    category: "Treat",
+    icon: "🎯",
+    benefits: "Small, soft treats ideal for reward-based training. High palatability reinforces positive behaviour. Many are formulated with real meat for high motivation.",
+    feeding: "Treats should not exceed 10% of daily caloric intake. Use tiny pieces (pea-sized) during training sessions.",
+    safety: "Avoid treats with excessive sodium, sugar, or artificial preservatives. Adjust main meal portions on heavy treat days to avoid weight gain."
+  },
+  {
+    name: "Dental Chews (Dogs)",
+    petType: "dog",
+    category: "Treat",
+    icon: "🦷",
+    benefits: "Mechanical action reduces plaque and tartar. Some are VOHC-approved. Freshens breath. Provides mental stimulation and satisfies chewing instinct.",
+    feeding: "One dental chew per day, appropriate size for your dog's weight. Give under supervision.",
+    safety: "Supervise chewing — gulping large pieces can cause choking or intestinal blockage. Not a substitute for brushing."
+  },
+  {
+    name: "Chicken & Rice (Homemade)",
+    petType: "dog",
+    category: "Homemade",
+    icon: "🍗",
+    benefits: "Easily digestible. Ideal for pets recovering from stomach upsets. Lean protein for muscle maintenance. Plain rice soothes an irritated digestive tract.",
+    feeding: "Use as a temporary bland diet during digestive recovery. Feed in same quantities as regular food.",
+    safety: "No salt, onion, garlic, or spices. Only plain boiled chicken and plain white rice. Not a long-term complete diet."
+  }
+];
+
+/* ─── Render food cards ─── */
+function buildFoodCard(item) {
+  const escapeFood = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[character]);
+  return `
+    <div class="col-sm-6 col-lg-4 food-item" data-type="${escapeFood(item.petType)}">
+      <div class="food-card">
+        <span class="food-icon">${escapeFood(item.icon)}</span>
+        <h5>${escapeFood(item.name)}</h5>
+        <div class="badge-container">
+          <span class="pet-type-badge">${escapeFood(capitalizeFood(item.petType))}</span>
+          <span class="category-badge">${escapeFood(item.category)}</span>
+        </div>
+        ${item.isDangerous ? '<span class="badge text-bg-danger mb-2">Dangerous — do not feed</span>' : ''}
+        <p class="benefits">${escapeFood(item.benefits)}</p>
+        <div class="feeding-info">
+          <strong>🍽️ Feeding:</strong> ${escapeFood(item.feeding)}
+        </div>
+        <div class="safety-info">
+          <strong>⚠️ Safety:</strong> ${escapeFood(item.safety)}
+        </div>
+      </div>
+    </div>`;
+}
+
+function capitalizeFood(s) {
+  if (!s) return '';
+  if (s === 'homemade') return 'Homemade';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function renderFoods(data, filter) {
+  const grid = document.getElementById('foodGrid');
+  const empty = document.getElementById('foodEmpty');
+  const filtered = filter === 'all' ? data : data.filter(d =>
+    d.petType === filter || d.category?.toLowerCase().includes(filter)
+  );
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(buildFoodCard).join('');
+  grid.style.display = 'flex';
+  grid.style.flexWrap = 'wrap';
+  empty.style.display = 'none';
+}
+
+/* ─── Load public food guide from the Node.js API ─── */
+async function loadFoodData() {
+  const loading = document.getElementById('foodLoading');
+  const notice = document.getElementById('foodDataNotice');
+
+  try {
+    const apiBaseUrl = window.PAWCARE_CONFIG?.API_BASE_URL;
+    if (!apiBaseUrl) throw new Error('API URL is not configured. Check frontend/js/config.js.');
+    const response = await fetch(`${apiBaseUrl}/food?limit=100`);
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || `Food guide unavailable (HTTP ${response.status}).`);
+    const data = (result.data || []).map(row => ({
+      name: row.food_name,
+      petType: (row.pet_type || '').toLowerCase(),
+      category: row.category || 'General',
+      icon: getDefaultIcon(row.pet_type),
+      benefits: row.benefits || 'No description supplied.',
+      feeding: row.feeding_info || 'Follow product labeling and consult a veterinarian for individual feeding needs.',
+      safety: row.safety_info || 'Review product safety guidance and consult a veterinarian.',
+      isDangerous: row.is_dangerous === true
+    }));
+    if (!data.length) throw new Error('No food guide entries have been added to the database yet.');
+    window._foodData = data;
+    renderFoods(data, 'all');
+  } catch (err) {
+    console.error('[Food] Could not load food guide:', err);
+    notice.textContent = `Food listings could not be loaded: ${err.message}`;
+    notice.hidden = false;
+    document.getElementById('foodGrid').style.display = 'none';
+    document.getElementById('foodEmpty').style.display = 'block';
+  }
+  loading.style.display = 'none';
+}
+
+function getDefaultIcon(petType) {
+  const icons = { dog: '🐕', treat: '🎁' };
+  return icons[(petType || '').toLowerCase()] || '🍽️';
+}
+
+/* ─── Filter pill interactions ─── */
+document.querySelectorAll('.filter-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    if (window._foodData) renderFoods(window._foodData, filter);
+  });
+});
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', loadFoodData);
+</script>
+</body>
+</html>

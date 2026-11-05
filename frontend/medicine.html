@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet Medicine Information | PetCare Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --danger-red: #dc2626;
+      --success: #16a34a;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --card-shadow: 0 4px 24px rgba(79,70,229,0.10);
+      --border-radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding-top: 72px;
+    }
+
+    /* ── Navbar ── */
+    .pawcare-navbar { background: linear-gradient(135deg, #1e293b 0%, #312e81 100%); box-shadow: 0 2px 20px rgba(0,0,0,0.25); padding: 0.6rem 0; }
+    .pawcare-navbar .navbar-brand { font-size: 1.5rem; font-weight: 800; color: #fff !important; letter-spacing: -0.5px; }
+    .pawcare-navbar .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 500; font-size: 0.9rem; padding: 0.4rem 0.65rem !important; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+    .pawcare-navbar .nav-link:hover, .pawcare-navbar .nav-link.active { background: rgba(255,255,255,0.15); color: #fff !important; }
+    .navbar-toggler { border-color: rgba(255,255,255,0.4); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ── Hero ── */
+    .hero-section {
+      background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 40%, #991b1b 100%);
+      padding: 80px 0 60px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-section .badge-pill { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; display: inline-block; margin-bottom: 1rem; }
+    .hero-section h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; margin-bottom: 0.75rem; }
+    .hero-section p { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+    /* ── Critical Disclaimer ── */
+    .critical-disclaimer {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border: 3px solid var(--danger-red);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin: 2rem 0;
+    }
+    .critical-disclaimer .cd-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem; }
+    .critical-disclaimer .cd-icon { font-size: 2rem; flex-shrink: 0; }
+    .critical-disclaimer .cd-title { font-size: 1.1rem; font-weight: 800; color: #7f1d1d; margin: 0; }
+    .critical-disclaimer p { color: #7f1d1d; font-size: 0.92rem; line-height: 1.7; margin: 0; }
+    .critical-disclaimer ul { color: #7f1d1d; font-size: 0.92rem; margin: 0.5rem 0 0; padding-left: 1.4rem; }
+    .critical-disclaimer ul li { margin-bottom: 0.3rem; }
+
+    /* ── Section Styles ── */
+    .section-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .section-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
+    .section-divider { width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; margin: 0 0 1rem; }
+    .section-padding { padding: 5rem 0; }
+    .section-padding-sm { padding: 3rem 0; }
+
+    /* ── Pet Type Filter Buttons ── */
+    .pet-filter-btn {
+      padding: 0.5rem 1.4rem;
+      border-radius: 50px;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pet-filter-btn:hover, .pet-filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ── Medicine Cards ── */
+    .medicine-card {
+      background: #fff;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(79,70,229,0.08);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .medicine-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(79,70,229,0.14); }
+    .medicine-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; display: block; }
+    .medicine-card h5 { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; color: var(--text-dark); text-align: center; }
+    .pet-types-row { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 0.75rem; }
+    .pet-type-tag { background: #ede9fe; color: #5b21b6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .medicine-card .purpose { background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.83rem; color: var(--text-muted); margin-bottom: 0.6rem; flex-grow: 1; }
+    .medicine-card .purpose strong { color: #15803d; font-size: 0.8rem; display: block; margin-bottom: 0.25rem; }
+    .medicine-card .precautions { background: #fff7ed; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.83rem; color: #78350f; margin-bottom: 0.6rem; }
+    .medicine-card .precautions strong { color: #b45309; font-size: 0.8rem; display: block; margin-bottom: 0.25rem; }
+    .medicine-card .vet-advice { font-size: 0.8rem; text-align: center; margin: 0; border-radius: 8px; padding: 0.5rem 0.75rem; }
+
+    /* ── Condition Accordion ── */
+    .custom-accordion .accordion-button { font-weight: 700; font-size: 1rem; color: var(--text-dark); background: #fff; border-radius: 12px !important; }
+    .custom-accordion .accordion-button:not(.collapsed) { background: linear-gradient(135deg, #ede9fe, #dbeafe); color: var(--primary-dark); box-shadow: none; }
+    .custom-accordion .accordion-item { border: 1px solid rgba(79,70,229,0.15); border-radius: 12px !important; overflow: hidden; margin-bottom: 0.75rem; }
+    .custom-accordion .accordion-body { background: #fafafa; font-size: 0.93rem; }
+
+    .condition-block { display: flex; gap: 12px; margin-bottom: 1rem; padding: 0.85rem 1rem; background: #fff; border-radius: 10px; border-left: 4px solid var(--primary); }
+    .condition-block .c-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .condition-block h6 { font-weight: 700; margin: 0 0 0.3rem; font-size: 0.9rem; }
+    .condition-block p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .condition-block ul { margin: 0.4rem 0 0; padding-left: 1.2rem; font-size: 0.85rem; color: var(--text-muted); }
+    .condition-block ul li { margin-bottom: 0.2rem; }
+    .vet-consult-note { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.82rem; font-weight: 600; color: #856404; margin-top: 0.75rem; }
+
+    /* ── Vaccine Education ── */
+    .vaccine-ed-card { background: #fff; border-radius: 14px; padding: 1.5rem; box-shadow: var(--card-shadow); border-top: 4px solid var(--primary); height: 100%; }
+    .vaccine-ed-card .v-icon { font-size: 2.2rem; margin-bottom: 0.75rem; display: block; }
+    .vaccine-ed-card h5 { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .vaccine-ed-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; margin: 0; }
+
+    /* Loading States */
+    .loading-spinner { text-align: center; padding: 4rem 0; color: var(--text-muted); }
+    .loading-spinner .spinner-border { color: var(--primary); width: 3rem; height: 3rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── Footer ── */
+    .site-footer { background: linear-gradient(135deg, #1e293b, #0f172a); color: #cbd5e1; padding: 3.5rem 0 1.5rem; margin-top: 5rem; }
+    .site-footer h5 { color: #fff; font-weight: 700; margin-bottom: 1rem; }
+    .site-footer a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .site-footer a:hover { color: #a5b4fc; }
+    .site-footer ul { list-style: none; padding: 0; }
+    .site-footer ul li { margin-bottom: 0.4rem; }
+    .footer-brand { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+    .footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem; }
+    .footer-bottom { text-align: center; font-size: 0.82rem; color: #64748b; }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+<nav class="navbar navbar-expand-lg pawcare-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link" href="shelters.html">Shelters</a></li>
+        <li class="nav-item"><a class="nav-link" href="petcare.html">Pet Care</a></li>
+        <li class="nav-item"><a class="nav-link" href="food.html">Food</a></li>
+        <li class="nav-item"><a class="nav-link active" href="medicine.html">Medicine</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <a href="login.html" class="btn btn-outline-primary btn-sm" id="loginBtn">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="registerBtn">Register</a>
+        <div id="userMenu" class="d-none">
+          <a href="dashboard.html" class="btn btn-outline-secondary btn-sm">Dashboard</a>
+          <button onclick="logoutUser()" class="btn btn-outline-danger btn-sm">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero-section">
+  <div class="container position-relative">
+    <div class="badge-pill">💊 Educational Resource</div>
+    <h1>Pet Medicine Information</h1>
+    <p>General medicine information for pet owners. Species and individual health matter: always consult a veterinarian before administering medicine.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
+<main class="container" style="max-width: 1200px;">
+
+  <!-- ── CRITICAL DISCLAIMER ── -->
+  <div class="critical-disclaimer">
+    <div class="cd-header">
+      <span class="cd-icon">⚠️</span>
+      <h3 class="cd-title">IMPORTANT: Read Before Continuing</h3>
+    </div>
+    <p><strong>Never give medicine to your dog without proper veterinary advice.</strong></p>
+    <ul>
+      <li>Do <strong>not</strong> self-diagnose your dog's condition or self-administer prescription or over-the-counter medications without veterinary guidance.</li>
+      <li>Many human medications are <strong>highly toxic and potentially lethal</strong> to dogs — including common drugs like paracetamol (acetaminophen), ibuprofen, and aspirin.</li>
+      <li>This page provides <strong>educational information only</strong> about general medication categories. It does not constitute veterinary advice or a recommendation for treatment.</li>
+      <li>Always consult a <strong>licensed, qualified veterinarian</strong> for any diagnosis, dosing, or treatment plan for your dog.</li>
+      <li>If your dog is showing signs of illness or you suspect poisoning, contact your vet or an emergency animal hospital <strong>immediately</strong>.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1 – Medicine Cards
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Medicine information</h2>
+    <p class="section-subtitle">The entries below are general information from the existing PetCare Connect database, not recommendations to treat a condition.</p>
+
+    <!-- Dog medication filter -->
+    <div class="d-flex flex-wrap gap-2 mb-4" id="petFilterBtns">
+      <button class="pet-filter-btn active" data-filter="all">🌟 All</button>
+      <button class="pet-filter-btn" data-filter="dog">🐶 Dogs</button>
+      <button class="pet-filter-btn" data-filter="cat">🐱 Cats</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="medLoading" class="loading-spinner">
+      <div class="spinner-border mb-3"></div>
+      <p>Loading medicine information...</p>
+    </div>
+    <div id="medicineDataNotice" class="alert alert-warning" role="status" aria-live="polite" hidden></div>
+    <div class="alert alert-danger" role="note"><strong>Consult a veterinarian before administering any medicine.</strong> Database entries are educational and are not independently clinically reviewed. Never use a human medicine, leftover prescription, or a product intended for another species unless a veterinarian specifically instructs you. Do not use this information to diagnose or calculate a dose. If poisoning or a serious reaction is suspected, contact an emergency veterinarian immediately.</div>
+
+    <!-- Medicine Grid -->
+    <div class="row g-4" id="medicineGrid" style="display:none;"></div>
+
+    <!-- Empty state -->
+    <div id="medEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <h5>No medicines found for this filter</h5>
+      <p>Try selecting a different pet type.</p>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 2 – Common Pet Health Conditions
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding" style="padding-top: 0;">
+    <div class="section-divider"></div>
+    <h2 class="section-title">Common Dog Health Conditions</h2>
+    <p class="section-subtitle">Educational overview of frequent health issues in dogs and guidance on when professional care is needed.</p>
+
+    <div class="accordion custom-accordion" id="conditionsAccordion">
+
+      <!-- Skin Problems -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSkin">
+            🐾 Skin Problems &amp; Itching
+          </button>
+        </h2>
+        <div id="collapseSkin" class="accordion-collapse collapse show" data-bs-parent="#conditionsAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Skin issues are among the most common reasons pets visit the vet. They can range from minor irritation to serious systemic disease.</p>
+            <div class="condition-block">
+              <span class="c-icon">🦟</span>
+              <div>
+                <h6>Flea Allergy Dermatitis (FAD)</h6>
+                <p>An allergic reaction to flea saliva causing intense itching, hair loss, and skin inflammation. Even a single flea bite can trigger a severe reaction in sensitive pets.</p>
+                <ul>
+                  <li>Signs: Excessive scratching, especially at the base of the tail and inner thighs</li>
+                  <li>Hot spots (acute moist dermatitis) may develop from persistent scratching</li>
+                  <li>Year-round flea prevention is the most effective treatment</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">🌾</span>
+              <div>
+                <h6>Environmental &amp; Food Allergies</h6>
+                <p>Pets can develop allergies to pollen, mould, dust mites, or specific food proteins. Allergies are one of the most complex conditions to diagnose in veterinary medicine.</p>
+                <ul>
+                  <li>Signs: Chronic itching, recurring ear infections, paw licking, facial rubbing</li>
+                  <li>Food trials (elimination diets) lasting 8–12 weeks are required to diagnose food allergies</li>
+                  <li>Environmental allergies may require allergy testing and immunotherapy</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">🔬</span>
+              <div>
+                <h6>Ringworm (Fungal Infection)</h6>
+                <p>Despite the name, ringworm is a contagious fungal infection, not a worm. It causes circular patches of hair loss and can be transmitted to humans (zoonotic).</p>
+                <ul>
+                  <li>Signs: Circular bald patches, scaly skin, broken hairs</li>
+                  <li>Diagnosed via UV lamp (Wood's lamp), culture, or PCR test</li>
+                  <li>Highly contagious — isolate affected pets and disinfect environment</li>
+                </ul>
+              </div>
+            </div>
+            <div class="vet-consult-note">👨‍⚕️ Consult your veterinarian for proper diagnosis and treatment. Skin conditions often require prescription antifungals, antibiotics, antiparasitics, or immunosuppressants.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Digestive Issues -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDigestive">
+            🫄 Digestive Issues
+          </button>
+        </h2>
+        <div id="collapseDigestive" class="accordion-collapse collapse" data-bs-parent="#conditionsAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Gastrointestinal problems are extremely common in pets and vary from mild dietary upset to serious life-threatening conditions.</p>
+            <div class="condition-block">
+              <span class="c-icon">🤢</span>
+              <div>
+                <h6>Acute Gastroenteritis</h6>
+                <p>Sudden-onset vomiting and diarrhoea, often caused by dietary indiscretion (eating something unusual), sudden diet changes, or minor infections.</p>
+                <ul>
+                  <li>Signs: Vomiting, loose/watery stools, mild lethargy, reduced appetite</li>
+                  <li>Most mild cases resolve with 24-hour food rest and bland diet</li>
+                  <li>Monitor for blood in vomit or stool, dehydration, or worsening symptoms</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">🔄</span>
+              <div>
+                <h6>Inflammatory Bowel Disease (IBD)</h6>
+                <p>Chronic inflammation of the gastrointestinal tract. A complex condition requiring thorough investigation and long-term management.</p>
+                <ul>
+                  <li>Signs: Chronic/recurrent vomiting or diarrhoea, weight loss, poor coat condition</li>
+                  <li>Diagnosis requires bloodwork, imaging, and often intestinal biopsy</li>
+                  <li>Managed with prescription diets, anti-inflammatory medications, or immunosuppressants</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block" style="border-left-color: var(--danger-red);">
+              <span class="c-icon">🚨</span>
+              <div>
+                <h6>Gastric Dilatation-Volvulus (GDV / Bloat)</h6>
+                <p><strong style="color: var(--danger-red);">Life-threatening emergency</strong> — the stomach fills with gas and rotates, cutting off blood supply. Most common in large, deep-chested breeds (Great Danes, German Shepherds, etc.).</p>
+                <ul>
+                  <li>Signs: Distended/hard abdomen, unproductive retching, restlessness, rapid deterioration</li>
+                  <li>Requires immediate emergency surgery — death can occur within hours</li>
+                  <li>Do NOT wait — go to an emergency vet the moment these symptoms appear</li>
+                </ul>
+              </div>
+            </div>
+            <div class="vet-consult-note">👨‍⚕️ Consult your veterinarian for proper diagnosis and treatment. Never withhold veterinary care hoping digestive symptoms will resolve on their own.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Respiratory Problems -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRespiratory">
+            💨 Respiratory Problems
+          </button>
+        </h2>
+        <div id="collapseRespiratory" class="accordion-collapse collapse" data-bs-parent="#conditionsAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Respiratory conditions range from mild upper respiratory infections to serious heart and lung disease. Any difficulty breathing warrants urgent veterinary attention.</p>
+            <div class="condition-block">
+              <span class="c-icon">🤧</span>
+              <div>
+                <h6>Upper Respiratory Infection (URI)</h6>
+                <p>Kennel cough (Bordetella) is a contagious respiratory infection that can spread quickly anywhere dogs gather, including boarding facilities and parks.</p>
+                <ul>
+                  <li>Signs: Sneezing, nasal discharge, eye discharge, mild fever, reduced appetite</li>
+                  <li>Signs can include a dry, honking cough, sneezing, nasal discharge, and reduced appetite</li>
+                  <li>Puppies, seniors, and immunocompromised dogs are at higher risk of complications</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">❤️</span>
+              <div>
+                <h6>Heart Disease &amp; Congestive Heart Failure</h6>
+                <p>Common in older dogs and certain breeds (Cavalier King Charles Spaniels, Dachshunds). Causes fluid accumulation in and around the lungs.</p>
+                <ul>
+                  <li>Signs: Persistent cough (especially at night), exercise intolerance, rapid breathing, distended abdomen</li>
+                  <li>Diagnosed via X-rays, echocardiogram, and blood tests</li>
+                  <li>Managed with diuretics, ACE inhibitors, and cardiac medications — lifelong treatment</li>
+                </ul>
+              </div>
+            </div>
+            <div class="vet-consult-note">👨‍⚕️ Consult your veterinarian for proper diagnosis and treatment. Breathing difficulties are a medical emergency — never wait to see if they improve.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Joint & Mobility Issues -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJoint">
+            🦴 Joint &amp; Mobility Issues
+          </button>
+        </h2>
+        <div id="collapseJoint" class="accordion-collapse collapse" data-bs-parent="#conditionsAccordion">
+          <div class="accordion-body">
+            <p class="text-muted mb-3">Musculoskeletal conditions significantly impact a pet's quality of life. Early detection and management can slow progression and maintain mobility.</p>
+            <div class="condition-block">
+              <span class="c-icon">🚶</span>
+              <div>
+                <h6>Osteoarthritis (OA)</h6>
+                <p>Osteoarthritis causes degeneration of joint cartilage, leading to chronic pain and reduced mobility. It is common in senior dogs and certain breeds.</p>
+                <ul>
+                  <li>Signs: Stiffness after rest, reluctance to jump or climb stairs, licking/biting at joints, behaviour changes, reduced activity</li>
+                  <li>Managed with weight control, joint supplements, physiotherapy, NSAIDs, and newer medications</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">🐕</span>
+              <div>
+                <h6>Hip Dysplasia</h6>
+                <p>Abnormal development of the hip joint — most common in large and giant breed dogs (German Shepherds, Labradors, Golden Retrievers). Has a strong genetic component.</p>
+                <ul>
+                  <li>Signs: Bunny-hopping gait, reluctance to exercise, lameness, loss of thigh muscle mass</li>
+                  <li>Diagnosed via X-rays</li>
+                  <li>Treatment ranges from weight management and physiotherapy to surgical correction in severe cases</li>
+                </ul>
+              </div>
+            </div>
+            <div class="condition-block">
+              <span class="c-icon">🐩</span>
+              <div>
+                <h6>Intervertebral Disc Disease (IVDD)</h6>
+                <p>Herniation of spinal discs causing spinal cord compression. Common in Dachshunds, Beagles, Cocker Spaniels, and other chondrodystrophic breeds.</p>
+                <ul>
+                  <li>Signs: Neck/back pain, hunched posture, wobbly gait, reluctance to move, paralysis in severe cases</li>
+                  <li>Emergency: Sudden paralysis or inability to urinate requires immediate veterinary assessment</li>
+                  <li>Treatment: Conservative management (cage rest + medication) or surgery depending on severity</li>
+                </ul>
+              </div>
+            </div>
+            <div class="vet-consult-note">👨‍⚕️ Consult your veterinarian for proper diagnosis and treatment. Joint conditions require X-rays, physical examination, and often specialist referral for accurate management.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3 – Vaccination Schedule (Educational)
+  ══════════════════════════════════════════════════════ -->
+  <section class="section-padding-sm mb-5">
+    <div class="section-divider"></div>
+    <h2 class="section-title">💉 Understanding Pet Vaccines</h2>
+    <p class="section-subtitle">Educational information about how vaccines work and why they are essential for your dog's health. This is not a dosage guide — always follow your vet's advice.</p>
+
+    <div class="alert alert-info mb-4 d-flex align-items-start gap-3">
+      <i class="fas fa-info-circle fa-lg mt-1"></i>
+      <div>Vaccines are one of the most important tools in preventive veterinary medicine. They train your dog's immune system to recognise and fight specific pathogens without causing the actual disease. Recommended vaccines depend on age, lifestyle, and geographic location — work with your vet to create a personalised vaccination schedule.</div>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="vaccine-ed-card">
+          <span class="v-icon">🛡️</span>
+          <h5>Core vs Non-Core Vaccines</h5>
+          <p><strong>Core vaccines</strong> are recommended for dogs regardless of lifestyle and protect against widespread or severe diseases. Examples include rabies and DHPP.<br><br><strong>Non-core vaccines</strong> are recommended based on individual risk factors such as geographic location, lifestyle, and exposure to other dogs. Examples include leptospirosis and Bordetella.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="vaccine-ed-card">
+          <span class="v-icon">📅</span>
+          <h5>Puppy Vaccine Series</h5>
+          <p>Puppies require a series of vaccines given weeks apart to build sufficient immunity. Maternal antibodies can interfere with vaccine response, so doses are spaced as those antibodies wane. Missing doses or spacing them incorrectly can leave gaps in protection. Always complete the full series as directed by your vet.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="vaccine-ed-card">
+          <span class="v-icon">🔄</span>
+          <h5>Booster Vaccines</h5>
+          <p>Immunity from vaccines does not always last a lifetime. Boosters are given to maintain protection — frequency depends on the vaccine type (some are annual, others every 3 years). Titre testing is available for some vaccines to measure current immunity levels, which can guide decisions about booster timing. Never skip boosters without discussing with your vet.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="vaccine-ed-card">
+          <span class="v-icon">⚡</span>
+          <h5>Possible Side Effects</h5>
+          <p>Most dogs experience no or minimal side effects. Mild, temporary reactions are normal and indicate the immune system is responding: slight soreness at injection site, mild lethargy for 24–48 hours, reduced appetite. Rare severe reactions (anaphylaxis) can include facial swelling, vomiting, difficulty breathing, or collapse — seek emergency care if these occur within a few hours of vaccination.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="vaccine-ed-card">
+          <span class="v-icon">📋</span>
+          <h5>Keeping Vaccination Records</h5>
+          <p>Always keep a written or digital record of all vaccines administered, including the date, product name, batch number, and due date for the next dose. Most countries require proof of up-to-date rabies vaccination for travel. Log your pet's vaccination history securely on your <a href="dashboard.html" class="fw-bold">PetCare Connect Dashboard</a> and set reminders for upcoming boosters.</p>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-brand">🐾 PetCare Connect</div>
+        <p style="color:#94a3b8; font-size:0.9rem; line-height:1.7;">Your trusted companion for pet adoption, care, and wellness. Connecting loving families with animals in need since 2024.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Shelters</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="petcare.html">Pet Care</a></li>
+          <li><a href="food.html">Food Guide</a></li>
+          <li><a href="medicine.html">Medicine Info</a></li>
+          <li><a href="videos.html">Videos</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Account</h5>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Emergency</h5>
+        <ul>
+          <li><a href="petcare.html">First Aid Guide</a></li>
+        </ul>
+        <div class="mt-3">
+          <small style="color:#64748b;">🚨 Pet Poison Helpline</small><br>
+          <strong style="color:#f87171;">+1-855-764-7661</strong>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p class="mb-0">© 2024 PetCare Connect. All rights reserved. | This site provides educational information only. Never administer medications without veterinary advice.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=services-v1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+<script>
+/* ─── Static Fallback Medicine Data ─── */
+const STATIC_MED_DATA = [
+  {
+    name: "Flea & Tick Prevention (Spot-On Topical)",
+    icon: "🦟",
+    petTypes: ["dog"],
+    purpose: "Applied monthly to the skin between shoulder blades to kill and prevent fleas, ticks, and sometimes mites. Active ingredients vary by brand (fipronil, selamectin, imidacloprid, etc.).",
+    precautions: "Consult your veterinarian before use and follow the product label. Keep your dog from licking the application site until dry.",
+    category: "antiparasitic"
+  },
+  {
+    name: "Oral Flea Prevention (Monthly Chewable)",
+    icon: "💊",
+    petTypes: ["dog"],
+    purpose: "Monthly oral medication that kills fleas through the bloodstream when they bite. Some formulas also cover ticks and heartworm. Prescription required in many countries.",
+    precautions: "Some dogs may experience vomiting, diarrhoea, or lethargy. Prescription-only in many regions — consult your vet for an appropriate product and dose.",
+    category: "antiparasitic"
+  },
+  {
+    name: "Heartworm Prevention",
+    icon: "❤️",
+    petTypes: ["dog"],
+    purpose: "Monthly medication (oral or topical) to prevent heartworm disease, which is transmitted by mosquitoes and can cause life-threatening heart and lung damage. Far easier and safer to prevent than treat.",
+    precautions: "Must test negative for heartworm before starting prevention. Giving preventives to a heartworm-positive dog without treatment can cause a severe and potentially fatal reaction. Prescription required.",
+    category: "antiparasitic"
+  },
+  {
+    name: "Broad-Spectrum Dewormer",
+    icon: "🪱",
+    petTypes: ["dog"],
+    purpose: "Treats internal parasites including roundworms, hookworms, tapeworms, and whipworms. Active ingredients include fenbendazole, praziquantel, and pyrantel pamoate depending on the product.",
+    precautions: "Different dewormers target different worm types — no single product treats all. Dose is calculated by body weight. Some are over-the-counter; others require a prescription. Over-the-counter products may be less effective than prescription versions.",
+    category: "antiparasitic"
+  },
+  {
+    name: "NSAIDs — Pain & Inflammation",
+    icon: "🔥",
+    petTypes: ["dog"],
+    purpose: "Non-steroidal anti-inflammatory drugs reduce pain and inflammation from arthritis, post-surgical recovery, and injuries. Common veterinary NSAIDs for dogs include carprofen, meloxicam, and grapiprant.",
+    precautions: "NEVER give human NSAIDs (ibuprofen, naproxen, aspirin) to dogs — they can cause fatal kidney failure and gastrointestinal bleeding. Requires veterinary prescription and may need bloodwork monitoring for kidney and liver function.",
+    category: "painkiller"
+  },
+  {
+    name: "Antibiotics (Prescription Only)",
+    icon: "💉",
+    petTypes: ["dog"],
+    purpose: "Used to treat bacterial infections including skin infections (pyoderma), urinary tract infections, respiratory infections, dental infections, and wound infections. Common types: amoxicillin, doxycycline, enrofloxacin, clindamycin.",
+    precautions: "Prescription only — never use leftover human antibiotics. Incorrect use causes antibiotic resistance. Complete the full course even if symptoms improve.",
+    category: "antibiotic"
+  },
+  {
+    name: "Antifungal Medications",
+    icon: "🍄",
+    petTypes: ["dog"],
+    purpose: "Treat fungal infections including ringworm (topical antifungals), yeast ear infections (otic antifungals), and systemic fungal diseases (oral antifungals like itraconazole or fluconazole).",
+    precautions: "Oral antifungals require monitoring of liver function as some can cause hepatotoxicity. Treatment courses are often long (several weeks). Topical antifungals are generally safer but must be used consistently.",
+    category: "antifungal"
+  },
+  {
+    name: "Allergy Medications (Apoquel / Cytopoint)",
+    icon: "🌸",
+    petTypes: ["dog"],
+    purpose: "Modern allergy treatments that target specific itch pathways with fewer side effects than steroids. Apoquel (oclacitinib) is a daily oral tablet; Cytopoint is an injectable monoclonal antibody given every 4–8 weeks by a vet.",
+    precautions: "Not suitable for all dogs — contraindicated in dogs with serious infections or certain cancers. Requires veterinary prescription and monitoring. These treat symptoms, not the underlying cause — allergy testing and immunotherapy are often recommended alongside.",
+    category: "allergy"
+  },
+  {
+    name: "Corticosteroids (Prednisone / Prednisolone)",
+    icon: "💪",
+    petTypes: ["dog"],
+    purpose: "Powerful anti-inflammatory medications used for allergies, immune-mediated diseases, inflammatory bowel disease, and as short-term pain relief. Highly effective but come with significant potential side effects with long-term use.",
+    precautions: "Must NEVER be stopped abruptly — requires gradual dose tapering. Long-term use causes increased thirst/urination, weight gain, muscle wasting, and increased infection risk. Avoid concurrent use with NSAIDs (life-threatening GI bleeding risk). Prescription only.",
+    category: "anti-inflammatory"
+  },
+  {
+    name: "Ear Infection Drops (Otic)",
+    icon: "👂",
+    petTypes: ["dog"],
+    purpose: "Topical ear medications containing combinations of antibiotics, antifungals, and corticosteroids to treat ear infections (otitis externa) caused by bacteria, yeast, or both. Some are multi-week single-dose formulas applied by the vet.",
+    precautions: "Never use ear drops without confirming the eardrum is intact — medication entering a ruptured eardrum can cause deafness. Your vet should diagnose the type of infection (bacterial vs yeast) as incorrect treatment can worsen the condition.",
+    category: "otic"
+  },
+  {
+    name: "Gabapentin (Pain / Anxiety)",
+    icon: "😌",
+    petTypes: ["dog"],
+    purpose: "Originally an anticonvulsant, gabapentin is used in veterinary medicine for chronic pain management and as a pre-visit anxiety medication for nervous dogs.",
+    precautions: "Can cause sedation and loss of coordination — dogs should not be allowed to jump or access high surfaces while medicated. Dose varies significantly; never use a dose prescribed for another animal without veterinary guidance.",
+    category: "painkiller"
+  }
+];
+
+/* ─── Render medicine cards ─── */
+function buildMedCard(item) {
+  const escapeMedicine = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[character]);
+  const petTags = item.petTypes.map(p => `<span class="pet-type-tag">${escapeMedicine(capitalise(p))}</span>`).join('');
+  return `
+    <div class="col-sm-6 col-lg-4 med-item" data-types="${escapeMedicine(item.petTypes.join(','))}">
+      <div class="medicine-card">
+        <span class="medicine-icon">${escapeMedicine(item.icon)}</span>
+        <h5>${escapeMedicine(item.name)}</h5>
+        <div class="pet-types-row">${petTags}</div>
+        <div class="purpose">
+          <strong>💊 General Purpose:</strong>
+          ${escapeMedicine(item.purpose)}
+        </div>
+        <div class="precautions">
+          <strong>⚠️ Precautions:</strong>
+          ${escapeMedicine(item.precautions)}
+        </div>
+        <div class="vet-advice alert alert-warning">
+          👨‍⚕️ Always consult your veterinarian before administering any medication to your pet.
+        </div>
+      </div>
+    </div>`;
+}
+
+function capitalise(s) {
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function renderMedicines(data, filter) {
+  const grid = document.getElementById('medicineGrid');
+  const empty = document.getElementById('medEmpty');
+  const filtered = filter === 'all' ? data : data.filter(d => d.petTypes.includes(filter));
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(buildMedCard).join('');
+  grid.style.display = 'flex';
+  grid.style.flexWrap = 'wrap';
+  empty.style.display = 'none';
+}
+
+/* ─── Load public medicine information from the Node.js API ─── */
+async function loadMedicineData() {
+  const loading = document.getElementById('medLoading');
+  const notice = document.getElementById('medicineDataNotice');
+
+  try {
+    const apiBaseUrl = window.PAWCARE_CONFIG?.API_BASE_URL;
+    if (!apiBaseUrl) throw new Error('API URL is not configured. Check frontend/js/config.js.');
+    const response = await fetch(`${apiBaseUrl}/medicine?limit=100`);
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || `Medicine information unavailable (HTTP ${response.status}).`);
+    const data = (result.data || []).map(row => ({
+      name: row.medicine_name,
+      icon: '💊',
+      petTypes: String(row.pet_type || '').toLowerCase().split(',').map(type => type.trim()).filter(Boolean),
+      purpose: row.purpose || 'No general purpose information has been supplied.',
+      precautions: row.precautions || 'No precautions have been supplied. Consult a veterinarian before administering any medicine.'
+    }));
+    window._medData = data;
+    renderMedicines(data, 'all');
+    if (!data.length) {
+      document.getElementById('medEmpty').style.display = 'block';
+      notice.textContent = 'No medicine entries have been added to the database yet.';
+      notice.hidden = false;
+    }
+  } catch (err) {
+    console.error('[Medicine] Could not load medicine information:', err);
+    notice.textContent = `Medicine information could not be loaded: ${err.message}`;
+    notice.hidden = false;
+    document.getElementById('medicineGrid').style.display = 'none';
+    document.getElementById('medEmpty').style.display = 'block';
+  }
+  loading.style.display = 'none';
+}
+
+/* ─── Filter button interactions ─── */
+document.querySelectorAll('.pet-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pet-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    if (window._medData) renderMedicines(window._medData, filter);
+  });
+});
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', loadMedicineData);
+</script>
+</body>
+</html>

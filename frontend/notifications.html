@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="View private PetCare Connect account notifications." />
+  <title>Notifications | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/site-theme.css" />
+  <link rel="stylesheet" href="css/portal-pages.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <div class="d-flex gap-3">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="dashboard.html" data-logout>Log out</a>
+      </div>
+    </div>
+  </nav>
+  <header class="portal-hero">
+    <div class="container">
+      <span class="portal-kicker">Your account updates</span>
+      <h1>Notifications</h1>
+      <p>Private updates for your PetCare Connect account.</p>
+    </div>
+  </header>
+  <main class="portal-main">
+    <div class="container">
+      <section class="portal-card" aria-labelledby="notificationsHeading">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+          <div>
+            <span class="portal-kicker">Your inbox</span>
+            <h2 class="h3 mt-2 mb-0" id="notificationsHeading">Recent notifications</h2>
+          </div>
+          <button class="btn btn-outline-primary" id="markAllRead" type="button" disabled>Mark all as read</button>
+        </div>
+        <div id="notificationStatus" class="alert alert-info" role="status" aria-live="polite">
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Loading notifications…
+        </div>
+        <div id="notificationList" class="d-grid gap-3"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="portal-footer">
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+      <a href="dashboard.html">Dashboard</a><a href="index.html">Home</a>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=review-fixes-1"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const statusBox = document.getElementById('notificationStatus');
+    const list = document.getElementById('notificationList');
+    const markAllButton = document.getElementById('markAllRead');
+    let items = [];
+    const escapeText = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+
+    function showStatus(message, kind = 'info') {
+      statusBox.className = `alert alert-${kind}`;
+      statusBox.textContent = message;
+      statusBox.hidden = false;
+    }
+
+    async function request(path, method = 'GET') {
+      const { data, error } = await window.PAWCARE_CONFIG.supabase.auth.getSession();
+      if (error) throw error;
+      if (!data.session?.access_token) throw new Error('Your session expired. Please sign in again.');
+      const response = await fetch(`${window.PAWCARE_CONFIG.API_BASE_URL}/notifications${path}`, {
+        method,
+        headers: { Authorization: `Bearer ${data.session.access_token}` }
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || `Notifications request failed (HTTP ${response.status}).`);
+      }
+      return result;
+    }
+
+    function render() {
+      if (!items.length) {
+        list.innerHTML = '';
+        showStatus('You have no notifications yet.');
+        markAllButton.disabled = true;
+        return;
+      }
+      statusBox.hidden = true;
+      list.innerHTML = items.map(item => `<article class="border rounded-4 p-3 ${item.is_read ? 'bg-light' : 'border-primary'}">
+        <div class="d-flex flex-wrap justify-content-between gap-2">
+          <h3 class="h6 mb-1">${escapeText(item.title)}</h3>
+          <span class="badge ${item.is_read ? 'text-bg-secondary' : 'text-bg-primary'}">${item.is_read ? 'Read' : 'Unread'}</span>
+        </div>
+        <p class="portal-muted mb-2">${escapeText(item.message)}</p>
+        <div class="d-flex justify-content-between align-items-center gap-2">
+          <time class="small text-secondary" datetime="${escapeText(item.created_at)}">${escapeText(new Date(item.created_at).toLocaleString())}</time>
+          ${item.is_read ? '' : `<button class="btn btn-sm btn-outline-primary" type="button" data-read-notification="${escapeText(item.id)}">Mark as read</button>`}
+        </div>
+      </article>`).join('');
+      markAllButton.disabled = !items.some(item => !item.is_read);
+    }
+
+    async function loadNotifications() {
+      showStatus('Loading notifications…');
+      try {
+        const result = await request('?limit=100');
+        items = result.data || [];
+        render();
+      } catch (error) {
+        console.error('Could not load notifications:', error);
+        showStatus(`Could not load notifications: ${error.message}`, error.message.includes('SUPABASE_SERVICE_ROLE_KEY') ? 'warning' : 'danger');
+      }
+    }
+
+    list.addEventListener('click', async event => {
+      const button = event.target.closest('[data-read-notification]');
+      if (!button) return;
+      button.disabled = true;
+      try {
+        await request(`/${encodeURIComponent(button.dataset.readNotification)}/read`, 'PUT');
+        const item = items.find(notification => notification.id === button.dataset.readNotification);
+        if (item) item.is_read = true;
+        render();
+      } catch (error) {
+        console.error('Could not mark notification as read:', error);
+        showStatus(`Could not update notification: ${error.message}`, 'danger');
+        button.disabled = false;
+      }
+    });
+
+    markAllButton.addEventListener('click', async () => {
+      markAllButton.disabled = true;
+      try {
+        await request('/read-all', 'PUT');
+        items = items.map(item => ({ ...item, is_read: true }));
+        render();
+      } catch (error) {
+        console.error('Could not mark notifications as read:', error);
+        showStatus(`Could not update notifications: ${error.message}`, 'danger');
+        markAllButton.disabled = false;
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!window.PAWCARE_CONFIG?.supabase) {
+        showStatus('Notifications are unavailable until Supabase is configured.', 'danger');
+        return;
+      }
+      const user = await window.PawCareAuth.requireAuth();
+      if (user) await loadNotifications();
+    });
+  </script>
+</body>
+</html>

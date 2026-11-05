@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Log in to your PetCare Connect account." />
+  <title>Log In | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #20382d; --green: #2f684c; --muted: #6d7c72; --cream: #f6f6ef; --line: #e1e6dc; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+    .topbar { background: #193e30; }
+    .topbar .navbar-brand { color: #fff; font-weight: 700; }
+    .login-layout { min-height: calc(100vh - 58px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .9fr); }
+    .welcome-panel { display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 7vw, 6.5rem); color: #fff; background: linear-gradient(145deg, #193e30, #347253); }
+    .welcome-panel h1 { max-width: 580px; font-family: 'Fraunces', serif; font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.1; }
+    .welcome-panel p { max-width: 490px; color: rgba(255,255,255,.8); line-height: 1.8; }
+    .form-panel { display: grid; place-items: center; padding: 2rem; }
+    .auth-card { width: min(100%, 450px); padding: clamp(1.5rem, 4vw, 2.6rem); border: 1px solid var(--line); border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(30,60,42,.08); }
+    .card-mark { display: grid; width: 48px; height: 48px; margin-bottom: 1.2rem; place-items: center; border-radius: 16px; background: #e9f3e7; color: var(--green); font-size: 1.2rem; }
+    .auth-card h2 { font-family: 'Fraunces', serif; font-size: 2rem; }
+    .auth-card .form-label { font-size: .9rem; font-weight: 600; }
+    .field-wrap { position: relative; }
+    .field-wrap > .field-icon { position: absolute; top: 50%; left: 15px; z-index: 2; color: #819286; transform: translateY(-50%); }
+    .auth-card .form-control { min-height: 50px; padding-left: 44px; border-color: var(--line); border-radius: 10px; }
+    .auth-card .form-control:focus { border-color: var(--green); box-shadow: 0 0 0 .2rem rgba(47,104,76,.12); }
+    .field-wrap .form-control.has-toggle { padding-right: 48px; }
+    .password-toggle { position: absolute; top: 50%; right: 8px; z-index: 3; display: grid; width: 36px; height: 36px; place-items: center; border: 0; border-radius: 9px; background: transparent; color: var(--muted); transform: translateY(-50%); }
+    .password-toggle:hover { background: #eef4ec; color: var(--green); }
+    .password-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .btn-login { min-height: 50px; border: 0; border-radius: 11px; background: var(--green); color: #fff; font-weight: 600; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .btn-login:hover { transform: translateY(-2px); background: #24583e; color: #fff; box-shadow: 0 10px 20px rgba(36,88,62,.18); }
+    .btn-login:disabled { opacity: .7; transform: none; }
+    .auth-link { color: var(--green); font-weight: 600; text-decoration: none; }
+    .auth-link:hover { text-decoration: underline; }
+    @media (max-width: 767.98px) {
+      .login-layout { grid-template-columns: 1fr; }
+      .welcome-panel { padding: 2.5rem 1.5rem; }
+      .welcome-panel h1 { font-size: 2.6rem; }
+      .form-panel { padding: 1.25rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+  <nav class="navbar topbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <a class="btn btn-sm btn-outline-light" href="register.html">Create account</a>
+    </div>
+  </nav>
+  <main class="login-layout">
+    <section class="welcome-panel">
+      <h1>Welcome back.</h1>
+      <p>Log in to continue your adoption journey, check your applications, or get help from the PetCare Connect team.</p>
+    </section>
+    <section class="form-panel">
+      <div class="auth-card">
+        <div class="card-mark" aria-hidden="true"><i class="fas fa-paw"></i></div>
+        <h2>Log in</h2>
+        <p class="text-secondary mb-4">Use the email and password for your account.</p>
+        <div class="alert d-none" id="loginMessage" role="status" aria-live="polite"></div>
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-envelope" aria-hidden="true"></i>
+              <input class="form-control" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-lock" aria-hidden="true"></i>
+              <input class="form-control has-toggle" id="password" name="password" type="password" autocomplete="current-password" required />
+              <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <button class="btn btn-login w-100" id="loginSubmit" type="submit"><i class="fas fa-right-to-bracket me-2" aria-hidden="true"></i>Log in <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i></button>
+        </form>
+        <p class="text-secondary text-center mt-3 mb-0">New to PetCare Connect? <a class="auth-link" href="register.html">Create an account <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i></a></p>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=adoption-auth-1"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const loginSubmit = document.getElementById('loginSubmit');
+
+    document.querySelectorAll('[data-password-toggle]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        const showPassword = input.type === 'password';
+        input.type = showPassword ? 'text' : 'password';
+        button.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
+        button.setAttribute('aria-pressed', String(showPassword));
+        button.innerHTML = `<i class="fas fa-eye${showPassword ? '-slash' : ''}" aria-hidden="true"></i>`;
+      });
+    });
+
+    loginForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      loginMessage.className = 'alert d-none';
+      loginSubmit.disabled = true;
+      loginSubmit.textContent = 'Logging in…';
+
+      const params = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect')
+        || sessionStorage.getItem('pawcare_redirect_after_login')
+        || 'dashboard.html';
+      const result = await loginUser(
+        document.getElementById('email').value.trim(),
+        document.getElementById('password').value,
+        redirectTo
+      );
+
+      if (!result.success) {
+        loginMessage.textContent = result.error;
+        loginMessage.className = 'alert alert-danger';
+        loginSubmit.disabled = false;
+        loginSubmit.innerHTML = '<i class="fas fa-right-to-bracket me-2" aria-hidden="true"></i>Log in <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>';
+      }
+    });
+  </script>
+</body>
+</html>

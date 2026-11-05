@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manage PetCare Connect pet listings." />
+  <title>Manage Pets | PetCare Connect Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/site-theme.css" />
+  <style>
+    :root { --ink: #20342b; --muted: #708077; --green: #245c45; --line: #e5eae5; --paper: #f6f8f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+    .topbar { background: #183d30; }
+    .topbar .navbar-brand { color: #fff; font-weight: 700; }
+    .panel { padding: 1.15rem; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 8px 26px rgba(30,60,42,.035); }
+    .dog-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 10px; background: #edf2ed; }
+    .table > :not(caption) > * > * { vertical-align: middle; }
+    #adminApp[hidden] { display: none !important; }
+    .notice:empty { display: none; }
+    @media (max-width: 575.98px) { .panel { padding: .8rem; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg topbar">
+    <div class="container-fluid px-3 px-lg-4">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect <span class="fw-normal opacity-75">/ Admin</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle admin navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="adminNav">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2 py-2 py-lg-0">
+          <a class="nav-link text-white" href="index.html">Dashboard</a>
+          <a class="nav-link text-white" href="pets.html" aria-current="page">Manage pets</a>
+          <a class="nav-link text-white" href="vaccinations.html">Vaccinations</a>
+          <a class="nav-link text-white" href="support.html">Support inbox</a>
+          <a class="nav-link text-white" href="../index.html">View site</a>
+          <button class="btn btn-sm btn-light ms-lg-2" data-admin-signout type="button">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid px-3 px-lg-4 pt-3">
+    <div id="adminAccessState" class="alert alert-info" role="status" aria-live="polite">Verifying administrator access…</div>
+  </div>
+
+  <main class="container-fluid px-3 px-lg-4 pb-5" id="adminApp" hidden>
+    <header class="d-flex flex-wrap justify-content-between align-items-end gap-3 py-4">
+      <div><span class="text-uppercase small fw-bold" style="letter-spacing:.12em;color:var(--green)">Pet directory</span><h1 class="h2 mb-1">Manage pet listings</h1><p class="text-secondary mb-0">Add, edit, archive, and restore pets without removing their application history.</p></div>
+      <button class="btn btn-success" id="newPetButton" type="button"><i class="fas fa-plus me-2" aria-hidden="true"></i>Add a pet</button>
+    </header>
+    <div id="petsNotice" class="alert notice" role="status" aria-live="polite"></div>
+    <section class="panel mb-4" aria-labelledby="petFormHeading">
+      <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+        <h2 class="h5 mb-0" id="petFormHeading">Add a listing</h2>
+        <button class="btn btn-sm btn-outline-secondary" type="button" id="cancelPetEdit" hidden>Cancel edit</button>
+      </div>
+      <form id="petForm" novalidate>
+        <input type="hidden" id="petId" />
+        <div class="row g-3">
+          <div class="col-sm-6 col-lg-3"><label class="form-label" for="petName">Name <span class="text-danger">*</span></label><input class="form-control" id="petName" maxlength="120" required /></div>
+          <div class="col-sm-6 col-lg-3"><label class="form-label" for="petBreed">Breed</label><input class="form-control" id="petBreed" maxlength="120" /></div>
+          <div class="col-6 col-lg-2"><label class="form-label" for="petAgeYears">Age (years)</label><input class="form-control" id="petAgeYears" type="number" min="0" max="100" value="0" /></div>
+          <div class="col-6 col-lg-2"><label class="form-label" for="petAgeMonths">Months</label><input class="form-control" id="petAgeMonths" type="number" min="0" max="11" value="0" /></div>
+          <div class="col-sm-6 col-lg-2"><label class="form-label" for="petGender">Gender</label><select class="form-select" id="petGender"><option value="">Not specified</option><option value="male">Male</option><option value="female">Female</option></select></div>
+          <div class="col-sm-6 col-lg-2"><label class="form-label" for="petSize">Size</label><select class="form-select" id="petSize"><option value="">Not specified</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="extra_large">Extra large</option></select></div>
+          <div class="col-sm-6 col-lg-2"><label class="form-label" for="petStatus">Adoption status</label><select class="form-select" id="petStatus"><option value="available">Available</option><option value="pending">Pending</option><option value="adopted">Adopted</option></select></div>
+          <div class="col-sm-6 col-lg-2"><label class="form-label" for="petFee">Adoption fee (₹)</label><input class="form-control" id="petFee" type="number" min="0" step="0.01" value="0" /></div>
+          <div class="col-sm-6 col-lg-2"><label class="form-label" for="petColor">Color</label><input class="form-control" id="petColor" maxlength="80" /></div>
+          <div class="col-sm-6 col-lg-4"><label class="form-label" for="petLocation">Location</label><input class="form-control" id="petLocation" maxlength="160" /></div>
+          <div class="col-sm-6 col-lg-4"><label class="form-label" for="petImage">Photo URL</label><input class="form-control" id="petImage" type="url" maxlength="1000" placeholder="https://…" /></div>
+          <div class="col-sm-6 col-lg-4 d-flex align-items-end"><div class="form-check mb-2"><input class="form-check-input" id="petVaccinated" type="checkbox" /><label class="form-check-label" for="petVaccinated">Vaccinated</label></div></div>
+          <div class="col-12"><label class="form-label" for="petDescription">Description</label><textarea class="form-control" id="petDescription" rows="3" maxlength="3000"></textarea></div>
+          <div class="col-12"><button class="btn btn-success" id="savePetButton" type="submit">Save pet</button></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="petsHeading">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+        <div><span class="text-uppercase small fw-bold" style="letter-spacing:.12em;color:var(--green)">Listings</span><h2 class="h5 mb-0" id="petsHeading">Pet directory <span class="badge text-bg-light" id="petCount">0</span></h2></div>
+        <div class="d-flex gap-2">
+          <label class="visually-hidden" for="listingFilter">Listing visibility</label>
+          <select class="form-select form-select-sm" id="listingFilter"><option value="listed">Listed pets</option><option value="archived">Archived pets</option><option value="all">All pets</option></select>
+          <button class="btn btn-sm btn-outline-success" id="refreshPets" type="button" aria-label="Refresh pet list"><i class="fas fa-rotate" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light"><tr><th>Photo</th><th>Name</th><th>Breed</th><th>Age</th><th>Gender</th><th>Location</th><th>Fee</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+          <tbody id="petsTableBody"><tr><td colspan="9" class="text-center py-4 text-secondary">Loading listings…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js?v=admin-v1"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin-common.js"></script>
+  <script src="pets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

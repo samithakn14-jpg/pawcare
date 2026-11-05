@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create a PetCare Connect account to apply to adopt a dog and contact the support team." />
+  <title>Create Account | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #20382d; --green: #2f684c; --muted: #6d7c72; --cream: #f6f6ef; --line: #e1e6dc; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+    .topbar { background: #193e30; }
+    .topbar .navbar-brand { color: #fff; font-weight: 700; }
+    .auth-layout { min-height: calc(100vh - 58px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .9fr); }
+    .welcome-panel { display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 7vw, 6.5rem); color: #fff; background: linear-gradient(145deg, #193e30, #347253); }
+    .welcome-panel .eyebrow { color: #d5ebad; font-size: .78rem; letter-spacing: .15em; text-transform: uppercase; }
+    .welcome-panel h1 { max-width: 580px; margin: 1rem 0; font-family: 'Fraunces', serif; font-size: clamp(2.4rem, 5vw, 4.3rem); line-height: 1.1; }
+    .welcome-panel p { max-width: 500px; color: rgba(255,255,255,.79); line-height: 1.8; }
+    .form-panel { display: grid; place-items: center; padding: 2rem; }
+    .auth-card { width: min(100%, 470px); padding: clamp(1.5rem, 4vw, 2.6rem); border: 1px solid var(--line); border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(30,60,42,.08); }
+    .card-mark { display: grid; width: 48px; height: 48px; margin-bottom: 1.2rem; place-items: center; border-radius: 16px; background: #e9f3e7; color: var(--green); font-size: 1.2rem; }
+    .auth-card h2 { font-family: 'Fraunces', serif; font-size: 2rem; }
+    .auth-card .form-label { font-size: .9rem; font-weight: 600; }
+    .field-wrap { position: relative; }
+    .field-wrap > .field-icon { position: absolute; top: 50%; left: 15px; z-index: 2; color: #819286; transform: translateY(-50%); }
+    .auth-card .form-control { min-height: 50px; padding-left: 44px; border-color: var(--line); border-radius: 10px; }
+    .auth-card .form-control:focus { border-color: var(--green); box-shadow: 0 0 0 .2rem rgba(47,104,76,.12); }
+    .field-wrap .form-control.has-toggle { padding-right: 48px; }
+    .password-toggle { position: absolute; top: 50%; right: 8px; z-index: 3; display: grid; width: 36px; height: 36px; place-items: center; border: 0; border-radius: 9px; background: transparent; color: var(--muted); transform: translateY(-50%); }
+    .password-toggle:hover { background: #eef4ec; color: var(--green); }
+    .password-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .btn-create { min-height: 50px; border: 0; border-radius: 11px; background: var(--green); color: #fff; font-weight: 600; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .btn-create:hover { transform: translateY(-2px); background: #24583e; color: #fff; box-shadow: 0 10px 20px rgba(36,88,62,.18); }
+    .btn-create:disabled { opacity: .7; transform: none; }
+    .auth-link { color: var(--green); font-weight: 600; text-decoration: none; }
+    .auth-link:hover { text-decoration: underline; }
+    .form-note { color: var(--muted); font-size: .82rem; }
+    @media (max-width: 767.98px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .welcome-panel { padding: 2.5rem 1.5rem; }
+      .welcome-panel h1 { font-size: 2.6rem; }
+      .form-panel { padding: 1.25rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+<body>
+  <nav class="navbar topbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <a class="btn btn-sm btn-outline-light" href="login.html">Log in</a>
+    </div>
+  </nav>
+  <main class="auth-layout">
+    <section class="welcome-panel">
+      <span class="eyebrow">A new friend starts here</span>
+      <h1>Make room for a little more love.</h1>
+      <p>Create your free account to apply for dog adoption, keep track of your applications, and ask our support team questions.</p>
+      <p class="mb-0"><i class="fas fa-paw me-2" aria-hidden="true"></i>Every great friendship begins with a hello.</p>
+    </section>
+    <section class="form-panel">
+      <div class="auth-card">
+        <div class="card-mark" aria-hidden="true"><i class="fas fa-paw"></i></div>
+        <h2>Create your account</h2>
+        <p class="text-secondary mb-4">Join PetCare Connect to start your adoption journey.</p>
+        <div class="alert d-none" id="registerMessage" role="status" aria-live="polite"></div>
+        <form id="registerForm">
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full name</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-user" aria-hidden="true"></i>
+              <input class="form-control" id="fullName" name="fullName" type="text" autocomplete="name" maxlength="120" placeholder="Your name" required />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-envelope" aria-hidden="true"></i>
+              <input class="form-control" id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone number</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-phone" aria-hidden="true"></i>
+              <input class="form-control" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[\d\(\)\s+\-]{10,18}" maxlength="18" placeholder="+91 63620 4336" required />
+            </div>
+            <div class="form-text">Include your country code if you are outside India.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-lock" aria-hidden="true"></i>
+              <input class="form-control has-toggle" id="password" name="password" type="password" autocomplete="new-password" minlength="6" required />
+              <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+            </div>
+            <div class="form-text">Use at least 6 characters.</div>
+          </div>
+          <div class="mb-4">
+            <label for="confirmPassword" class="form-label">Confirm password</label>
+            <div class="field-wrap">
+              <i class="field-icon fas fa-shield-halved" aria-hidden="true"></i>
+              <input class="form-control has-toggle" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required />
+              <button class="password-toggle" type="button" data-password-toggle="confirmPassword" aria-label="Show password" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <button class="btn btn-create w-100" id="registerSubmit" type="submit"><i class="fas fa-user-plus me-2" aria-hidden="true"></i>Create account <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i></button>
+        </form>
+        <p class="form-note mt-3 mb-0 text-center">Already registered? <a class="auth-link" href="login.html">Log in <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i></a></p>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=auth-security-2"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const registerMessage = document.getElementById('registerMessage');
+    const registerSubmit = document.getElementById('registerSubmit');
+
+    document.querySelectorAll('[data-password-toggle]').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        const showPassword = input.type === 'password';
+        input.type = showPassword ? 'text' : 'password';
+        button.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
+        button.setAttribute('aria-pressed', String(showPassword));
+        button.innerHTML = `<i class="fas fa-eye${showPassword ? '-slash' : ''}" aria-hidden="true"></i>`;
+      });
+    });
+
+    registerForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      registerMessage.className = 'alert d-none';
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (fullName.length < 2 || fullName.length > 120) {
+        registerMessage.textContent = 'Please enter a name between 2 and 120 characters.';
+        registerMessage.className = 'alert alert-danger';
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        registerMessage.textContent = 'Your passwords do not match.';
+        registerMessage.className = 'alert alert-danger';
+        return;
+      }
+
+      registerSubmit.disabled = true;
+      registerSubmit.textContent = 'Creating your account…';
+      const result = await registerUser(fullName, email, phone, password);
+      if (!result.success) {
+        registerMessage.textContent = result.error;
+        registerMessage.className = 'alert alert-danger';
+        registerSubmit.disabled = false;
+        registerSubmit.innerHTML = '<i class="fas fa-user-plus me-2" aria-hidden="true"></i>Create account <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>';
+        return;
+      }
+
+      if (result.session) {
+        try {
+          const { data, error } = await window.PAWCARE_CONFIG.supabase.auth.getSession();
+          if (error) throw error;
+          if (data.session) {
+            window.location.href = 'dashboard.html';
+            return;
+          }
+        } catch (error) {
+          registerMessage.textContent = `Your account was created, but sign-in status could not be confirmed: ${error.message}`;
+          registerMessage.className = 'alert alert-warning';
+          registerSubmit.disabled = false;
+          registerSubmit.innerHTML = '<i class="fas fa-user-plus me-2" aria-hidden="true"></i>Create account <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>';
+          return;
+        }
+      }
+
+      registerMessage.textContent = result.message.includes('verify')
+        ? `${result.message} Then log in to continue.`
+        : `${result.message} You can now log in.`;
+      registerMessage.className = 'alert alert-success';
+      registerSubmit.innerHTML = '<i class="fas fa-circle-check me-2" aria-hidden="true"></i>Account created';
+    });
+  </script>
+</body>
+</html>

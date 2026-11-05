@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Book veterinary appointments and review your pet's health visits." />
+  <title>Pet Health | PetCare Connect</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/site-theme.css" /><link rel="stylesheet" href="css/portal-pages.css" />
+  <style>
+    .health-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:1rem; }
+    .provider-card { height:100%; padding:1.15rem; border:1px solid var(--line,#e5eae5); border-radius:16px; background:#fff; }
+    .history-card { border:1px solid var(--line,#e5eae5); border-radius:14px; padding:1rem; background:#fff; }
+    .health-section { margin-top:2rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🐾 PetCare Connect</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#healthNav" aria-controls="healthNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="healthNav"><ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="health.html">Pet health</a></li>
+        <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li class="nav-item nav-guest"><a class="nav-link" href="login.html">Log in</a></li>
+        <li class="nav-item nav-auth" style="display:none"><a class="nav-link" href="#" data-logout>Log out</a></li>
+      </ul></div>
+    </div>
+  </nav>
+  <header class="portal-hero"><div class="container">
+    <span class="portal-kicker">Care in one place</span><h1>Pet health &amp; appointments.</h1>
+    <p>Request a visit with a partner that lists veterinary services and keep track of your appointment history.</p>
+  </div></header>
+  <main class="portal-main"><div class="container">
+    <div id="healthStatus" class="alert alert-info portal-notice" role="status" aria-live="polite">Checking your account…</div>
+    <div class="row g-4">
+      <section class="col-lg-7" aria-labelledby="bookHeading"><div class="portal-card">
+        <span class="portal-kicker">Appointment request</span><h2 class="h3 mt-2" id="bookHeading">Book a veterinary visit</h2>
+        <p class="portal-muted">Requests are pending until the clinic confirms them. For emergencies, contact a local emergency veterinarian directly.</p>
+        <div id="bookingMessage" class="alert" role="status" aria-live="polite" hidden></div>
+        <form id="appointmentForm" novalidate>
+          <div class="mb-3"><label class="form-label" for="appointmentPet">Pet <span class="text-danger">*</span></label><select class="form-select" id="appointmentPet" required><option value="">Loading pets…</option></select></div>
+          <div class="mb-3"><label class="form-label" for="appointmentProvider">Clinic / shelter partner <span class="text-danger">*</span></label><select class="form-select" id="appointmentProvider" required><option value="">Loading service providers…</option></select><div class="form-text">The listed partner’s veterinary services and contact information are shown below. Availability is confirmed by the provider.</div></div>
+          <div id="selectedProvider" class="small mb-3 text-secondary" aria-live="polite"></div>
+          <div class="mb-3"><label class="form-label" for="veterinarianName">Veterinarian name, if known</label><input class="form-control" id="veterinarianName" maxlength="120" autocomplete="off" /></div>
+          <div class="row g-3">
+            <div class="col-sm-6"><label class="form-label" for="appointmentDate">Date <span class="text-danger">*</span></label><input class="form-control" id="appointmentDate" type="date" required /></div>
+            <div class="col-sm-6"><label class="form-label" for="appointmentTime">Time <span class="text-danger">*</span></label><input class="form-control" id="appointmentTime" type="time" required /></div>
+          </div>
+          <div class="mt-3"><label class="form-label" for="appointmentReason">Reason for visit <span class="text-danger">*</span></label><textarea class="form-control" id="appointmentReason" rows="3" minlength="3" maxlength="500" required placeholder="Briefly describe the reason for this visit"></textarea></div>
+          <div class="mt-3"><label class="form-label" for="appointmentNotes">Additional notes</label><textarea class="form-control" id="appointmentNotes" rows="2" maxlength="1000"></textarea></div>
+          <button class="btn btn-primary mt-3" id="bookAppointment" type="submit"><i class="fas fa-calendar-check me-2" aria-hidden="true"></i>Request appointment</button>
+        </form>
+      </div></section>
+      <aside class="col-lg-5" aria-labelledby="providersHeading">
+        <div class="portal-card"><span class="portal-kicker">Partner services</span><h2 class="h3 mt-2" id="providersHeading">Veterinary service providers</h2>
+          <p class="portal-muted">These are existing shelter partners whose service listings mention veterinary care. Contact them to confirm a veterinarian, services, hours, and appointment availability.</p>
+          <div id="providerCards" class="health-grid"><p class="portal-muted">Loading providers…</p></div>
+        </div>
+      </aside>
+    </div>
+    <section class="health-section" aria-labelledby="historyHeading"><div class="portal-card">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div><span class="portal-kicker">Your visits</span><h2 class="h3 mb-0" id="historyHeading">Appointment history</h2></div>
+        <button class="btn btn-outline-primary btn-sm" type="button" id="refreshAppointments"><i class="fas fa-rotate me-1" aria-hidden="true"></i>Refresh</button>
+      </div>
+      <div id="appointmentHistory" aria-live="polite"><p class="portal-muted">Loading your appointments…</p></div>
+    </div></section>
+  </div></main>
+  <footer class="portal-footer"><div class="container d-flex flex-wrap justify-content-between gap-2"><a href="petcare.html">Pet care guide</a><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><a href="dashboard.html">Dashboard</a></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=health-v1"></script><script src="js/auth.js"></script><script src="js/health.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

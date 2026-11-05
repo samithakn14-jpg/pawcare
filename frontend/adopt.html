@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse dogs available for adoption from verified shelters on PetCare Connect." />
+  <title>Find Your Perfect Pet | PetCare Connect</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:," />
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+  <!-- Page CSS -->
+
+  <style>
+    /* ==================== ROOT VARIABLES ==================== */
+    :root {
+      --primary: #f97316;
+      --primary-dark: #ea580c;
+      --primary-light: #fff7ed;
+      --secondary: #10b981;
+      --secondary-dark: #059669;
+      --dark: #1e293b;
+      --dark-mid: #334155;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      --card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --radius: 16px;
+      --radius-sm: 8px;
+      --font-main: 'Nunito', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-main);
+      background: #f8fafc;
+      color: var(--dark);
+    }
+
+    /* ==================== NAVBAR ==================== */
+    .navbar-brand .brand-logo { height: 38px; width: auto; }
+    .navbar-brand .brand-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--primary); letter-spacing: -0.5px; }
+    .navbar-brand .brand-text span { color: var(--secondary); }
+
+    .nav-link {
+      font-weight: 600;
+      color: var(--dark-mid) !important;
+      transition: color 0.2s;
+      padding: 0.5rem 0.85rem !important;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+    .nav-link.active { border-bottom: 2px solid var(--primary); }
+
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; font-weight: 700; font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .notification-bell { position: relative; }
+    #notification-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: #ef4444; color: #fff; font-size: 0.6rem;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; display: none;
+    }
+
+    /* ==================== PAGE HERO ==================== */
+    .adopt-hero {
+      height: 300px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1a1a2e 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .adopt-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f97316' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .adopt-hero-content { position: relative; z-index: 1; text-align: center; color: #fff; }
+    .adopt-hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; margin-bottom: 0.5rem;
+    }
+    .adopt-hero-title .emoji { font-size: 0.9em; }
+    .adopt-hero-subtitle { color: #94a3b8; font-size: 1.05rem; margin-bottom: 1rem; }
+    .available-dogs-count {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      margin: 0 0 1rem; padding: 0.55rem 0.9rem;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 999px;
+      background: rgba(255,255,255,0.08); color: #fff;
+      font-size: 0.9rem;
+    }
+    .available-dogs-count i { color: #86efac; }
+    .breadcrumb { justify-content: center; }
+    .breadcrumb-item, .breadcrumb-item a { color: #94a3b8; text-decoration: none; font-size: 0.875rem; }
+    .breadcrumb-item.active { color: var(--primary); }
+    .breadcrumb-item + .breadcrumb-item::before { color: #475569; }
+
+    /* ==================== FILTER SECTION ==================== */
+    .filter-section {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      z-index: 1020;
+      padding: 1rem 0;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+    .search-wrapper .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 0.9rem; pointer-events: none;
+    }
+    #searchInput {
+      border: 2px solid var(--border); border-radius: 12px;
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      font-family: var(--font-main); font-size: 0.95rem;
+      width: 100%; transition: border-color 0.2s, box-shadow 0.2s;
+      background: #f8fafc;
+    }
+    #searchInput:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+      background: #fff;
+    }
+
+    /* Filter Pills */
+    .filter-pills {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      align-items: center;
+    }
+    .filter-pill {
+      border: 2px solid var(--border); background: #fff;
+      color: var(--dark-mid); border-radius: 30px;
+      padding: 0.35rem 1rem; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+      font-family: var(--font-main);
+    }
+    .filter-pill:hover {
+      border-color: var(--primary); color: var(--primary);
+      background: var(--primary-light);
+    }
+    .filter-pill.active {
+      border-color: var(--primary); background: var(--primary);
+      color: #fff;
+    }
+
+    /* Advanced Filters */
+    .advanced-filters {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      align-items: center; margin-top: 0.75rem;
+    }
+    .advanced-filters select {
+      border: 2px solid var(--border); border-radius: 10px;
+      padding: 0.45rem 1.8rem 0.45rem 0.75rem;
+      font-size: 0.83rem; font-weight: 600; color: var(--dark);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.6rem center;
+      appearance: none; -webkit-appearance: none;
+      cursor: pointer; transition: border-color 0.2s;
+      font-family: var(--font-main);
+    }
+    .advanced-filters select:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+    }
+
+    #clearFilters {
+      border: 2px solid #ef4444; background: #fff; color: #ef4444;
+      border-radius: 10px; padding: 0.45rem 1rem;
+      font-size: 0.83rem; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; font-family: var(--font-main);
+    }
+    #clearFilters:hover { background: #ef4444; color: #fff; }
+
+    /* Toggle advanced filters */
+    #toggleAdvanced {
+      background: none; border: 2px solid var(--border);
+      border-radius: 10px; padding: 0.45rem 0.9rem;
+      font-size: 0.83rem; font-weight: 600; cursor: pointer;
+      color: var(--dark-mid); transition: all 0.2s;
+      font-family: var(--font-main); display: flex; align-items: center; gap: 0.3rem;
+    }
+    #toggleAdvanced:hover { border-color: var(--primary); color: var(--primary); }
+    #toggleAdvanced .chevron { transition: transform 0.2s; }
+    #toggleAdvanced.open .chevron { transform: rotate(180deg); }
+
+    /* ==================== RESULTS BAR ==================== */
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.75rem; padding: 1rem 0;
+    }
+    .results-count { font-size: 0.95rem; font-weight: 600; color: var(--dark-mid); }
+    .results-count span { color: var(--primary); font-weight: 800; }
+    .sort-wrapper { display: flex; align-items: center; gap: 0.5rem; }
+    .sort-wrapper label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    #sortSelect {
+      border: 2px solid var(--border); border-radius: 10px;
+      padding: 0.4rem 1.8rem 0.4rem 0.75rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--dark);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.6rem center;
+      appearance: none; -webkit-appearance: none;
+      cursor: pointer; font-family: var(--font-main);
+    }
+    #sortSelect:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(249,115,22,0.12); }
+
+    /* ==================== PETS GRID ==================== */
+    #petsGrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 991px) { #petsGrid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 575px) { #petsGrid { grid-template-columns: 1fr; } }
+
+    /* ==================== PET CARD ==================== */
+    .pet-card {
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--card-shadow); overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer; border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+    }
+    .pet-card:hover { transform: translateY(-6px); box-shadow: var(--card-hover-shadow); }
+
+    .pet-card-image {
+      position: relative; overflow: hidden;
+      height: 220px; background: #f1f5f9;
+    }
+    .pet-card-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .pet-card:hover .pet-card-image img { transform: scale(1.06); }
+
+    .pet-badges {
+      position: absolute; top: 10px; left: 10px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .species-badge {
+      background: rgba(15,23,42,0.75); color: #fff;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+    .status-badge {
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+    .status-badge.available { background: rgba(16,185,129,0.9); color: #fff; }
+    .status-badge.pending   { background: rgba(245,158,11,0.9); color: #fff; }
+    .status-badge.adopted   { background: rgba(100,116,139,0.9); color: #fff; }
+
+    .save-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(255,255,255,0.92); border: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      backdrop-filter: blur(4px);
+    }
+    .save-btn:hover { background: #fff; transform: scale(1.1); }
+    .save-btn i { color: #94a3b8; transition: color 0.2s; font-size: 0.9rem; }
+    .save-btn.saved i { color: #ef4444; }
+    .save-btn:hover i { color: #ef4444; }
+
+    .vaccination-badge {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(255,255,255,0.92); border-radius: 20px;
+      padding: 2px 8px; font-size: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .pet-card-body {
+      padding: 1rem 1.1rem 1.15rem;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .pet-name {
+      font-family: var(--font-heading); font-weight: 700;
+      font-size: 1.1rem; margin-bottom: 0.1rem; color: var(--dark);
+    }
+    .pet-breed {
+      font-size: 0.82rem; color: var(--text-muted);
+      margin-bottom: 0.6rem; font-weight: 500;
+    }
+    .pet-details {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .pet-details span {
+      font-size: 0.8rem; color: var(--dark-mid);
+      font-weight: 600; display: flex; align-items: center; gap: 3px;
+    }
+    .shelter-name {
+      font-size: 0.8rem; color: var(--text-muted);
+      margin-bottom: 0.8rem; font-weight: 500;
+    }
+    .pet-card-actions {
+      display: flex; gap: 0.5rem; margin-top: auto;
+    }
+    .pet-card-actions .btn {
+      flex: 1; border-radius: 10px; font-size: 0.82rem;
+      font-weight: 700; padding: 0.45rem 0.5rem;
+      font-family: var(--font-main);
+    }
+    .btn-primary {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+    .btn-secondary {
+      background: #fff; border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-secondary:hover { background: var(--primary-light); }
+
+    /* ==================== SKELETON LOADING ==================== */
+    .skeleton-card {
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--card-shadow); overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .skeleton-img {
+      height: 220px; background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .skeleton-body { padding: 1rem 1.1rem; }
+    .skeleton-line {
+      height: 12px; border-radius: 6px; margin-bottom: 10px;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .skeleton-line.w-70 { width: 70%; }
+    .skeleton-line.w-50 { width: 50%; }
+    .skeleton-line.w-40 { width: 40%; }
+    .skeleton-line.h-32 { height: 32px; margin-top: 14px; }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ==================== EMPTY STATE ==================== */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center; padding: 4rem 2rem;
+    }
+    .empty-state-icon { font-size: 5rem; margin-bottom: 1rem; opacity: 0.4; }
+    .empty-state h3 { font-family: var(--font-heading); font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+    .empty-state p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .empty-state .btn-clear {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: 12px; padding: 0.65rem 1.5rem;
+      font-weight: 700; cursor: pointer; font-family: var(--font-main);
+      transition: background 0.2s;
+    }
+    .empty-state .btn-clear:hover { background: var(--primary-dark); }
+
+    /* ==================== LOAD MORE ==================== */
+    .load-more-wrapper { text-align: center; padding: 2rem 0; }
+    #loadMoreBtn {
+      background: #fff; border: 2px solid var(--primary);
+      color: var(--primary); border-radius: 12px;
+      padding: 0.7rem 2.5rem; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s; font-family: var(--font-main);
+    }
+    #loadMoreBtn:hover { background: var(--primary); color: #fff; }
+    #loadMoreBtn:disabled { border-color: var(--border); color: var(--text-muted); background: #f8fafc; cursor: default; }
+    .all-loaded-msg { color: var(--text-muted); font-weight: 600; font-size: 0.9rem; }
+
+    /* ==================== SIDEBAR ==================== */
+    .sidebar-card {
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--card-shadow); border: 1px solid var(--border);
+      padding: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .sidebar-card h6 {
+      font-family: var(--font-heading); font-weight: 700;
+      font-size: 0.9rem; color: var(--dark);
+      margin-bottom: 1rem; padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary-light);
+    }
+    .stat-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .stat-value { font-size: 1rem; font-weight: 800; color: var(--dark); font-family: var(--font-heading); }
+
+    .tip-item {
+      display: flex; gap: 0.6rem; margin-bottom: 0.75rem;
+      font-size: 0.83rem; color: var(--dark-mid);
+    }
+    .tip-item .tip-icon { flex-shrink: 0; margin-top: 2px; color: var(--secondary); }
+
+    .featured-shelter-img {
+      height: 80px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin-bottom: 0.75rem; color: #fff;
+    }
+    .featured-shelter-name { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
+    .featured-shelter-meta { font-size: 0.78rem; color: var(--text-muted); }
+    .featured-shelter-link {
+      display: inline-block; margin-top: 0.75rem;
+      color: var(--primary); font-weight: 700; font-size: 0.82rem;
+      text-decoration: none;
+    }
+    .featured-shelter-link:hover { color: var(--primary-dark); }
+
+    /* ==================== CHATBOT ==================== */
+    .chatbot-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none; color: #fff; font-size: 1.4rem;
+      box-shadow: 0 6px 24px rgba(249,115,22,0.45);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .chatbot-fab:hover { transform: scale(1.12); box-shadow: 0 10px 32px rgba(249,115,22,0.55); }
+    .chatbot-fab .fab-badge {
+      position: absolute; top: 2px; right: 2px;
+      width: 14px; height: 14px; background: var(--secondary);
+      border-radius: 50%; border: 2px solid #fff;
+    }
+
+    .chatbot-window {
+      position: fixed; bottom: 96px; right: 24px; z-index: 9998;
+      width: 360px; max-height: 520px; background: #fff;
+      border-radius: 20px; box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+      display: none; flex-direction: column; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .chatbot-window.open { display: flex; }
+    .chatbot-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; padding: 1rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .chatbot-header .bot-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .chatbot-header .bot-name { font-weight: 700; font-size: 0.95rem; }
+    .chatbot-header .bot-status { font-size: 0.72rem; opacity: 0.85; }
+    .chatbot-close {
+      margin-left: auto; background: none; border: none; color: #fff;
+      font-size: 1.1rem; cursor: pointer; opacity: 0.8; padding: 0;
+    }
+    .chatbot-close:hover { opacity: 1; }
+    .chatbot-messages {
+      flex: 1; overflow-y: auto; padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .chat-bubble {
+      max-width: 80%; padding: 0.6rem 0.9rem;
+      border-radius: 14px; font-size: 0.85rem; line-height: 1.45;
+    }
+    .chat-bubble.bot {
+      background: #f1f5f9; color: var(--dark); align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.user {
+      background: var(--primary); color: #fff; align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .chatbot-input-row {
+      display: flex; gap: 0.5rem; padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .chatbot-input-row input {
+      flex: 1; border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 0.45rem 0.75rem; font-size: 0.85rem; font-family: var(--font-main);
+    }
+    .chatbot-input-row input:focus { outline: none; border-color: var(--primary); }
+    .chatbot-send {
+      background: var(--primary); border: none; color: #fff;
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .chatbot-send:hover { background: var(--primary-dark); }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      background: var(--dark); color: #94a3b8;
+      padding-top: 3.5rem; margin-top: 4rem;
+    }
+    .footer-brand .brand-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: #fff; }
+    .footer-brand .brand-text span { color: var(--primary); }
+    .footer-tagline { font-size: 0.87rem; color: #64748b; margin-top: 0.4rem; margin-bottom: 1rem; }
+    .footer-social { display: flex; gap: 0.6rem; }
+    .footer-social a {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: #334155; display: flex; align-items: center; justify-content: center;
+      color: #94a3b8; text-decoration: none; transition: all 0.2s;
+    }
+    .footer-social a:hover { background: var(--primary); color: #fff; }
+    .footer h6 { color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem; }
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 0.5rem; }
+    .footer-links a { color: #64748b; text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-divider { border-color: #334155; margin: 2rem 0 0; }
+    .footer-bottom {
+      padding: 1.25rem 0;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem;
+      font-size: 0.82rem;
+    }
+    .footer-bottom-links { display: flex; gap: 1.25rem; }
+    .footer-bottom-links a { color: #64748b; text-decoration: none; }
+    .footer-bottom-links a:hover { color: var(--primary); }
+
+    /* ==================== MISC ==================== */
+    @media (max-width: 991px) {
+      .sidebar-col { display: none; }
+    }
+
+    .section-main-col { flex: 1; min-width: 0; }
+
+    /* ==================== DISTINCTIVE ADOPTION JOURNAL THEME ==================== */
+    :root {
+      --primary: #d56b3f;
+      --primary-dark: #b9512d;
+      --primary-light: #fff0e6;
+      --secondary: #66876b;
+      --secondary-dark: #4b6d51;
+      --dark: #20352d;
+      --dark-mid: #455d51;
+      --text-muted: #778279;
+      --border: #e4e5d9;
+      --card-shadow: 0 12px 30px rgba(32, 53, 45, 0.07);
+      --card-hover-shadow: 0 22px 44px rgba(32, 53, 45, 0.15);
+      --radius: 22px;
+      --font-main: 'DM Sans', sans-serif;
+      --font-heading: 'Fraunces', Georgia, serif;
+    }
+
+    body { background: #f5f4ec; }
+    .navbar {
+      background: rgba(250, 249, 243, 0.96) !important;
+      border-bottom-color: #e5e4d8 !important;
+      box-shadow: 0 4px 20px rgba(32, 53, 45, 0.05) !important;
+    }
+    .adopt-hero {
+      height: auto;
+      min-height: 390px;
+      justify-content: stretch;
+      background:
+        radial-gradient(ellipse at 80% 12%, rgba(211, 144, 86, 0.2), transparent 33%),
+        linear-gradient(115deg, #203a30 0%, #294d3d 65%, #3c604b 100%);
+    }
+    .adopt-hero::before { opacity: 0.45; }
+    .adopt-hero-content {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: clamp(2rem, 7vw, 6rem);
+      text-align: left;
+      padding-top: 3.5rem;
+      padding-bottom: 3.5rem;
+    }
+    .adopt-hero-copy { max-width: 610px; }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      color: #f2c59f;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .hero-kicker::before {
+      content: '';
+      width: 25px;
+      height: 2px;
+      background: #e9976e;
+    }
+    .adopt-hero-title {
+      max-width: 600px;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 0.99;
+      margin-bottom: 1.1rem;
+    }
+    .adopt-hero-title .emoji { color: #f2b984; }
+    .adopt-hero-subtitle {
+      max-width: 500px;
+      color: #d2ddd4;
+      font-size: 1.04rem;
+      line-height: 1.75;
+      margin-bottom: 1.4rem;
+    }
+    .breadcrumb { justify-content: flex-start; }
+    .breadcrumb-item.active { color: #f2b984; }
+    .adopt-hero-visual {
+      position: relative;
+      justify-self: end;
+      width: min(100%, 410px);
+      height: 285px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 48% 48% 24px 24px;
+      transform: rotate(2deg);
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .adopt-hero-visual img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 48% 48% 18px 18px;
+    }
+    .hero-photo-note {
+      position: absolute;
+      right: -15px;
+      bottom: 22px;
+      padding: 0.75rem 1rem;
+      border-radius: 14px;
+      background: #f8e8cd;
+      color: #294334;
+      box-shadow: 0 10px 25px rgba(12, 28, 20, 0.2);
+      font-size: 0.84rem;
+      font-weight: 800;
+      transform: rotate(-3deg);
+    }
+    .filter-section {
+      background: #faf9f3;
+      border: 1px solid #e5e4d8;
+      border-left: 0;
+      border-right: 0;
+      box-shadow: 0 9px 24px rgba(32, 53, 45, 0.06);
+      padding: 1.1rem 0;
+    }
+    .filter-pill { border-radius: 12px; }
+    .filter-pill.active { background: var(--dark); border-color: var(--dark); }
+    #searchInput, .advanced-filters select, #sortSelect {
+      background-color: #fffefa;
+      border-color: #dedfd2;
+      border-radius: 13px;
+    }
+    #searchInput:focus, .advanced-filters select:focus, #sortSelect:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(102, 135, 107, 0.15);
+    }
+    #toggleAdvanced { border-radius: 13px; }
+    #toggleAdvanced:hover { border-color: var(--secondary); color: var(--secondary-dark); }
+    .container.py-4 { padding-top: 2.5rem !important; }
+    .results-bar { padding: 0.5rem 0 1.35rem; }
+    .results-count {
+      display: flex;
+      align-items: baseline;
+      gap: 0.45rem;
+      color: var(--dark-mid);
+      font-size: 0.9rem;
+    }
+    .results-count span { font-family: var(--font-heading); font-size: 1.65rem; color: var(--dark); }
+    #petsGrid { gap: 1.25rem; }
+    .pet-card {
+      border: 1px solid #e6e5d9;
+      border-radius: 20px;
+      background: #fffefa;
+      box-shadow: 0 8px 22px rgba(32, 53, 45, 0.055);
+    }
+    .pet-card:hover { transform: translateY(-5px); }
+    .pet-card-image { height: 235px; background: #e9e8dc; }
+    .pet-badges { top: 14px; left: 14px; }
+    .species-badge { background: rgba(32, 53, 45, 0.86); }
+    .save-btn { top: 14px; right: 14px; width: 40px; height: 40px; }
+    .pet-card-body { padding: 1.15rem 1.2rem 1.25rem; }
+    .pet-name { font-size: 1.35rem; }
+    .pet-breed { letter-spacing: 0.015em; }
+    .pet-details { gap: 0.45rem; }
+    .pet-details span {
+      border-radius: 9px;
+      background: #f3f3e9;
+      padding: 0.32rem 0.48rem;
+      font-size: 0.73rem;
+    }
+    .shelter-name { margin-bottom: 0.45rem; }
+    .adoption-fee {
+      display: inline-flex;
+      align-self: flex-start;
+      border-radius: 10px;
+      background: #f7ead3;
+      color: #694522;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.85rem;
+    }
+    .pet-card-actions .btn { border-radius: 11px; padding: 0.55rem 0.5rem; }
+    .btn-primary { background: var(--dark); border-color: var(--dark); }
+    .btn-primary:hover { background: #304f3f; border-color: #304f3f; }
+    .btn-secondary { border-color: #d8a07e; color: #a74e31; }
+    .btn-secondary:hover { background: #fff0e6; }
+    .load-more-wrapper { padding: 2.4rem 0; }
+    #loadMoreBtn {
+      border: 1px solid #ccd4c8;
+      border-radius: 14px;
+      color: var(--dark);
+      background: #fffefa;
+    }
+    #loadMoreBtn:hover { background: var(--dark); color: #fff; }
+    .sidebar-card { background: #fffefa; border-color: #e6e5d9; }
+    .sidebar-card h6 { border-bottom-color: #e4e8db; }
+    .footer { margin-top: 2rem; }
+
+    @media (min-width: 992px) {
+      #petsGrid > .pet-card:first-of-type {
+        grid-column: span 2;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        min-height: 350px;
+      }
+      #petsGrid > .pet-card:first-of-type .pet-card-image { height: 100%; min-height: 350px; }
+      #petsGrid > .pet-card:first-of-type .pet-card-body { justify-content: center; padding: 1.6rem; }
+      #petsGrid > .pet-card:first-of-type .pet-name { font-size: 1.8rem; }
+    }
+    @media (max-width: 767px) {
+      .adopt-hero-content { grid-template-columns: 1fr; gap: 1.8rem; padding-top: 2.75rem; padding-bottom: 2.5rem; }
+      .adopt-hero-visual { justify-self: center; width: min(88%, 360px); height: 220px; }
+      .adopt-hero-title { font-size: clamp(2.65rem, 12vw, 4rem); }
+    }
+    @media (max-width: 575px) {
+      .adopt-hero { min-height: 0; }
+      .adopt-hero-content { text-align: center; }
+      .adopt-hero-copy { margin: 0 auto; }
+      .breadcrumb { justify-content: center; }
+      .adopt-hero-visual { width: 82%; height: 190px; }
+      .filter-section { padding: 0.8rem 0; }
+      #petsGrid { gap: 1rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site-theme.css" />
+</head>
+
+<body>
+
+<!-- ============================================================ -->
+<!-- NAVBAR -->
+<!-- ============================================================ -->
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top" style="box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <span class="brand-text">PetCare <span>Connect</span></span>
+    </a>
+
+    <!-- Mobile toggler -->
+    <button class="navbar-toggler border-0 shadow-none" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav links -->
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto gap-1">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="adopt.html">Adopt</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="shelters.html">Shelters</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </li>
+        <li class="nav-item nav-admin" style="display:none;">
+          <a class="nav-link text-danger" href="admin/index.html"><i class="fas fa-shield-alt me-1"></i>Admin</a>
+        </li>
+      </ul>
+
+      <!-- Right side actions -->
+      <div class="d-flex align-items-center gap-2">
+
+        <!-- Notification Bell (auth only) -->
+        <div class="nav-auth notification-bell" style="display:none;">
+          <a href="notifications.html" class="btn btn-sm btn-light rounded-circle position-relative"
+             style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;">
+            <i class="fas fa-bell" style="color:var(--dark-mid);"></i>
+            <span id="notification-badge"></span>
+          </a>
+        </div>
+
+        <!-- User dropdown (auth) -->
+        <div class="nav-auth dropdown" style="display:none;">
+          <button class="btn btn-sm btn-light d-flex align-items-center gap-2 dropdown-toggle"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  style="border-radius:12px;padding:0.3rem 0.75rem 0.3rem 0.4rem;">
+            <div class="user-avatar" id="nav-user-avatar">?</div>
+            <span id="nav-user-name" class="fw-600 d-none d-md-inline" style="font-size:0.87rem;font-weight:600;">User</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius:14px;min-width:190px;">
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-th-large me-2 text-primary"></i>Dashboard</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#applications"><i class="fas fa-file-alt me-2 text-primary"></i>My Applications</a></li>
+            <li><a class="dropdown-item" href="dashboard.html#saved"><i class="fas fa-heart me-2 text-danger"></i>Saved Pets</a></li>
+            <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-user-circle me-2 text-secondary"></i>Account dashboard</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item text-danger" href="#" data-logout><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+
+        <!-- Guest buttons -->
+        <div class="nav-guest d-flex gap-2">
+          <a href="login.html" class="btn btn-sm btn-outline-secondary" style="border-radius:10px;font-weight:600;padding:0.4rem 1rem;">Login</a>
+          <a href="register.html" class="btn btn-sm btn-primary" style="border-radius:10px;font-weight:600;padding:0.4rem 1rem;background:var(--primary);border-color:var(--primary);">Sign Up</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- END NAVBAR -->
+
+
+<!-- ============================================================ -->
+<!-- PAGE HERO -->
+<!-- ============================================================ -->
+<section class="adopt-hero">
+  <div class="adopt-hero-content container">
+    <div class="adopt-hero-copy">
+      <span class="hero-kicker">The good-dog directory</span>
+      <h1 class="adopt-hero-title">
+        Your next great love has four paws<span class="emoji">.</span>
+      </h1>
+      <p class="adopt-hero-subtitle">Meet dogs ready for their next chapter. Find a companion who fits your life, then start a new one together.</p>
+      <p class="available-dogs-count" role="status" aria-live="polite">
+        <i class="fas fa-dog" aria-hidden="true"></i>
+        <span id="availableDogCount">Loading available dogs…</span>
+      </p>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Adopt</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="adopt-hero-visual">
+      <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=900&h=650&fit=crop&auto=format" alt="Golden retriever ready for adoption" />
+      <span class="hero-photo-note">A new best friend awaits</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- FILTER SECTION (sticky) -->
+<!-- ============================================================ -->
+<div class="filter-section sticky-top">
+  <div class="container">
+
+    <!-- Row 1: Search + Pills + Toggle -->
+    <div class="d-flex flex-wrap align-items-center gap-3">
+
+      <!-- Search -->
+      <div class="search-wrapper" style="min-width:220px;flex:1 1 220px;max-width:320px;">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search pets by name, breed…" autocomplete="off" />
+      </div>
+
+      <!-- Species Pills -->
+      <div class="filter-pills">
+        <button class="filter-pill active" data-filter="dog">🐕 Dogs</button>
+      </div>
+
+      <!-- Toggle Advanced -->
+      <button id="toggleAdvanced" type="button" aria-expanded="false" aria-controls="advancedFilters">
+        <i class="fas fa-sliders-h"></i> Filters
+        <i class="fas fa-chevron-down chevron ms-1" style="font-size:0.7rem;"></i>
+      </button>
+
+    </div>
+
+    <!-- Row 2: Advanced filters (collapsible) -->
+    <div id="advancedFilters" class="advanced-filters" style="display:none;">
+
+      <select id="genderFilter" title="Gender">
+        <option value="">Any Gender</option>
+        <option value="male">♂ Male</option>
+        <option value="female">♀ Female</option>
+      </select>
+
+      <select id="ageFilter" title="Age">
+        <option value="">Any Age</option>
+        <option value="baby">🍼 Baby (0–1 yr)</option>
+        <option value="young">Young (1–3 yrs)</option>
+        <option value="adult">Adult (3–7 yrs)</option>
+        <option value="senior">Senior (7+ yrs)</option>
+      </select>
+
+      <select id="sizeFilter" title="Size">
+        <option value="">Any Size</option>
+        <option value="small">Small</option>
+        <option value="medium">Medium</option>
+        <option value="large">Large</option>
+        <option value="extra_large">Extra Large</option>
+      </select>
+
+      <select id="locationFilter" title="Location">
+        <option value="">All Locations</option>
+        <option value="Mumbai">📍 Mumbai</option>
+        <option value="Delhi">📍 Delhi</option>
+        <option value="Bangalore">📍 Bangalore</option>
+        <option value="Chennai">📍 Chennai</option>
+        <option value="Pune">📍 Pune</option>
+        <option value="Hyderabad">📍 Hyderabad</option>
+        <option value="Kolkata">📍 Kolkata</option>
+      </select>
+
+      <select id="vaccinationFilter" title="Vaccination">
+        <option value="">Any Vaccination</option>
+        <option value="true">💉 Vaccinated</option>
+        <option value="false">Not Vaccinated</option>
+      </select>
+
+      <select id="statusFilter" title="Status">
+        <option value="">All Status</option>
+        <option value="available">✅ Available</option>
+        <option value="pending">⏳ Pending</option>
+        <option value="adopted">🏠 Adopted</option>
+      </select>
+
+      <button id="clearFilters" type="button">
+        <i class="fas fa-times me-1"></i>Clear All
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- END FILTER SECTION -->
+
+
+<!-- ============================================================ -->
+<!-- MAIN CONTENT AREA -->
+<!-- ============================================================ -->
+<div class="container py-4">
+  <div class="d-flex gap-4">
+
+    <!-- Main Column -->
+    <div class="section-main-col">
+
+      <!-- Results Bar -->
+      <div class="results-bar">
+        <p class="results-count mb-0">
+          Showing <span id="resultsCount">0</span> pets
+        </p>
+        <div class="sort-wrapper">
+          <label for="sortSelect"><i class="fas fa-sort me-1"></i>Sort:</label>
+          <select id="sortSelect" title="Sort by">
+            <option value="newest">Newest First</option>
+            <option value="name_asc">Name A–Z</option>
+            <option value="age_asc">Age (Youngest)</option>
+            <option value="age_desc">Age (Oldest)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Pets Grid -->
+      <div id="petsGrid" role="list" aria-label="Available pets for adoption">
+        <!-- Skeleton loading cards (8) -->
+        <div class="skeleton-card" id="skel-1">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+        <div class="skeleton-card" id="skel-2">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+        <div class="skeleton-card" id="skel-3">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+        <div class="skeleton-card" id="skel-4">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+        <div class="skeleton-card" id="skel-5">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+        <div class="skeleton-card" id="skel-6">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-50"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line h-32"></div>
+          </div>
+        </div>
+      </div>
+      <!-- END petsGrid -->
+
+      <!-- Empty State (hidden by default) -->
+      <div id="emptyState" class="empty-state" style="display:none;" role="status" aria-live="polite">
+        <div class="empty-state-icon">🐾</div>
+        <h3 id="emptyStateTitle">No Pets Found</h3>
+        <p id="emptyStateMessage">Try adjusting your filters or search terms to discover more pets.</p>
+        <button class="btn-clear" onclick="clearAllFilters()">
+          <i class="fas fa-undo me-2"></i>Clear Filters
+        </button>
+      </div>
+
+      <!-- Load More -->
+      <div class="load-more-wrapper" id="loadMoreWrapper" style="display:none;">
+        <button id="loadMoreBtn" type="button">
+          <i class="fas fa-paw me-2"></i>Load More Pets
+        </button>
+      </div>
+
+    </div>
+    <!-- END main column -->
+
+    <!-- ============================================================ -->
+    <!-- SIDEBAR (desktop only) -->
+    <!-- ============================================================ -->
+    <aside class="sidebar-col" style="width:260px;flex-shrink:0;">
+
+      <!-- Quick Stats -->
+      <div class="sidebar-card">
+        <h6><i class="fas fa-chart-bar me-2 text-primary"></i>Quick Stats</h6>
+        <div class="stat-item">
+          <div class="stat-icon" style="background:#fff7ed;">🐕</div>
+          <div>
+            <div class="stat-label">Dogs Available</div>
+            <div class="stat-value" id="statDogs">—</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon" style="background:#fdf4ff;">🏠</div>
+          <div>
+            <div class="stat-label">Shelters</div>
+            <div class="stat-value" id="statShelters">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Shelter -->
+      <div class="sidebar-card">
+        <h6><i class="fas fa-star me-2 text-warning"></i>Featured Shelter</h6>
+        <div class="featured-shelter-img">🏠</div>
+        <div class="featured-shelter-name">Happy Paws Shelter</div>
+        <div class="featured-shelter-meta">
+          <i class="fas fa-map-marker-alt me-1"></i>Mumbai, Maharashtra<br />
+          <i class="fas fa-dog me-1 mt-1"></i>20 dog listings
+        </div>
+        <a href="shelters.html?id=featured" class="featured-shelter-link">
+          View Shelter <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+      <!-- Adoption Tips -->
+      <div class="sidebar-card">
+        <h6><i class="fas fa-lightbulb me-2 text-warning"></i>Adoption Tips</h6>
+        <div class="tip-item">
+          <i class="fas fa-check-circle tip-icon"></i>
+          <span>Research the breed's temperament before adopting</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-check-circle tip-icon"></i>
+          <span>Consider your living space and lifestyle</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-check-circle tip-icon"></i>
+          <span>Visit the shelter to meet pets in person</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-check-circle tip-icon"></i>
+          <span>Budget for food, vet, and grooming costs</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-check-circle tip-icon"></i>
+          <span>Prepare your home before bringing pet home</span>
+        </div>
+        <a href="petcare.html" class="featured-shelter-link">
+          Read the Care Guide <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+    </aside>
+    <!-- END sidebar -->
+
+  </div>
+</div>
+<!-- END MAIN CONTENT -->
+
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Brand col -->
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand d-flex align-items-center gap-2 mb-2">
+          <span class="brand-text">PetCare <span>Connect</span></span>
+        </div>
+        <p class="footer-tagline">Connecting loving hearts with pets in need since 2024.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Explore -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <h6>Explore</h6>
+        <ul class="footer-links">
+          <li><a href="adopt.html">Adopt a Pet</a></li>
+          <li><a href="shelters.html">Find Shelters</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <h6>Support</h6>
+        <ul class="footer-links">
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-4 col-md-6">
+        <h6>Contact</h6>
+        <ul class="footer-links">
+          <li><i class="fas fa-envelope me-2 text-primary"></i><a href="mailto:samithakn14@gmail.com">samithakn14@gmail.com</a></li>
+          <li class="mt-1"><i class="fas fa-phone me-2 text-primary"></i><a href="tel:+916362024336">+91 63620 4336</a></li>
+          <li class="mt-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Sira, Tumakuru, Karnataka, India</li>
+        </ul>
+        <div class="mt-3">
+          <a href="register.html" class="btn btn-sm" style="background:var(--primary);color:#fff;border-radius:10px;font-weight:700;padding:0.5rem 1.25rem;">
+            🐾 List Your Shelter
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="footer-divider" />
+
+    <div class="footer-bottom">
+      <p class="mb-0">© 2024 PetCare Connect. All rights reserved. Made with ❤️ for animals.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- END FOOTER -->
+
+
+<!-- ============================================================ -->
+<!-- FLOATING CHATBOT -->
+<!-- ============================================================ -->
+<button class="chatbot-fab" id="chatbotFab" title="Chat with PawBot" aria-label="Open chatbot">
+  <i class="fas fa-comment-dots"></i>
+  <span class="fab-badge"></span>
+</button>
+
+<div class="chatbot-window" id="chatbotWindow" role="dialog" aria-label="PawBot chat window">
+  <div class="chatbot-header">
+    <div class="bot-avatar">🐾</div>
+    <div>
+      <div class="bot-name">PawBot</div>
+      <div class="bot-status">Online · PetCare Connect Assistant</div>
+    </div>
+    <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <div class="chat-bubble bot">
+      Hi! 👋 I'm PawBot. How can I help you find your perfect pet today?
+    </div>
+    <div class="chat-bubble bot">
+      You can ask me about breeds, adoption requirements, or shelter info!
+    </div>
+  </div>
+  <div class="chatbot-input-row">
+    <input type="text" id="chatbotInput" placeholder="Ask PawBot anything…" aria-label="Chat message" />
+    <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+      <i class="fas fa-paper-plane" style="font-size:0.85rem;"></i>
+    </button>
+  </div>
+</div>
+<!-- END CHATBOT -->
+
+
+<!-- ============================================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================================ -->
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- PetCare Connect core scripts -->
+<script src="js/config.js?v=adoption-auth-1"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+
+<!-- ============================================================ -->
+<!-- INLINE INITIALIZATION SCRIPT -->
+<!-- ============================================================ -->
+<script>
+  // ============================================================
+  // Adopt Page – Inline initialization
+  // ============================================================
+
+  /**
+   * State object for the adopt page
+   */
+  const AdoptPage = {
+    allPets: [],           // Full dataset from Supabase / demo data
+    filteredPets: [],      // After applying filters
+    displayedCount: 0,     // How many cards currently rendered
+    ITEMS_PER_PAGE: 9,     // Load-more batch size
+    savedPets: new Set(),  // Set of saved pet IDs
+
+    // Active filter state
+    filters: {
+      search: '',
+      species: 'dog',
+      gender: '',
+      age: '',
+      size: '',
+      location: '',
+      vaccination: '',
+      status: '',
+      sort: 'newest'
+    }
+  };
+  let petLoadError = false;
+
+  // ============================================================
+  // DEMO DATA (used when Supabase is not yet configured)
+  // ============================================================
+  const DEMO_PETS = [
+    {
+      id: '22222222-0000-0000-0000-000000000001', name: 'Bruno', species: 'dog', breed: 'Golden Retriever',
+      age_years: 3, age_months: 0, gender: 'male', size: 'large',
+      color: 'Golden', location: 'Mumbai', status: 'available', adoption_fee: 1500,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Paws & Hearts Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000001',
+      photo_url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-11-20T10:00:00Z', personality_tags: ['playful', 'affectionate', 'good with kids']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000002', name: 'Rani', species: 'dog', breed: 'Labrador Mix',
+      age_years: 1, age_months: 6, gender: 'female', size: 'medium',
+      color: 'Black', location: 'New Delhi', status: 'available', adoption_fee: 1000,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Delhi Animal Welfare Society', shelter_id: '11111111-0000-0000-0000-000000000002',
+      photo_url: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-11-18T10:00:00Z', personality_tags: ['gentle', 'smart', 'calm']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000003', name: 'Max', species: 'dog', breed: 'German Shepherd',
+      age_years: 5, age_months: 0, gender: 'male', size: 'large',
+      color: 'Black and Tan', location: 'Bangalore', status: 'available', adoption_fee: 1200,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Bangalore Pet Rescue Foundation', shelter_id: '11111111-0000-0000-0000-000000000003',
+      photo_url: 'https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-11-15T08:00:00Z', personality_tags: ['loyal', 'protective', 'intelligent']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000004', name: 'Coco', species: 'dog', breed: 'Indian Pariah Dog',
+      age_years: 2, age_months: 3, gender: 'female', size: 'medium',
+      color: 'Fawn', location: 'Chennai', status: 'available', adoption_fee: 800,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Chennai Companion Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000004',
+      photo_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-11-12T09:00:00Z', personality_tags: ['adaptable', 'playful', 'friendly']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000005', name: 'Rocky', species: 'dog', breed: 'Beagle',
+      age_years: 4, age_months: 0, gender: 'male', size: 'small',
+      color: 'Tricolour', location: 'Pune', status: 'available', adoption_fee: 1000,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Pune Furry Friends Rescue', shelter_id: '11111111-0000-0000-0000-000000000005',
+      photo_url: 'https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-11-01T09:00:00Z', personality_tags: ['curious', 'friendly', 'funny']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000006', name: 'Simba', species: 'dog', breed: 'Indian Pariah Dog',
+      age_years: 0, age_months: 4, gender: 'male', size: 'small',
+      color: 'Cream', location: 'Mumbai', status: 'available', adoption_fee: 500,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Paws & Hearts Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000001',
+      photo_url: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-28T11:00:00Z', personality_tags: ['playful', 'curious', 'affectionate']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000007', name: 'Daisy', species: 'dog', breed: 'Indie',
+      age_years: 1, age_months: 2, gender: 'female', size: 'medium',
+      color: 'Tan', location: 'Mumbai', status: 'available', adoption_fee: 750,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Paws & Hearts Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000001',
+      photo_url: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-25T10:00:00Z', personality_tags: ['gentle', 'playful', 'social']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000008', name: 'Milo', species: 'dog', breed: 'Shih Tzu',
+      age_years: 3, age_months: 5, gender: 'male', size: 'small',
+      color: 'White and Brown', location: 'New Delhi', status: 'available', adoption_fee: 1800,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Delhi Animal Welfare Society', shelter_id: '11111111-0000-0000-0000-000000000002',
+      photo_url: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-22T10:00:00Z', personality_tags: ['affectionate', 'calm', 'friendly']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000009', name: 'Zara', species: 'dog', breed: 'Border Collie',
+      age_years: 2, age_months: 0, gender: 'female', size: 'medium',
+      color: 'Black and White', location: 'Bangalore', status: 'available', adoption_fee: 1500,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Bangalore Pet Rescue Foundation', shelter_id: '11111111-0000-0000-0000-000000000003',
+      photo_url: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-18T10:00:00Z', personality_tags: ['intelligent', 'energetic', 'trainable']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000010', name: 'Ollie', species: 'dog', breed: 'Dachshund',
+      age_years: 4, age_months: 1, gender: 'male', size: 'small',
+      color: 'Red', location: 'Chennai', status: 'available', adoption_fee: 1200,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Chennai Companion Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000004',
+      photo_url: 'https://images.unsplash.com/photo-1612195583950-b8fd34c87093?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-15T10:00:00Z', personality_tags: ['curious', 'brave', 'affectionate']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000011', name: 'Maya', species: 'dog', breed: 'Indie',
+      age_years: 0, age_months: 7, gender: 'female', size: 'small',
+      color: 'Brown', location: 'Pune', status: 'available', adoption_fee: 500,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Pune Furry Friends Rescue', shelter_id: '11111111-0000-0000-0000-000000000005',
+      photo_url: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-12T10:00:00Z', personality_tags: ['playful', 'curious', 'sweet']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000012', name: 'Thor', species: 'dog', breed: 'Boxer',
+      age_years: 3, age_months: 8, gender: 'male', size: 'large',
+      color: 'Fawn', location: 'Mumbai', status: 'available', adoption_fee: 1600,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Paws & Hearts Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000001',
+      photo_url: 'https://images.unsplash.com/photo-1546975490-a79abdd54533?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-10T10:00:00Z', personality_tags: ['loyal', 'goofy', 'energetic']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000013', name: 'Ruby', species: 'dog', breed: 'Cocker Spaniel',
+      age_years: 5, age_months: 0, gender: 'female', size: 'medium',
+      color: 'Golden', location: 'New Delhi', status: 'available', adoption_fee: 1400,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Delhi Animal Welfare Society', shelter_id: '11111111-0000-0000-0000-000000000002',
+      photo_url: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-08T10:00:00Z', personality_tags: ['gentle', 'friendly', 'affectionate']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000014', name: 'Benny', species: 'dog', breed: 'Pug',
+      age_years: 2, age_months: 6, gender: 'male', size: 'small',
+      color: 'Fawn', location: 'Bangalore', status: 'available', adoption_fee: 1100,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Bangalore Pet Rescue Foundation', shelter_id: '11111111-0000-0000-0000-000000000003',
+      photo_url: 'https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-05T10:00:00Z', personality_tags: ['charming', 'playful', 'easygoing']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000015', name: 'Nala', species: 'dog', breed: 'Great Dane',
+      age_years: 1, age_months: 11, gender: 'female', size: 'extra_large',
+      color: 'Blue', location: 'Chennai', status: 'available', adoption_fee: 2500,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Chennai Companion Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000004',
+      photo_url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-10-02T10:00:00Z', personality_tags: ['gentle', 'calm', 'affectionate']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000016', name: 'Finn', species: 'dog', breed: 'Australian Shepherd',
+      age_years: 2, age_months: 9, gender: 'male', size: 'large',
+      color: 'Blue Merle', location: 'Pune', status: 'available', adoption_fee: 1800,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Pune Furry Friends Rescue', shelter_id: '11111111-0000-0000-0000-000000000005',
+      photo_url: 'https://images.unsplash.com/photo-1503256207526-0d5d80fa2f47?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-09-30T10:00:00Z', personality_tags: ['active', 'smart', 'loyal']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000017', name: 'Penny', species: 'dog', breed: 'Poodle Mix',
+      age_years: 6, age_months: 3, gender: 'female', size: 'small',
+      color: 'Apricot', location: 'Mumbai', status: 'available', adoption_fee: 1200,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Paws & Hearts Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000001',
+      photo_url: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-09-28T10:00:00Z', personality_tags: ['bright', 'friendly', 'gentle']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000018', name: 'Koda', species: 'dog', breed: 'Siberian Husky',
+      age_years: 3, age_months: 2, gender: 'male', size: 'large',
+      color: 'Grey and White', location: 'New Delhi', status: 'available', adoption_fee: 2200,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Delhi Animal Welfare Society', shelter_id: '11111111-0000-0000-0000-000000000002',
+      photo_url: 'https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-09-25T10:00:00Z', personality_tags: ['energetic', 'curious', 'social']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000019', name: 'Rosie', species: 'dog', breed: 'Dachshund Mix',
+      age_years: 1, age_months: 4, gender: 'female', size: 'small',
+      color: 'Chocolate', location: 'Bangalore', status: 'available', adoption_fee: 1300,
+      vaccinated: true, dewormed: true, neutered: false,
+      shelter_name: 'Bangalore Pet Rescue Foundation', shelter_id: '11111111-0000-0000-0000-000000000003',
+      photo_url: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-09-22T10:00:00Z', personality_tags: ['sweet', 'playful', 'confident']
+    },
+    {
+      id: '22222222-0000-0000-0000-000000000020', name: 'Ace', species: 'dog', breed: 'Doberman Pinscher',
+      age_years: 4, age_months: 6, gender: 'male', size: 'large',
+      color: 'Black and Rust', location: 'Chennai', status: 'available', adoption_fee: 2000,
+      vaccinated: true, dewormed: true, neutered: true,
+      shelter_name: 'Chennai Companion Animal Shelter', shelter_id: '11111111-0000-0000-0000-000000000004',
+      photo_url: 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&auto=format&fit=crop&q=80',
+      created_at: '2024-09-20T10:00:00Z', personality_tags: ['loyal', 'alert', 'trainable']
+    }
+  ];
+
+  // ============================================================
+  // HELPER: Compute age in years (for display)
+  // ============================================================
+  function getAgeDisplay(pet) {
+    const y = pet.age_years || 0;
+    const m = pet.age_months || 0;
+    if (y === 0 && m === 0) return 'Unknown age';
+    if (y === 0) return `${m} month${m !== 1 ? 's' : ''}`;
+    if (m === 0) return `${y} year${y !== 1 ? 's' : ''}`;
+    return `${y} yr ${m} mo`;
+  }
+
+  // ============================================================
+  // HELPER: Age bucket for filter
+  // ============================================================
+  function getAgeBucket(pet) {
+    const totalMonths = (pet.age_years || 0) * 12 + (pet.age_months || 0);
+    if (totalMonths <= 12) return 'baby';
+    if (totalMonths <= 36) return 'young';
+    if (totalMonths <= 84) return 'adult';
+    return 'senior';
+  }
+
+  // ============================================================
+  // HELPER: Species emoji
+  // ============================================================
+  function speciesEmoji(species) {
+    return species === 'dog' ? '🐕' : '🐾';
+  }
+
+  // ============================================================
+  // HELPER: Gender symbol
+  // ============================================================
+  function genderSymbol(gender) {
+    if (gender === 'male') return '♂';
+    if (gender === 'female') return '♀';
+    return '–';
+  }
+
+  // ============================================================
+  // HELPER: Status badge class
+  // ============================================================
+  function statusClass(status) {
+    const map = { available: 'available', pending: 'pending', adopted: 'adopted' };
+    return map[status] || 'available';
+  }
+
+  // ============================================================
+  // HELPER: Capitalise first letter
+  // ============================================================
+  function cap(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // ============================================================
+  // HELPER: Fallback pet photo
+  // ============================================================
+  function fallbackPhoto(species) {
+    const c = 'f97316';
+    const emoji = encodeURIComponent(speciesEmoji(species));
+    return `https://via.placeholder.com/400x300/${c}/ffffff?text=${emoji}`;
+  }
+
+  // ============================================================
+  // BUILD SINGLE PET CARD HTML
+  // ============================================================
+  function buildPetCard(pet) {
+    const isSaved = AdoptPage.savedPets.has(pet.id);
+    const ageDisplay = getAgeDisplay(pet);
+    const imgSrc = pet.photo_url || fallbackPhoto(pet.species);
+    const statusCls = statusClass(pet.status);
+    const vaccinationHTML = pet.vaccinated
+      ? `<div class="vaccination-badge" title="Vaccinated">💉 Vaccinated</div>`
+      : '';
+
+    return `
+    <article class="pet-card" data-pet-id="${pet.id}" data-species="${pet.species}"
+             data-gender="${pet.gender}" data-status="${pet.status}" role="listitem">
+      <div class="pet-card-image">
+        <img
+          src="${imgSrc}"
+          alt="${cap(pet.name)} - ${cap(pet.species)} for adoption"
+          loading="lazy"
+          onerror="this.src='${fallbackPhoto(pet.species)}'"
+        />
+        <div class="pet-badges">
+          <span class="species-badge">${speciesEmoji(pet.species)} ${cap(pet.species)}</span>
+          <span class="status-badge ${statusCls}">${cap(pet.status)}</span>
+        </div>
+        <button
+          class="save-btn ${isSaved ? 'saved' : ''}"
+          data-pet-id="${pet.id}"
+          onclick="toggleSavePet(event, '${pet.id}')"
+          title="${isSaved ? 'Remove from saved' : 'Save this pet'}"
+          aria-label="${isSaved ? 'Remove from saved pets' : 'Save this pet'}">
+          <i class="fas fa-heart"></i>
+        </button>
+        ${vaccinationHTML}
+      </div>
+      <div class="pet-card-body">
+        <h5 class="pet-name">${cap(pet.name)}</h5>
+        <p class="pet-breed">${cap(pet.breed) || 'Mixed Breed'}</p>
+        <div class="pet-details">
+          <span title="Age">⏳ ${ageDisplay}</span>
+          <span title="Gender">${genderSymbol(pet.gender)} ${cap(pet.gender) || '—'}</span>
+          <span title="Location">📍 ${pet.location || '—'}</span>
+        </div>
+        <p class="shelter-name">🏠 ${pet.shelter_name || 'Unknown Shelter'}</p>
+        <p class="adoption-fee fw-bold mb-3" aria-label="Adoption fee">💰 ${window.PawCareUtils.formatAdoptionFee(pet.adoption_fee)}</p>
+        <div class="pet-card-actions">
+          <a href="pet-detail.html?id=${pet.id}" class="btn btn-primary">
+            <i class="fas fa-eye me-1"></i>View Details
+          </a>
+          <a href="adoption-form.html?pet=${encodeURIComponent(pet.id)}" class="btn btn-secondary">
+            Adopt Now
+          </a>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  // ============================================================
+  // CLEAR SKELETON CARDS
+  // ============================================================
+  function clearSkeletons() {
+    document.querySelectorAll('[id^="skel-"]').forEach(el => el.remove());
+  }
+
+  // ============================================================
+  // RENDER PETS
+  // ============================================================
+  function renderPets(reset = false) {
+    const grid = document.getElementById('petsGrid');
+    const emptyState = document.getElementById('emptyState');
+    const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+    const resultsCount = document.getElementById('resultsCount');
+
+    if (reset) {
+      clearSkeletons();
+      // Remove existing pet cards only (keep empty state inside grid placeholder)
+      grid.querySelectorAll('.pet-card').forEach(c => c.remove());
+      AdoptPage.displayedCount = 0;
+    }
+
+    const pets = AdoptPage.filteredPets;
+    resultsCount.textContent = pets.length;
+
+    if (pets.length === 0) {
+      document.getElementById('emptyStateTitle').textContent =
+        petLoadError ? 'Unable to Load Pets' : 'No Pets Found';
+      document.getElementById('emptyStateMessage').textContent = petLoadError
+        ? 'Live pet listings could not be reached. Please check your connection and try again.'
+        : 'Try adjusting your filters or search terms to discover more pets.';
+      emptyState.style.display = 'block';
+      loadMoreWrapper.style.display = 'none';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    const start = AdoptPage.displayedCount;
+    const end = Math.min(start + AdoptPage.ITEMS_PER_PAGE, pets.length);
+    const batch = pets.slice(start, end);
+
+    batch.forEach(pet => {
+      grid.insertAdjacentHTML('beforeend', buildPetCard(pet));
+    });
+
+    AdoptPage.displayedCount = end;
+
+    // Show / hide load more
+    if (AdoptPage.displayedCount < pets.length) {
+      loadMoreWrapper.style.display = 'block';
+      document.getElementById('loadMoreBtn').disabled = false;
+      document.getElementById('loadMoreBtn').innerHTML = '<i class="fas fa-paw me-2"></i>Load More Pets';
+    } else {
+      loadMoreWrapper.style.display = 'block';
+      const btn = document.getElementById('loadMoreBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>All pets loaded';
+    }
+  }
+
+  // ============================================================
+  // APPLY FILTERS & SORT
+  // ============================================================
+  function applyFilters() {
+    const f = AdoptPage.filters;
+    let pets = [...AdoptPage.allPets];
+
+    // Search filter
+    if (f.search) {
+      const q = f.search.toLowerCase();
+      pets = pets.filter(p =>
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.breed || '').toLowerCase().includes(q) ||
+        (p.location || '').toLowerCase().includes(q) ||
+        (p.shelter_name || '').toLowerCase().includes(q)
+      );
+    }
+
+    // Species filter
+    if (f.species && f.species !== 'all') {
+      pets = pets.filter(p => p.species === f.species);
+    }
+
+    // Gender filter
+    if (f.gender) pets = pets.filter(p => p.gender === f.gender);
+
+    // Age bucket filter
+    if (f.age) pets = pets.filter(p => getAgeBucket(p) === f.age);
+
+    // Size filter
+    if (f.size) pets = pets.filter(p => p.size === f.size);
+
+    // Location filter
+    if (f.location) pets = pets.filter(p => p.location === f.location);
+
+    // Vaccination filter
+    if (f.vaccination !== '') {
+      const v = f.vaccination === 'true';
+      pets = pets.filter(p => p.vaccinated === v);
+    }
+
+    // Status filter
+    if (f.status) pets = pets.filter(p => p.status === f.status);
+
+    // Sort
+    switch (f.sort) {
+      case 'newest':
+        pets.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        break;
+      case 'name_asc':
+        pets.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        break;
+      case 'age_asc':
+        pets.sort((a, b) => {
+          const aM = (a.age_years || 0) * 12 + (a.age_months || 0);
+          const bM = (b.age_years || 0) * 12 + (b.age_months || 0);
+          return aM - bM;
+        });
+        break;
+      case 'age_desc':
+        pets.sort((a, b) => {
+          const aM = (a.age_years || 0) * 12 + (a.age_months || 0);
+          const bM = (b.age_years || 0) * 12 + (b.age_months || 0);
+          return bM - aM;
+        });
+        break;
+    }
+
+    AdoptPage.filteredPets = pets;
+    renderPets(true);
+  }
+
+  // ============================================================
+  // CLEAR ALL FILTERS (global – also called from empty state btn)
+  // ============================================================
+  function clearAllFilters() {
+    AdoptPage.filters = {
+      search: '', species: 'dog', gender: '', age: '',
+      size: '', location: '', vaccination: '', status: '', sort: 'newest'
+    };
+
+    // Reset UI
+    document.getElementById('searchInput').value = '';
+    document.getElementById('genderFilter').value = '';
+    document.getElementById('ageFilter').value = '';
+    document.getElementById('sizeFilter').value = '';
+    document.getElementById('locationFilter').value = '';
+    document.getElementById('vaccinationFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('sortSelect').value = 'newest';
+
+    // Reset pills
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('.filter-pill[data-filter="dog"]')?.classList.add('active');
+
+    applyFilters();
+  }
+
+  // ============================================================
+  // SAVE / UNSAVE PET
+  // ============================================================
+  function toggleSavePet(event, petId) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const btn = event.currentTarget;
+    if (AdoptPage.savedPets.has(petId)) {
+      AdoptPage.savedPets.delete(petId);
+      btn.classList.remove('saved');
+      btn.title = 'Save this pet';
+    } else {
+      AdoptPage.savedPets.add(petId);
+      btn.classList.add('saved');
+      btn.title = 'Remove from saved';
+
+      // Brief pop animation
+      btn.style.transform = 'scale(1.35)';
+      setTimeout(() => { btn.style.transform = ''; }, 200);
+    }
+
+    // Persist to localStorage
+    localStorage.setItem('pawcare_saved_pets', JSON.stringify([...AdoptPage.savedPets]));
+  }
+
+  // ============================================================
+  // UPDATE SIDEBAR STATS
+  // ============================================================
+  function updateSidebarStats(pets) {
+    const dogs = pets.filter(p => p.species === 'dog' && p.status === 'available').length;
+    const shelters = new Set(pets.map(p => p.shelter_id).filter(Boolean)).size;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('statDogs', dogs);
+    set('availableDogCount', `${dogs} dog${dogs === 1 ? '' : 's'} available now`);
+    set('statShelters', shelters || '—');
+  }
+
+  // ============================================================
+  // LOAD PETS FROM THE BACKEND API
+  // ============================================================
+  async function loadPets() {
+    const apiBase = window.PAWCARE_CONFIG.API_BASE_URL;
+    const url = `${apiBase}/pets?species=dog&limit=100`;
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      console.info(`[adopt] GET ${url} returned HTTP ${response.status}.`);
+      if (!response.ok) {
+        throw new Error(`Pet API returned HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (!result.success || !Array.isArray(result.data)) {
+        throw new Error(result.message || 'The pet API returned an invalid response.');
+      }
+      console.info(`[adopt] Loaded ${result.data.length} pet listings (HTTP ${response.status}).`);
+
+      const pets = result.data.map(pet => {
+        const shelter = Array.isArray(pet.shelters) ? pet.shelters[0] : pet.shelters;
+        const primaryImage = pet.pet_images?.find(image => image.is_primary) || pet.pet_images?.[0];
+        return {
+          ...pet,
+          status: pet.adoption_status,
+          vaccinated: pet.vaccination_status,
+          dewormed: pet.deworming_status,
+          neutered: pet.neutered_status,
+          photo_url: pet.primary_image || primaryImage?.image_url,
+          personality_tags: pet.personality,
+          shelter_name: shelter?.name || 'Unknown Shelter',
+          location: pet.location || shelter?.location || '—'
+        };
+      });
+      AdoptPage.allPets = pets;
+      petLoadError = false;
+    } catch (err) {
+      const message = err.name === 'AbortError'
+        ? 'Pet API request timed out after 10 seconds.'
+        : err.message;
+      console.error(`[adopt] GET ${url} failed: ${message}`, err);
+      window.showToast?.('Live dog listings are unavailable. Please try again shortly.', 'error');
+      petLoadError = true;
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+
+    // Load saved pets from localStorage
+    try {
+      const saved = JSON.parse(localStorage.getItem('pawcare_saved_pets') || '[]');
+      AdoptPage.savedPets = new Set(saved);
+    } catch { AdoptPage.savedPets = new Set(); }
+
+    // Apply initial filters & render
+    applyFilters();
+    updateSidebarStats(AdoptPage.allPets);
+  }
+
+  // ============================================================
+  // READ URL PARAMS FOR PRE-SELECTED FILTERS
+  // ============================================================
+  function readUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('species')) {
+      AdoptPage.filters.species = 'dog';
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      const pill = document.querySelector('.filter-pill[data-filter="dog"]');
+      if (pill) pill.classList.add('active');
+    }
+    if (params.get('location')) {
+      AdoptPage.filters.location = params.get('location');
+      const el = document.getElementById('locationFilter');
+      if (el) el.value = params.get('location');
+    }
+    if (params.get('status')) {
+      AdoptPage.filters.status = params.get('status');
+      const el = document.getElementById('statusFilter');
+      if (el) el.value = params.get('status');
+    }
+    if (params.get('q')) {
+      AdaptPage.filters.search = params.get('q');
+      document.getElementById('searchInput').value = params.get('q');
+    }
+  }
+
+  // ============================================================
+  // SETUP EVENT LISTENERS
+  // ============================================================
+  function setupFilterHandlers() {
+
+    // Search – debounced
+    let searchTimer;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        AdoptPage.filters.search = e.target.value.trim();
+        applyFilters();
+      }, 300);
+    });
+
+    // Species pills
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        AdoptPage.filters.species = pill.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // Advanced selects
+    const selects = {
+      genderFilter: 'gender',
+      ageFilter: 'age',
+      sizeFilter: 'size',
+      locationFilter: 'location',
+      vaccinationFilter: 'vaccination',
+      statusFilter: 'status'
+    };
+    Object.entries(selects).forEach(([id, key]) => {
+      document.getElementById(id)?.addEventListener('change', (e) => {
+        AdoptPage.filters[key] = e.target.value;
+        applyFilters();
+      });
+    });
+
+    // Sort
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+      AdoptPage.filters.sort = e.target.value;
+      applyFilters();
+    });
+
+    // Clear all
+    document.getElementById('clearFilters').addEventListener('click', clearAllFilters);
+
+    // Toggle advanced filters
+    const toggleBtn = document.getElementById('toggleAdvanced');
+    const advPanel  = document.getElementById('advancedFilters');
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = advPanel.style.display !== 'none';
+      advPanel.style.display = isOpen ? 'none' : 'flex';
+      toggleBtn.classList.toggle('open', !isOpen);
+      toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Load more
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+      renderPets(false);
+    });
+  }
+
+  // ============================================================
+  // CHATBOT LOGIC
+  // ============================================================
+  function setupChatbot() {
+    const fab    = document.getElementById('chatbotFab');
+    const window_ = document.getElementById('chatbotWindow');
+    const closeBtn = document.getElementById('chatbotClose');
+    const input  = document.getElementById('chatbotInput');
+    const sendBtn = document.getElementById('chatbotSend');
+    const msgs   = document.getElementById('chatbotMessages');
+
+    if (!fab) return;
+
+    fab.addEventListener('click', () => window_.classList.toggle('open'));
+    closeBtn?.addEventListener('click', () => window_.classList.remove('open'));
+
+    const BOT_REPLIES = {
+      default: "I'm here to help! Try asking about breeds, adoption fees, or shelter locations.",
+      dog: "Browse our dogs available for adoption and filter by age, size, and location.",
+      adoption: "To adopt, click 'Adopt Now' on a pet card. Fill out the application form and a shelter will contact you!",
+      vaccinated: "Many of our dogs are vaccinated. Look for the 💉 badge on pet cards.",
+      cost: "The adoption fee in ₹ is shown on each dog’s listing. Fees can vary by shelter, so contact the shelter to confirm before applying.",
+      shelter: "We have verified shelters across Mumbai, Delhi, Bangalore, Chennai, Pune and more!",
+      hello: "Hello! 👋 How can I help you find your perfect pet today?",
+      hi: "Hi there! 🐾 Looking for a new furry friend? I can help!",
+    };
+
+    function botReply(message) {
+      const lower = message.toLowerCase();
+      let reply = BOT_REPLIES.default;
+      for (const [key, val] of Object.entries(BOT_REPLIES)) {
+        if (lower.includes(key)) { reply = val; break; }
+      }
+      setTimeout(() => {
+        msgs.insertAdjacentHTML('beforeend', `<div class="chat-bubble bot">${reply}</div>`);
+        msgs.scrollTop = msgs.scrollHeight;
+      }, 500);
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      msgs.insertAdjacentHTML('beforeend', `<div class="chat-bubble user">${text}</div>`);
+      input.value = '';
+      msgs.scrollTop = msgs.scrollHeight;
+      botReply(text);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+  }
+
+  // ============================================================
+  // DOMContentLoaded – MAIN ENTRY POINT
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', async () => {
+
+    // Read URL params first (before loading pets so filters are pre-set)
+    readUrlParams();
+
+    // Setup UI interactions
+    setupFilterHandlers();
+
+    // Setup chatbot
+    setupChatbot();
+
+    // Load pets (async – removes skeletons when done)
+    await loadPets();
+  });
+
+</script>
+
+</body>
+</html>
